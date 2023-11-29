@@ -1,13 +1,23 @@
 "use client";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 export default function SignIn() {
+  /* 상태 변수 */
+  const [user, setUser] = useState({});
+
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
-  /* 로그인 함수 */
+  /* 라이프 사이클 */
+  useEffect(() => {
+    if (user._id) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
+  /* 이벤트 핸들러 */
   const handleSignIn = async (e) => {
     e.preventDefault();
 
@@ -20,10 +30,11 @@ export default function SignIn() {
         password: password,
       })
       .then((res) => {
-        console.log("로그인 성공", res);
+        setUser(res.data.item);
+        console.log("로그인 성공!");
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
       });
   };
 
@@ -38,7 +49,6 @@ export default function SignIn() {
           type="email"
           name="email"
           ref={emailRef}
-          value="s1@market.com"
           placeholder="example@essentia.co.kr"
         />
         <div aria-live="polite">아이디를 확인해주세요</div>
@@ -48,7 +58,6 @@ export default function SignIn() {
           type="password"
           name="password"
           ref={passwordRef}
-          value="11111111"
           placeholder="영문 대/소문자, 숫자 및 특수문자를 포함한 비밀번호"
         />
         <div aria-live="polite">비밀번호를 확인해주세요</div>
