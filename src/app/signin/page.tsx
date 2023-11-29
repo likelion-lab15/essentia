@@ -1,11 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import axios from "axios";
+import { useUserStore } from "@/stores/useUserStore";
 
 export default function SignIn() {
   /* 상태 변수 */
-  const [user, setUser] = useState({});
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -14,6 +16,7 @@ export default function SignIn() {
   useEffect(() => {
     if (user._id) {
       localStorage.setItem("user", JSON.stringify(user));
+      alert("로그인 성공!");
     }
   }, [user]);
 
