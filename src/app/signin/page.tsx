@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import axios from "axios";
 
-const SignIn = () => {
+export default function SignIn() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
@@ -67,6 +67,4 @@ const SignIn = () => {
       </div>
     </main>
   );
-};
-
-export default SignIn;
+}
