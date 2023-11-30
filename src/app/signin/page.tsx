@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import axios from "axios";
 import { useUserStore } from "@/stores/useUserStore";
@@ -11,6 +12,9 @@ export default function SignIn() {
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
+  /* 훅스 */
+  const router = useRouter();
 
   /* 라이프 사이클 */
   useEffect(() => {
@@ -35,6 +39,7 @@ export default function SignIn() {
       .then((res) => {
         setUser(res.data.item);
         console.log("로그인 성공!");
+        router.push("/");
       })
       .catch((err) => {
         console.log(err.message);
