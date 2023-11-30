@@ -1,8 +1,33 @@
 "use client";
 import React, { useState } from "react";
 import { AddressModal } from "@/components/_index";
+import axios from "axios"; // Import Axios
 
 export default function SignUp() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [birth, setBirth] = useState("");
+  const type = "seller";
+
+  const sendPostRequest = async () => {
+    try {
+      const response = await axios.post("https://localhost/api/users/", {
+        email,
+        password,
+        name,
+        type,
+        phone,
+        // birth,
+        address,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error("axios 에러발생", error);
+    }
+  };
+
   // 이메일, 비밀번호, 휴대폰번호의 유효성 상태 관리
   const [isEmailValid, setEmailValid] = useState(true);
   const [isPasswordValid, setPasswordValid] = useState(true);
@@ -51,25 +76,32 @@ export default function SignUp() {
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isValid = validatePhone(e.target.value);
+    const phoneValue = e.target.value;
+    const isValid = validatePhone(phoneValue);
     setPhoneValid(isValid);
     setShowPhoneError(!isValid);
+    setPhone(phoneValue); // Update phone state
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isValid = validateEmail(e.target.value);
+    const emailValue = e.target.value;
+    const isValid = validateEmail(emailValue);
     setEmailValid(isValid);
     setShowEmailError(!isValid);
+    setEmail(emailValue);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isValid = validatePassword(e.target.value);
+    const passwordValue = e.target.value;
+    const isValid = validatePassword(passwordValue);
     setPasswordValid(isValid);
     setShowPasswordError(!isValid);
+    setPassword(passwordValue);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    sendPostRequest();
   };
 
   return (
@@ -126,6 +158,7 @@ export default function SignUp() {
           type="text"
           aria-errormessage="nameError"
           placeholder="이름"
+          onChange={(e) => setName(e.target.value)}
         />
         <div id="nameError" aria-live="polite">
           이름 오류 메세지
@@ -153,6 +186,7 @@ export default function SignUp() {
           type="date"
           aria-errormessage="birthError"
           placeholder="예) 19990707"
+          onChange={(e) => setBirth(e.target.value)}
         />
         {/* 생년월일 오류 경고창*/}
         <div id="birthError" aria-live="polite">
@@ -168,6 +202,7 @@ export default function SignUp() {
           placeholder="도로명 주소를 입력해주세요"
           value={address} // Display the selected address
           readOnly // Make the field read-only
+          onChange={(e) => setAddress(e.target.value)}
         />
         <button type="button" onClick={() => setAddressModalOpen(true)}>
           주소 검색
