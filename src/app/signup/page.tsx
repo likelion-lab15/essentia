@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { AddressModal } from "@/components/_index";
 
 export default function SignUp() {
   const [isEmailValid, setEmailValid] = useState(true);
@@ -8,6 +9,20 @@ export default function SignUp() {
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
   const [showPhoneError, setShowPhoneError] = useState(false);
+
+  /* api 주소 관련 */
+  const [address, setAddress] = useState("");
+  const [isAddressModalOpen, setAddressModalOpen] = useState(false);
+
+  interface AddressData {
+    address: string;
+    // 필요한 경우 여기에 추가적인 필드를 정의
+  }
+
+  const handleAddressChange = (data: AddressData) => {
+    setAddress(data.address);
+    setAddressModalOpen(false);
+  };
 
   /* 유효성 검사 */
   /* 이메일 유효성 (올바른 이메일 형식 체크) */
@@ -50,11 +65,15 @@ export default function SignUp() {
     setShowPasswordError(!isValid);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <main className="flex flex-col items-center pt-[120px]">
       <h2 className="mb-[66px] text-36 font-bold">회원가입</h2>
 
-      <form action="/" className="flex w-[400px] flex-col">
+      <form onSubmit={handleSubmit} className="flex w-[400px] flex-col">
         {/* 이메일 주소 */}
         <label htmlFor="email">
           로그인에 사용할 이메일 주소를 입력해주세요
@@ -144,8 +163,17 @@ export default function SignUp() {
           type="text"
           aria-errormessage="addressError"
           placeholder="도로명 주소를 입력해주세요"
+          value={address} // Display the selected address
+          readOnly // Make the field read-only
         />
-        <button type="button">주소 검색</button>
+        <button type="button" onClick={() => setAddressModalOpen(true)}>
+          주소 검색
+        </button>
+        <AddressModal
+          isOpen={isAddressModalOpen}
+          onClose={() => setAddressModalOpen(false)}
+          onSelectAddress={handleAddressChange}
+        />
         <label htmlFor="addressDetail"></label>
         <input
           id="addressDetail"
