@@ -26,7 +26,6 @@ export default function SignIn() {
   useEffect(() => {
     if (user._id) {
       localStorage.setItem("user", JSON.stringify(user));
-      alert("로그인 성공!");
     }
   }, [user]);
 
