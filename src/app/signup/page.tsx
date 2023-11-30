@@ -3,29 +3,26 @@ import React, { useState } from "react";
 import { AddressModal } from "@/components/_index";
 
 export default function SignUp() {
+  // 이메일, 비밀번호, 휴대폰번호의 유효성 상태 관리
   const [isEmailValid, setEmailValid] = useState(true);
   const [isPasswordValid, setPasswordValid] = useState(true);
   const [isPhoneValid, setPhoneValid] = useState(true);
+
+  // 이메일, 비밀번호, 휴대폰번호의 오류메세지 상태 관리
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
   const [showPhoneError, setShowPhoneError] = useState(false);
 
-  /* api 주소 관련 */
+  // 주소 API 관련 상태 관리
   const [address, setAddress] = useState("");
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
   interface AddressData {
     address: string;
-    // 필요한 경우 여기에 추가적인 필드를 정의
   }
 
-  const handleAddressChange = (data: AddressData) => {
-    setAddress(data.address);
-    setAddressModalOpen(false);
-  };
-
-  /* 유효성 검사 */
-  /* 이메일 유효성 (올바른 이메일 형식 체크) */
+  /* 이메일 유효성 검사
+  1. 올바른 이메일 형식 체크 */
   const validateEmail = (email: string) => {
     return /\S+@\S+\.\S+/.test(email);
   };
@@ -45,6 +42,12 @@ export default function SignUp() {
   */
   const validatePhone = (phone: string) => {
     return /^010\d{8}$/.test(phone);
+  };
+
+  /* 주소 변경 핸들러 */
+  const handleAddressChange = (data: AddressData) => {
+    setAddress(data.address);
+    setAddressModalOpen(false);
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
