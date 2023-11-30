@@ -32,12 +32,13 @@ export default function Products() {
     fetchData();
   }, []);
   return (
-    <>
-      <ul className="flex w-[984px] flex-row flex-wrap">
+    <div className="w-[984px]">
+      <p className="mb-[110px]">{products.length}개의 상품이 있습니다.</p>
+      <ul className="flex w-[1000px] flex-row flex-wrap">
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </ul>
-    </>
+    </div>
   );
 }
