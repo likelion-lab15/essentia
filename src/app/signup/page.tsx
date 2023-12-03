@@ -41,6 +41,7 @@ export default function SignUp() {
       // If the request is successful, set email as unique
       setEmailUnique(true);
       setShowEmailError(false);
+      setHasCheckedDuplication(true);
       console.log("Email is unique");
     } catch (error) {
       if (error.response && error.response.status === 409) {
@@ -54,6 +55,9 @@ export default function SignUp() {
       }
     }
   };
+
+  // 중복확인 했는지 유무 상태 관리
+  const [hasCheckedDuplication, setHasCheckedDuplication] = useState(false);
 
   // 이메일, 비밀번호, 휴대폰번호의 유효성 상태 관리
   const [isEmailValid, setEmailValid] = useState(true);
@@ -249,7 +253,9 @@ export default function SignUp() {
               중복된 이메일입니다.
             </div>
           )}
-
+          {isEmailValid && isEmailUnique && hasCheckedDuplication && (
+            <div className="text-green-500">사용 가능한 이메일입니다.</div>
+          )}
           {/* 이메일 오류 경고창 */}
           {showEmailError && (
             <div id="emailError" aria-live="polite" className="text-red-500">
