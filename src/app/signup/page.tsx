@@ -70,6 +70,27 @@ export default function SignUp() {
     return /^[가-힣]+$/.test(name);
   };
 
+  // 생년월일 상태관리
+  const [isBirthValid, setBirthValid] = useState(true);
+  const [showBirthError, setShowBirthError] = useState(false);
+
+  // 생년월일 유효성 검사 (1900 ~2023년생까지 가능)
+  const validateBirth = (birth) => {
+    return (
+      /^\d{4}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/.test(birth) &&
+      parseInt(birth.substring(0, 4)) >= 1900 &&
+      parseInt(birth.substring(0, 4)) <= 2023
+    );
+  };
+
+  const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const birthValue = e.target.value;
+    const isValid = validateBirth(birthValue);
+    setBirthValid(isValid);
+    setShowBirthError(!isValid);
+    setBirth(birthValue);
+  };
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nameValue = e.target.value;
     const isValid = validateName(nameValue);
@@ -233,18 +254,19 @@ export default function SignUp() {
           )}
 
           {/* 생년월일 */}
-          <label htmlFor="birth">생년월일을 입력해주세요</label>
           <input
             id="birth"
-            type="date"
+            type="text"
             aria-errormessage="birthError"
+            aria-invalid={!isBirthValid}
+            onChange={handleBirthChange}
             placeholder="예) 19990707"
-            onChange={(e) => setBirth(e.target.value)}
           />
-          {/* 생년월일 오류 경고창*/}
-          <div id="birthError" aria-live="polite">
-            생년월일 오류 메세지
-          </div>
+          {showBirthError && (
+            <div id="birthError" aria-live="polite" className="text-red-500">
+              올바른 생년월일을 입력해주세요 (1900~2023년도).
+            </div>
+          )}
 
           {/* 주소 */}
           <label htmlFor="address">주소를 입력해주세요</label>
