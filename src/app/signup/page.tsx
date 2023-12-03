@@ -29,6 +29,32 @@ export default function SignUp() {
     }
   };
 
+  // 이메일 중복확인 상태
+  const [isEmailUnique, setEmailUnique] = useState(true);
+
+  // 이메일 중복확인 통신
+  const checkEmailDuplication = async () => {
+    try {
+      const response = await axios.get(
+        `https://localhost/api/users/email?email=${email}`
+      );
+      // If the request is successful, set email as unique
+      setEmailUnique(true);
+      setShowEmailError(false);
+      console.log("Email is unique");
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        // Handle duplicate email case
+        setEmailUnique(false);
+        setShowEmailError(true);
+        console.log("Email is a duplicate");
+      } else {
+        // Handle other errors
+        console.error("Error checking email: ", error);
+      }
+    }
+  };
+
   // 이메일, 비밀번호, 휴대폰번호의 유효성 상태 관리
   const [isEmailValid, setEmailValid] = useState(true);
   const [isPasswordValid, setPasswordValid] = useState(true);
@@ -146,6 +172,7 @@ export default function SignUp() {
     setEmailValid(isValid);
     setShowEmailError(!isValid);
     setEmail(emailValue);
+    setEmailUnique(true);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -184,6 +211,7 @@ export default function SignUp() {
     // 모든 필드가 유효한 경우에만 요청 보내기
     if (
       !isEmailEmpty &&
+      isEmailUnique &&
       !isPasswordEmpty &&
       !isNameEmpty &&
       !isPhoneEmpty &&
@@ -213,6 +241,15 @@ export default function SignUp() {
             onChange={handleEmailChange}
             placeholder="example@essentia.co.kr"
           />
+          <button type="button" onClick={checkEmailDuplication}>
+            중복 확인
+          </button>
+          {showEmailError && !isEmailUnique && (
+            <div id="emailError" aria-live="polite" className="text-red-500">
+              중복된 이메일입니다.
+            </div>
+          )}
+
           {/* 이메일 오류 경고창 */}
           {showEmailError && (
             <div id="emailError" aria-live="polite" className="text-red-500">
