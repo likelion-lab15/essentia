@@ -43,6 +43,24 @@ export default function SignUp() {
   const [address, setAddress] = useState("");
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
+  // 비밀번호 확인을 위한 상태 관리
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [isPasswordCheckValid, setPasswordCheckValid] = useState(true);
+  const [showPasswordCheckError, setShowPasswordCheckError] = useState(false);
+
+  // 비밀번호 확인 변경 핸들러
+  const handlePasswordCheckChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const passwordCheckValue = e.target.value;
+    setPasswordCheck(passwordCheckValue);
+
+    // 비밀번호와 비밀번호 확인이 일치하는지 검사
+    const isValid = password === passwordCheckValue;
+    setPasswordCheckValid(isValid);
+    setShowPasswordCheckError(!isValid);
+  };
+
   interface AddressData {
     address: string;
   }
@@ -141,16 +159,28 @@ export default function SignUp() {
             onChange={handlePasswordChange}
             placeholder="영문 대/소문자, 숫자 및 특수문자를 포함한 비밀번호"
           />
-          <input
-            id="passwordCheck"
-            type="password"
-            aria-errormessage="passwordError"
-            placeholder="비밀번호 확인"
-          />
-          {/* 비밀번호 오류 경고창 */}
           {showPasswordError && (
             <div id="passwordError" aria-live="polite" className="text-red-500">
               비밀번호 오류 메세지
+            </div>
+          )}
+          {/* 비밀번호 확인 */}
+          <input
+            id="passwordCheck"
+            type="password"
+            aria-errormessage="passwordCheckError"
+            aria-invalid={!isPasswordCheckValid}
+            onChange={handlePasswordCheckChange}
+            placeholder="비밀번호 확인"
+          />
+          {/* 비밀번호 확인 오류 경고창 */}
+          {showPasswordCheckError && (
+            <div
+              id="passwordCheckError"
+              aria-live="polite"
+              className="text-red-500"
+            >
+              비밀번호가 일치하지 않습니다.
             </div>
           )}
 
