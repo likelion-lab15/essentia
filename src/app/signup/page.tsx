@@ -158,7 +158,40 @@ export default function SignUp() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendPostRequest();
+
+    // 각 입력 필드가 비어 있는지 검사
+    const isEmailEmpty = !email.trim();
+    const isPasswordEmpty = !password.trim();
+    const isNameEmpty = !name.trim();
+    const isPhoneEmpty = !phone.trim();
+    const isBirthEmpty = !birth.trim();
+    const isAddressEmpty = !address.trim();
+
+    // 필요한 경우 유효성 상태와 오류 메시지 상태 업데이트
+    setEmailValid(!isEmailEmpty);
+    setPasswordValid(!isPasswordEmpty);
+    setNameValid(!isNameEmpty);
+    setPhoneValid(!isPhoneEmpty);
+    setBirthValid(!isBirthEmpty);
+
+    // 오류 메시지 표시
+    setShowEmailError(isEmailEmpty);
+    setShowPasswordError(isPasswordEmpty);
+    setShowNameError(isNameEmpty);
+    setShowPhoneError(isPhoneEmpty);
+    setShowBirthError(isBirthEmpty);
+
+    // 모든 필드가 유효한 경우에만 요청 보내기
+    if (
+      !isEmailEmpty &&
+      !isPasswordEmpty &&
+      !isNameEmpty &&
+      !isPhoneEmpty &&
+      !isBirthEmpty &&
+      !isAddressEmpty
+    ) {
+      sendPostRequest();
+    }
   };
 
   return (
