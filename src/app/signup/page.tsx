@@ -61,6 +61,23 @@ export default function SignUp() {
     setShowPasswordCheckError(!isValid);
   };
 
+  // 이름 상태관리
+  const [isNameValid, setNameValid] = useState(true);
+  const [showNameError, setShowNameError] = useState(false);
+
+  // 이름 유효성 검사 (한글만 허용)
+  const validateName = (name) => {
+    return /^[가-힣]+$/.test(name);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nameValue = e.target.value;
+    const isValid = validateName(nameValue);
+    setNameValid(isValid);
+    setShowNameError(!isValid);
+    setName(nameValue);
+  };
+
   interface AddressData {
     address: string;
   }
@@ -190,12 +207,15 @@ export default function SignUp() {
             id="name"
             type="text"
             aria-errormessage="nameError"
-            placeholder="이름"
-            onChange={(e) => setName(e.target.value)}
+            aria-invalid={!isNameValid}
+            onChange={handleNameChange}
+            placeholder="이름 (한글만 입력)"
           />
-          <div id="nameError" aria-live="polite">
-            이름 오류 메세지
-          </div>
+          {showNameError && (
+            <div id="nameError" aria-live="polite" className="text-red-500">
+              한글 이름을 입력해주세요.
+            </div>
+          )}
           <label htmlFor="phone"></label>
           <input
             id="phone"
