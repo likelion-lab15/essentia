@@ -3,21 +3,20 @@ import { Filter } from "@/components/_index";
 
 export default function layout({ children }: { children: ReactNode }) {
   return (
-    <main>
-      <h2>내 페이지</h2>
+    <main className="mx-auto w-[1280px]">
+      {/* <h2>내 페이지</h2> */}
       {/* 상단 콘텐츠 */}
-      <div>
-        <span>TTP님</span>환영합니다
-      </div>
-
-      {/* 하단 콘텐츠 */}
-      <div>
-        <div>
-          {/* 필터 */}
-          <Filter />
-          {/* 페이지 콘텐츠 */}
-          {children}
+      <div className="relative mb-[62px] h-[300px] items-center border-b-[1px] border-black text-[32px]">
+        <div className="absolute left-0 top-[50%]">
+          <span className="text-[48px] font-bold">현지수 </span>님 환영합니다
         </div>
+      </div>
+      {/* 하단 콘텐츠 */}
+      <div className="flex">
+        {/* 필터 */}
+        <Filter />
+        {/* 페이지 콘텐츠 */}
+        {children}
       </div>
     </main>
   );
