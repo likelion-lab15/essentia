@@ -10,14 +10,19 @@ export default function Header() {
       className="h-[80px] border-b border-primary pl-[60px] pr-[60px]"
     >
       <nav
-        aria-label="Main navigation"
+        aria-label="메인 네비게이션"
         className="flex items-center justify-between"
       >
         <Link
           href="/"
           className="flex h-[80px] w-[140px] items-center justify-center"
         >
-          <Image src="/Logo.png" alt="Home" width={120} height={55} />
+          <Image
+            src="/Logo.png"
+            alt="홈페이지로 이동하는 로고 이미지"
+            width={120}
+            height={55}
+          />
         </Link>
         <ul className="text-primary-500 flex w-[500px] justify-between text-16 ">
           <li>
@@ -54,34 +59,49 @@ export default function Header() {
 
         <div className="flex h-[80px] w-[280px] justify-between pl-[80px] ">
           <button
-            aria-label="Open search"
+            aria-label="검색창 열기"
             onClick={() => {}}
             className="bg-center bg-no-repeat"
           >
-            <Image src="/search-icon.svg" alt="Home" width={24} height={24} />
+            <Image
+              src="/search-icon.svg"
+              alt="검색 아이콘"
+              width={24}
+              height={24}
+            />
           </button>
           <button
-            aria-label="My Page"
+            aria-label="마이페이지로 이동하기"
             onClick={() => {}}
             className="bg-center bg-no-repeat"
           >
-            <Image src="/user-icon.svg" alt="Home" width={24} height={24} />
+            <Image
+              src="/user-icon.svg"
+              alt="유저 아이콘"
+              width={24}
+              height={24}
+            />
           </button>
           <button
-            aria-label="Sign In"
+            aria-label="로그인 또는 로그아웃하기"
             onClick={() => {}}
             className="bg-center bg-no-repeat"
           >
-            <Image src="/signin-icon.svg" alt="Home" width={24} height={24} />
+            <Image
+              src="/signin-icon.svg"
+              alt="로그인 로그아웃 아이콘"
+              width={24}
+              height={24}
+            />
           </button>
           <button
-            aria-label="Wish List"
+            aria-label="찜 목록 보기"
             onClick={() => {}}
             className="bg-center bg-no-repeat"
           >
             <Image
               src="/blackheart-icon.svg"
-              alt="Home"
+              alt="찜 아이콘"
               width={24}
               height={24}
             />
