@@ -1,4 +1,6 @@
 import { ReactNode } from "react";
+import { userInfoList, shoppingInfoList } from "@/constants/_index";
+import { FilterList } from "@/components/_index";
 import { Filter } from "@/containers/_index";
 
 export default function layout({ children }: { children: ReactNode }) {
@@ -14,7 +16,10 @@ export default function layout({ children }: { children: ReactNode }) {
       {/* 하단 콘텐츠 */}
       <div className="flex">
         {/* 필터 */}
-        <Filter />
+        <Filter title="MY PAGE">
+          <FilterList list={shoppingInfoList} />
+          <FilterList list={userInfoList} />
+        </Filter>
         {/* 페이지 콘텐츠 */}
         {children}
       </div>
