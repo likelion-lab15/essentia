@@ -34,6 +34,13 @@ const config: Config = {
         medium: "500",
         extrabold: "800",
       },
+      colors: {
+        primary: "#222222",
+        white: "#ffffff",
+        tertiary: "#808080",
+        secondary: "#A0D1EF",
+        warning: "#D7260D",
+      },
     },
   },
   plugins: [],
