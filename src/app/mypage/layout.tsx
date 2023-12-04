@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Filter } from "@/components/_index";
+import { Filter } from "@/containers/_index";
 
 export default function layout({ children }: { children: ReactNode }) {
   return (
