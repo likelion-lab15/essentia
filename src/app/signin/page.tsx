@@ -55,54 +55,94 @@ export default function SignIn() {
   };
 
   return (
-    <main>
-      <h2>로그인</h2>
+    <main className="flex h-screen flex-col items-center justify-center">
+      <h2 className="mb-[57px] text-[36px] font-bold">로그인</h2>
 
-      <form onSubmit={handleSignIn}>
-        <label htmlFor="email">이메일</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          ref={emailRef}
-          placeholder="example@essentia.co.kr"
-        />
-        <div
-          aria-live="polite"
-          className={cn("hidden text-red-500", {
-            block: checkUser,
-          })}
-        >
-          아이디를 확인해주세요
+      <form className="flex w-[400px] flex-col" onSubmit={handleSignIn}>
+        <div className="mb-[6px] flex flex-col">
+          <label htmlFor="email" className="h-[32px] text-[14px] font-bold">
+            이메일 주소
+          </label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            ref={emailRef}
+            placeholder="example@essentia.co.kr"
+            className="mb-[26px] h-[32px] border-b border-black text-[14px] font-medium"
+          />
+          <div
+            aria-live="polite"
+            className={cn("hidden text-[12px] text-red-500", {
+              block: checkUser,
+            })}
+          >
+            아이디를 확인해주세요
+          </div>
         </div>
-        <label htmlFor="password">비밀번호</label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          ref={passwordRef}
-          placeholder="영문 대/소문자, 숫자 및 특수문자를 포함한 비밀번호"
-        />
-        <div
-          aria-live="polite"
-          className={cn("hidden text-red-500", {
-            block: checkUser,
-          })}
-        >
-          비밀번호를 확인해주세요
+        <div className="mb-[26px] flex flex-col">
+          <label htmlFor="password" className="h-[32px] text-[14px] font-bold">
+            비밀번호
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            ref={passwordRef}
+            placeholder="영문 대/소문자, 숫자 및 특수문자를 포함한 비밀번호"
+            className="mb-[26px] h-[32px] border-b border-black text-[14px] font-medium"
+          />
+          <div
+            aria-live="polite"
+            className={cn("hidden text-[12px] text-red-500", {
+              block: checkUser,
+            })}
+          >
+            비밀번호를 확인해주세요
+          </div>
         </div>
-        <button type="submit">이메일로 로그인</button>
+        <button
+          type="submit"
+          className="mb-[20px] h-[50px] bg-black text-[18px] font-bold text-white"
+        >
+          이메일로 로그인
+        </button>
       </form>
 
-      <div>
-        <Link href="/signup">이메일 회원가입</Link>
-        <button>이메일 찾기</button>
-        <button>비밀번호 찾기</button>
+      <div className="mb-[20px] flex w-[400px] items-center justify-around">
+        <Link
+          href="/signup"
+          className="flex h-[32px] w-[100px] items-center justify-center text-[14px] font-medium"
+        >
+          이메일 회원가입
+        </Link>
+        <button
+          type="button"
+          className="h-[32px] w-[100px] text-[14px] font-medium"
+        >
+          이메일 찾기
+        </button>
+        <button
+          type="button"
+          className="h-[32px] w-[100px] text-[14px] font-medium"
+        >
+          비밀번호 찾기
+        </button>
       </div>
 
-      <div>
-        <button type="button">카카오로 로그인</button>
-        <button type="button">네이버로 로그인</button>
+      <div className="flex w-[400px] items-center justify-around">
+        <button
+          type="button"
+          className="h-[50px] w-[190px] bg-[#FEE500] text-[14px] font-semibold"
+        >
+          카카오로 로그인
+        </button>
+        <button
+          type="button"
+          className="h-[50px] w-[190px] bg-[#03C75A] text-[14px] font-semibold text-white"
+        >
+          네이버로 로그인
+        </button>
       </div>
     </main>
   );
