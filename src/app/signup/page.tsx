@@ -1,11 +1,10 @@
 "use client";
 import axios from "axios";
 import React, { useState } from "react";
-import Header from "@/components/Header";
-import { AddressModal } from "@/components/_index";
+import { AddressModal, Header } from "@/components/_index";
 
 export default function SignUp() {
-  type AddressData = {
+  type TAddressData = {
     address: string;
   };
 
@@ -174,7 +173,7 @@ export default function SignUp() {
     setBirth(birthValue);
   };
 
-  const handleAddressChange = (data: AddressData) => {
+  const handleAddressChange = (data: TAddressData) => {
     setAddress(data.address);
     setAddressModalOpen(false);
   };
