@@ -37,11 +37,17 @@ export default function ShoppingInfo() {
               <td>2023.11.26</td>
               <td className="text-left">BYREDO 상탈 33 EDT</td>
               <td>195,000 원</td>
-              <td className="">
-                <button type="button" className="h-[50px] w-[70px]">
+              <td className="w-fit">
+                <button
+                  type="button"
+                  className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                >
                   작성
                 </button>
-                <button type="button" className="h-[50px] w-[70px]">
+                <button
+                  type="button"
+                  className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                >
                   수정
                 </button>
               </td>
@@ -68,10 +74,16 @@ export default function ShoppingInfo() {
               <td className="text-left">BYREDO 상탈 33 EDT</td>
               <td>195,000 원</td>
               <td className="">
-                <button type="button" className="h-[50px] w-[70px]">
+                <button
+                  type="button"
+                  className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                >
                   작성
                 </button>
-                <button type="button" className="h-[50px] w-[70px]">
+                <button
+                  type="button"
+                  className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                >
                   수정
                 </button>
               </td>
