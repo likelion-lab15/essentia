@@ -1,19 +1,15 @@
 "use client";
 // 노드 모듈 / 외부 라이브러리 임포트
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // 프로젝트 내부 임포트
-import { useUserStore } from "@/stores/useUserStore";
 import { cn } from "@/utils/_index";
 
 export default function SignIn() {
   /* 상태 변수 */
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
-
   const [checkUser, setCheckUser] = useState(false);
 
   const emailRef = useRef(null);
@@ -21,13 +17,6 @@ export default function SignIn() {
 
   /* 훅스 */
   const router = useRouter();
-
-  /* 라이프 사이클 */
-  useEffect(() => {
-    if (user._id) {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
-  }, [user]);
 
   /* 이벤트 핸들러 */
   const handleSignIn = async (e) => {
@@ -42,7 +31,8 @@ export default function SignIn() {
         password: password,
       })
       .then((res) => {
-        setUser(res.data.item);
+        const userData = JSON.stringify(res.data.item);
+        localStorage.setItem("user", userData);
         setCheckUser(false);
         alert("로그인 성공!");
         router.push("/");
