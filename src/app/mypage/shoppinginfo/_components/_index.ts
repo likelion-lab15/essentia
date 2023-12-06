@@ -1,3 +1,4 @@
 export { default as BuyHistoryTable } from "./BuyHistoryTable";
-export { default as SellHistoryTable } from "./SellHistoryTable";
 export { default as Membership } from "./Membership";
+export { default as MoreButton } from "./MoreButton";
+export { default as SellHistoryTable } from "./SellHistoryTable";
