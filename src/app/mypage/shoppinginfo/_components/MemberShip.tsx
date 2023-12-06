@@ -1,6 +1,6 @@
 import React from "react";
 
-const MemberShip = () => {
+const Membership = () => {
   return (
     <div className="mb-[65px] flex h-[150px] items-center justify-between bg-[#222] text-white">
       <div className="flex-1 py-[35px] pl-[40px]">
@@ -19,4 +19,4 @@ const MemberShip = () => {
   );
 };
 
-export default MemberShip;
+export default Membership;
