@@ -6,10 +6,10 @@ const SellHistoryTable = () => {
       </caption>
       <tbody>
         <tr className="h-[50px] border-b-[1px] border-black text-[18px] font-bold">
-          <th>등록일</th>
-          <th>상품정보</th>
-          <th>등록금액</th>
-          <th>관리</th>
+          <th className="w-[10%]">등록일</th>
+          <th className="w-[30%]">상품정보</th>
+          <th className="w-[10%]">판매금액</th>
+          <th className="w-[10%]">상품관리</th>
         </tr>
         <tr className="h-[50px] border-b-[1px] border-black text-center text-[18px] font-medium">
           <td>2023.11.26</td>

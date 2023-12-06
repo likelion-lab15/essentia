@@ -31,26 +31,28 @@ const BuyHistoryTable = () => {
       </caption>
       <tbody>
         <tr className="h-[50px] border-b-[1px] border-black text-[18px] font-bold">
-          <th>구매일</th>
-          <th>상품정보</th>
-          <th>결제금액</th>
-          <th>리뷰</th>
+          <th className="w-[10%]">구매일</th>
+          <th className="w-[30%]">상품정보</th>
+          <th className="w-[10%]">결제금액</th>
+          <th className="w-[10%]">리뷰</th>
         </tr>
         {buyHistory?.map((item, index) => {
           const { cost, createdAt, products } = item;
 
           // 구매 상품이 1개 이상일 때
-          const more = products.length > 1 ? `외 ${products.length}개` : "";
+          const etc = products.length > 1 ? `외 ${products.length}개` : "";
 
           return (
             <tr
               key={index}
               className="h-[50px] border-b-[1px] border-black text-center text-[18px] font-medium"
             >
-              <td>{createdAt.split(" ")[0]}</td>
-              <td className="text-left">{`${products[0].name} ${more}`}</td>
-              <td>{cost.total.toLocaleString("ko-KR")} 원</td>
-              <td>
+              <td className="w-[10%]">{createdAt.split(" ")[0]}</td>
+              <td className="w-[30%] text-left">{`${products[0].name} ${etc}`}</td>
+              <td className="w-[10%]">
+                {cost.total.toLocaleString("ko-KR")} 원
+              </td>
+              <td className="w-[10%]">
                 <button
                   type="button"
                   className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
