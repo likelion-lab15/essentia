@@ -1,4 +1,5 @@
 "use client";
+import Header from "@/components/Header";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
@@ -9,6 +10,7 @@ export default function Sell() {
     content: "",
     shippingFees: "",
     mainImages: [],
+    extra: { depth: 1 },
   });
   const [files, setFiles] = useState([]);
 
@@ -108,137 +110,143 @@ export default function Sell() {
   };
 
   return (
-    <section className="flex flex-col items-center">
-      <div className="flex h-[180px] items-center justify-center">
-        <h2 className="w-[900px] text-center text-36 font-bold">
-          판매 상품 등록
-        </h2>
-      </div>
+    <>
+      <Header />
+      <section className="flex flex-col items-center">
+        <div className="flex h-[180px] items-center justify-center">
+          <h2 className="w-[900px] text-center text-36 font-bold">
+            판매 상품 등록
+          </h2>
+        </div>
 
-      <form onSubmit={handleSubmit} className="w-[1200px]">
-        <div className="h-[138px] border-b-[1px] border-tertiary">
-          <label htmlFor="name" className="mr-[100px] text-18 font-bold">
-            상품명
-          </label>
-          <input
-            type="text"
-            name="name"
-            placeholder="제품명"
-            value={product.name}
-            onChange={handleChange}
-            className="w-[745px] border-b-[5px] border-primary"
-          />
-        </div>
-        <div className="h-[138px] border-b-[1px] border-tertiary pt-[50px]">
-          <label htmlFor="amount" className="mr-[100px] text-18 font-bold">
-            향수 용량
-          </label>
-          <select name="amount" id="amount" className="w-[300px]">
-            <option value="50ml">50ml</option>
-            <option value="100ml">100ml</option>
-          </select>
-        </div>
-        <div className="h-[280px] border-b-[1px] border-tertiary pt-[50px]">
-          <label htmlFor="file" className="mr-[100px] text-18 font-bold">
-            상품이미지
-          </label>
-          <input
-            type="file"
-            name="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileChange}
-          />
-          {Array.from(files).map((file, index) => (
-            <img
-              key={index}
-              src={URL.createObjectURL(file)}
-              alt={`file-${index}`}
-              style={{ width: "100px", height: "100px", marginRight: "10px" }}
+        <form onSubmit={handleSubmit} className="w-[1200px]">
+          <div className="h-[138px] border-b-[1px] border-tertiary">
+            <label htmlFor="name" className="mr-[100px] text-18 font-bold">
+              상품명
+            </label>
+            <input
+              type="text"
+              name="name"
+              placeholder="제품명"
+              value={product.name}
+              onChange={handleChange}
+              className="w-[745px] border-b-[5px] border-primary"
             />
-          ))}
-        </div>
-        <div className="h-[195px] border-b-[1px] border-tertiary pt-[50px]">
-          <label htmlFor="restamount" className="mr-[100px] text-18 font-bold">
-            남은 용량
-          </label>
-          <input
-            type="text"
-            name="restamount"
-            placeholder="ml"
-            onChange={handleChange}
-            className="w-[250px] border-b-[2px] border-primary"
-          />
-          <label
-            htmlFor="price"
-            className="ml-[120px] mr-[100px] text-18 font-bold"
-          >
-            가격
-          </label>
-          <input
-            type="number"
-            name="price"
-            placeholder="원"
-            value={product.price}
-            onChange={handleChange}
-            className="mr-[270px] w-[250px] border-b-[2px] border-primary"
-          />
-          <div className="mt-[40px]">
+          </div>
+          <div className="h-[138px] border-b-[1px] border-tertiary pt-[50px]">
+            <label htmlFor="amount" className="mr-[100px] text-18 font-bold">
+              향수 용량
+            </label>
+            <select name="amount" id="amount" className="w-[300px]">
+              <option value="50ml">50ml</option>
+              <option value="100ml">100ml</option>
+            </select>
+          </div>
+          <div className="h-[280px] border-b-[1px] border-tertiary pt-[50px]">
+            <label htmlFor="file" className="mr-[100px] text-18 font-bold">
+              상품이미지
+            </label>
+            <input
+              type="file"
+              name="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+            />
+            {Array.from(files).map((file, index) => (
+              <img
+                key={index}
+                src={URL.createObjectURL(file)}
+                alt={`file-${index}`}
+                style={{ width: "100px", height: "100px", marginRight: "10px" }}
+              />
+            ))}
+          </div>
+          <div className="h-[195px] border-b-[1px] border-tertiary pt-[50px]">
             <label
-              htmlFor="shippingFees"
-              className="mr-[120px] text-18 font-bold"
+              htmlFor="restamount"
+              className="mr-[100px] text-18 font-bold"
             >
-              배송비
+              남은 용량
+            </label>
+            <input
+              type="text"
+              name="restamount"
+              placeholder="ml"
+              onChange={handleChange}
+              className="w-[250px] border-b-[2px] border-primary"
+            />
+            <label
+              htmlFor="price"
+              className="ml-[120px] mr-[100px] text-18 font-bold"
+            >
+              가격
             </label>
             <input
               type="number"
-              name="shippingFees"
+              name="price"
               placeholder="원"
-              value={product.shippingFees}
+              value={product.price}
               onChange={handleChange}
-              className="w-[250px] border-b-[2px] border-primary"
+              className="mr-[270px] w-[250px] border-b-[2px] border-primary"
             />
-            <label
-              htmlFor="date"
-              className="ml-[120px] mr-[65px] text-18 font-bold"
-            >
-              구매 일시
-            </label>
-            <input
-              type="date"
-              name="date"
-              onChange={handleChange}
-              className="w-[250px] border-b-[2px] border-primary"
-            />
+            <div className="mt-[40px]">
+              <label
+                htmlFor="shippingFees"
+                className="mr-[120px] text-18 font-bold"
+              >
+                배송비
+              </label>
+              <input
+                type="number"
+                name="shippingFees"
+                placeholder="원"
+                value={product.shippingFees}
+                onChange={handleChange}
+                className="w-[250px] border-b-[2px] border-primary"
+              />
+              <label
+                htmlFor="date"
+                className="ml-[120px] mr-[65px] text-18 font-bold"
+              >
+                구매 일시
+              </label>
+              <input
+                type="date"
+                name="date"
+                onChange={handleChange}
+                className="w-[250px] border-b-[2px] border-primary"
+              />
+            </div>
           </div>
-        </div>
-        <div className="relative h-[320px] border-b-[1px] border-tertiary pt-[50px]">
-          <label
-            htmlFor="content"
-            className="absolute top-[50px] text-18 font-bold"
-          >
-            설명
-          </label>
-          <textarea
-            name="content"
-            id="text"
-            cols={100}
-            rows={8}
-            placeholder="제품의 상태 (사용감, 하자 유무) 등을 입력해 주세요."
-            value={product.content}
-            onChange={handleChange}
-            className="absolute left-[100px] border-[1px] border-tertiary pl-[16px] pt-[16px]"
-          ></textarea>
-        </div>
-        <div className="mt-[90px] flex h-[195px] flex-row justify-center gap-[16px]">
-          <button className="h-[48px] w-[322px] border-[1px] border-primary">
-            임시저장
-          </button>
-          <button className="h-[48px] w-[322px] bg-primary text-white">
-            등록하기
-          </button>
-        </div>
-      </form>
-    </section>
+          <div className="relative h-[320px] border-b-[1px] border-tertiary pt-[50px]">
+            <label
+              htmlFor="content"
+              className="absolute top-[50px] text-18 font-bold"
+            >
+              설명
+            </label>
+            <textarea
+              name="content"
+              id="text"
+              cols={100}
+              rows={8}
+              placeholder="제품의 상태 (사용감, 하자 유무) 등을 입력해 주세요."
+              value={product.content}
+              onChange={handleChange}
+              className="absolute left-[100px] border-[1px] border-tertiary pl-[16px] pt-[16px]"
+            ></textarea>
+          </div>
+          <div className="mt-[90px] flex h-[195px] flex-row justify-center gap-[16px]">
+            <button className="h-[48px] w-[322px] border-[1px] border-primary">
+              임시저장
+            </button>
+            <button className="h-[48px] w-[322px] bg-primary text-white">
+              등록하기
+            </button>
+          </div>
+        </form>
+      </section>
+    </>
   );
 }
