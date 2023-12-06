@@ -67,25 +67,6 @@ const BuyHistoryTable = () => {
             </tr>
           );
         })}
-        {/* <tr className="h-[50px] border-b-[1px] border-black text-center text-[18px] font-medium">
-          <td>2023.11.26</td>
-          <td className="text-left">BYREDO 상탈 33 EDT</td>
-          <td>195,000 원</td>
-          <td>
-            <button
-              type="button"
-              className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-            >
-              작성
-            </button>
-            <button
-              type="button"
-              className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-            >
-              수정
-            </button>
-          </td>
-        </tr> */}
       </tbody>
     </table>
   );
