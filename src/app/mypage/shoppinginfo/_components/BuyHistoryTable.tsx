@@ -16,7 +16,7 @@ const BuyHistoryTable = () => {
             Authorization: `Bearer ${getAccessToken()}`,
           },
         });
-        const data = response.data.item;
+        const data = response.data.item.slice(0, 5);
         setBuyHistory(data);
       } catch (err) {
         console.log(err);

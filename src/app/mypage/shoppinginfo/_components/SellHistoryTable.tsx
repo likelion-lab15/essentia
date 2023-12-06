@@ -19,13 +19,14 @@ const SellHistoryTable = () => {
             },
           }
         );
-        const data = response.data.item;
+        const data = response.data.item.slice(0, 5);
         setSellHistory(data);
       } catch (err) {
         console.log(err);
       }
     })();
   }, []);
+
   return (
     <table className="mb-[66px] w-[100%]">
       <caption className="h-[64px] border-b-[3px] border-black text-left text-[28px] font-bold">
