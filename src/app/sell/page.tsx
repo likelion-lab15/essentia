@@ -8,11 +8,14 @@ export default function Sell() {
     name: "",
     price: "",
     content: "",
-    shippingFees: "",
     mainImages: [],
-    extra: { depth: 1 },
+    shippingFees: "",
+    show: true,
+    active: true,
+    quantity: 200,
+    buyQuantity: 198,
+    extra: { depth: 2, parent: "" },
   });
-  const [files, setFiles] = useState([]);
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +46,7 @@ export default function Sell() {
           },
         }
       );
-      // 업로도된 파일들의 경로를 배열로 반환
+      // 업로도된 파일들의 경로를 배열로 반환 -> 이미지 파일 최대 10개 등록가능
       return response.data.files.map((file: any) => file.path);
     } catch (error) {
       console.error("파일 업로드 오류", error);
@@ -133,15 +136,6 @@ export default function Sell() {
               className="w-[745px] border-b-[5px] border-primary"
             />
           </div>
-          <div className="h-[138px] border-b-[1px] border-tertiary pt-[50px]">
-            <label htmlFor="amount" className="mr-[100px] text-18 font-bold">
-              향수 용량
-            </label>
-            <select name="amount" id="amount" className="w-[300px]">
-              <option value="50ml">50ml</option>
-              <option value="100ml">100ml</option>
-            </select>
-          </div>
           <div className="h-[280px] border-b-[1px] border-tertiary pt-[50px]">
             <label htmlFor="file" className="mr-[100px] text-18 font-bold">
               상품이미지
@@ -153,14 +147,14 @@ export default function Sell() {
               multiple
               onChange={handleFileChange}
             />
-            {Array.from(files).map((file, index) => (
+            {/* {Array.from(files).map((file, index) => (
               <img
                 key={index}
                 src={URL.createObjectURL(file)}
                 alt={`file-${index}`}
                 style={{ width: "100px", height: "100px", marginRight: "10px" }}
               />
-            ))}
+            ))} */}
           </div>
           <div className="h-[195px] border-b-[1px] border-tertiary pt-[50px]">
             <label
