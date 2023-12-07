@@ -21,7 +21,12 @@ export default function Sell() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     // 가격 및 배송비는 숫자로 변환하여 상태 업데이트
-    if (name === "price" || name === "shippingFees" || name === "restamount") {
+    if (
+      name === "price" ||
+      name === "shippingFees" ||
+      name === "restamount" ||
+      name === "date"
+    ) {
       const intValue = value ? parseInt(value, 10) : 0;
       setProduct({
         ...product,
