@@ -38,13 +38,13 @@ export default function History() {
       {/* 3. 구매 내역 */}
       <div className="relative">
         <BuyHistoryTable buyHistoryData={buySlicedHistoryData} />
-        <MoreButton path={"/mypage/history/buyhistory"} />
+        <MoreButton href={"/mypage/history/buyhistory"} />
       </div>
 
       {/* 4. 판매 내역 */}
       <div className="relative">
         <SellHistoryTable sellHistoryData={sellSlicedHistoryData} />
-        <MoreButton path={"/mypage/history/sellhistory"} />
+        <MoreButton href={"/mypage/history/sellhistory"} />
       </div>
     </section>
   );
