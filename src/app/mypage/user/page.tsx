@@ -1,4 +1,4 @@
-export default function UserInfo() {
+export default function User() {
   return (
     <section className="w-[1000px]">
       <div className="flex h-[70px] items-center border-b-[3px] border-[#222]">
