@@ -9,25 +9,34 @@ export default function Sell() {
     price: "",
     content: "",
     mainImages: [],
-    shippingFees: "",
+    shippingFees: 0,
     show: true,
     active: true,
     quantity: 200,
     buyQuantity: 198,
-    extra: { depth: 2, parent: "" },
+    extra: { depth: 2, parent: "", restamount: "", date: "" },
   });
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     // 가격 및 배송비는 숫자로 변환하여 상태 업데이트
-    if (name === "price" || name === "shippingFees") {
+    if (name === "price" || name === "shippingFees" || name === "restamount") {
       const intValue = value ? parseInt(value, 10) : 0;
-      setProduct({ ...product, [name]: intValue });
+      setProduct({
+        ...product,
+        [name]: intValue,
+        extra: {
+          ...product.extra,
+          [name]: intValue, // extra 내의 동일한 속성도 업데이트
+        },
+      });
     } else {
       setProduct({ ...product, [name]: value });
     }
   };
+
+  // console.log(product.extra.date);
 
   // 파일 업로드 처리 함수
   const uploadFiles = async (files: any) => {
@@ -167,6 +176,7 @@ export default function Sell() {
               type="text"
               name="restamount"
               placeholder="ml"
+              value={product.extra.restamount}
               onChange={handleChange}
               className="w-[250px] border-b-[2px] border-primary"
             />
@@ -185,29 +195,14 @@ export default function Sell() {
               className="mr-[270px] w-[250px] border-b-[2px] border-primary"
             />
             <div className="mt-[40px]">
-              <label
-                htmlFor="shippingFees"
-                className="mr-[120px] text-18 font-bold"
-              >
-                배송비
-              </label>
-              <input
-                type="number"
-                name="shippingFees"
-                placeholder="원"
-                value={product.shippingFees}
-                onChange={handleChange}
-                className="w-[250px] border-b-[2px] border-primary"
-              />
-              <label
-                htmlFor="date"
-                className="ml-[120px] mr-[65px] text-18 font-bold"
-              >
+              <label htmlFor="date" className="mr-[100px] text-18 font-bold">
                 구매 일시
               </label>
               <input
-                type="date"
+                type="text"
                 name="date"
+                placeholder="예) 20220707"
+                value={product.extra.date}
                 onChange={handleChange}
                 className="w-[250px] border-b-[2px] border-primary"
               />
