@@ -110,18 +110,25 @@ export default function ProductDetail() {
           </ul>
         </nav>
         {/* 상세 이미지 SECTION */}
-        <section className="h-[2000px] w-[1280px] border border-secondary">
+        <section className="flex h-[600px] w-[1280px] items-center justify-center border ">
           <h3>제품 설명 이미지</h3>
         </section>
+
+        {/* 구분선 */}
+        <div className="h-0 w-full border-b-2 border-primary"></div>
         {/* 리뷰, 추천 상품 SECTION */}
-        <section className="h-[1450px] w-[1280px] border border-blue-500">
-          <div className="h-[555px] border border-pink-700">
-            <h3>REVIEW</h3>
-          </div>
-          <div className="h-[600px] border border-pink-700">
-            <h3>추천 상품</h3>
-          </div>
-        </section>
+        <div className="flex h-[1450px] w-[1280px] flex-col items-center justify-center">
+          {/* 리뷰 */}
+          <section className="mb-[100px] h-[555px] w-full border border-pink-700">
+            <h3 className="mb-[80px] text-48 font-bold">REVIEW</h3>
+            <p className="mb-[16px] border text-20 font-medium">전체후기</p>
+            <div className=""></div>
+          </section>
+          {/* 추천 상품 */}
+          <section className="h-[600px] w-full border border-pink-700">
+            <h3 className="text-48 font-bold">추천 상품</h3>
+          </section>
+        </div>
       </main>
     </>
   );
