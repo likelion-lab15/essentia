@@ -14,7 +14,7 @@ export default function Admin() {
     active: true,
     quantity: 200,
     buyQuantity: 198,
-    extra: { depth: 1, amount: "" },
+    extra: { depth: 1, amount: "", brand: "" },
   });
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -27,10 +27,16 @@ export default function Admin() {
     if (name === "price" || name === "shippingFees") {
       const intValue = value ? parseInt(value, 10) : 0;
       setProduct({ ...product, [name]: intValue });
-    } else if (name === "amount") {
-      setProduct({ ...product, extra: { ...product.extra, amount: value } });
+    } else if (name === "amount" || name === "brand") {
+      setProduct({
+        ...product,
+        extra: { ...product.extra, [name]: value },
+      });
     } else {
-      setProduct({ ...product, [name]: value });
+      setProduct({
+        ...product,
+        [name]: value,
+      });
     }
   };
 
@@ -139,6 +145,19 @@ export default function Admin() {
 
         <form onSubmit={handleSubmit} className="w-[1200px]">
           <div className="h-[138px] border-b-[1px] border-tertiary">
+            <label htmlFor="brand" className="mr-[100px] text-18 font-bold">
+              브랜드
+            </label>
+            <input
+              type="text"
+              name="brand"
+              placeholder="브랜드명"
+              value={product.extra.brand}
+              onChange={handleChange}
+              className="w-[745px] border-b-[5px] border-primary"
+            />
+          </div>
+          <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary pb-[50px]">
             <label htmlFor="name" className="mr-[100px] text-18 font-bold">
               상품명
             </label>
