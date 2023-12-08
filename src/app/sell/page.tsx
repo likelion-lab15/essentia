@@ -16,11 +16,12 @@ export default function Sell() {
     buyQuantity: 198,
     extra: { depth: 2, parent: "", restamount: "", date: "" },
   });
+  const [previewImages, setPreviewImages] = useState([]);
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    // 가격 및 배송비는 숫자로 변환하여 상태 업데이트
+    // 가격, 배송비, 남은용량, 구매일시 숫자로 변환하여 상태 업데이트
     if (
       name === "price" ||
       name === "shippingFees" ||
@@ -33,15 +34,13 @@ export default function Sell() {
         [name]: intValue,
         extra: {
           ...product.extra,
-          [name]: intValue, // extra 내의 동일한 속성도 업데이트
+          [name]: intValue,
         },
       });
     } else {
       setProduct({ ...product, [name]: value });
     }
   };
-
-  // console.log(product.extra.date);
 
   // 파일 업로드 처리 함수
   const uploadFiles = async (files: any) => {
@@ -60,8 +59,10 @@ export default function Sell() {
           },
         }
       );
-      // 업로도된 파일들의 경로를 배열로 반환 -> 이미지 파일 최대 10개 등록가능
-      return response.data.files.map((file: any) => file.path);
+      // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 최대 10개 등록가능
+      return response.data.files.map(
+        (file: any) => `https://localhost${file.path}`
+      );
     } catch (error) {
       console.error("파일 업로드 오류", error);
       return [];
@@ -71,10 +72,16 @@ export default function Sell() {
   // 파일 선택 시, 업로드 함수 호출 및 mainImages 상태 업데이트
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
+      // 최대 10개 파일 업로드로 제한
+      const files = Array.from(e.target.files).slice(0, 10);
       // 파일 업로드 함수 호출
-      const uploadedPaths = await uploadFiles(Array.from(e.target.files));
+      const uploadedPaths = await uploadFiles(files);
       // mainImages 상태 업데이트
       setProduct({ ...product, mainImages: uploadedPaths });
+      // 각 파일에 대한 미리보기 URL 생성
+      const previewUrls = files.map((file) => URL.createObjectURL(file));
+      // 미리보기 URL들을 상태에 저장
+      setPreviewImages(previewUrls);
     }
   };
 
@@ -161,14 +168,20 @@ export default function Sell() {
               multiple
               onChange={handleFileChange}
             />
-            {/* {Array.from(files).map((file, index) => (
-              <img
-                key={index}
-                src={URL.createObjectURL(file)}
-                alt={`file-${index}`}
-                style={{ width: "100px", height: "100px", marginRight: "10px" }}
-              />
-            ))} */}
+            <div className="ml-[160px] mt-[40px] flex flex-row">
+              {previewImages.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Preview ${index + 1}`}
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    marginRight: "10px",
+                  }}
+                />
+              ))}
+            </div>
           </div>
           <div className="h-[195px] border-b-[1px] border-tertiary pt-[50px]">
             <label
