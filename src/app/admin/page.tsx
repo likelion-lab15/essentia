@@ -14,16 +14,20 @@ export default function Admin() {
     active: true,
     quantity: 200,
     buyQuantity: 198,
-    extra: { depth: 1 },
+    extra: { depth: 1, amount: "" },
   });
 
   // 입력 값이 변경될 때 호출되는 함수
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     // 가격 및 배송비는 숫자로 변환하여 상태 업데이트
     if (name === "price" || name === "shippingFees") {
       const intValue = value ? parseInt(value, 10) : 0;
       setProduct({ ...product, [name]: intValue });
+    } else if (name === "amount") {
+      setProduct({ ...product, extra: { ...product.extra, amount: value } });
     } else {
       setProduct({ ...product, [name]: value });
     }
@@ -145,7 +149,12 @@ export default function Admin() {
             <label htmlFor="amount" className="mr-[100px] text-18 font-bold">
               향수 용량
             </label>
-            <select name="amount" id="amount" className="w-[300px]">
+            <select
+              name="amount"
+              id="amount"
+              className="w-[300px]"
+              onChange={handleChange}
+            >
               <option value="50ml">50ml</option>
               <option value="100ml">100ml</option>
             </select>
@@ -194,7 +203,7 @@ export default function Admin() {
               id="text"
               cols={100}
               rows={8}
-              placeholder="제품의 상태 (사용감, 하자 유무) 등을 입력해 주세요."
+              placeholder="상품 상세 설명을 입력해주세요."
               value={product.content}
               onChange={handleChange}
               className="absolute left-[100px] border-[1px] border-tertiary pl-[16px] pt-[16px]"
