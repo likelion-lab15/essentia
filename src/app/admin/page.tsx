@@ -16,6 +16,7 @@ export default function Admin() {
     buyQuantity: 198,
     extra: { depth: 1, amount: "" },
   });
+  const [previewImage, setPreviewImage] = useState(null);
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (
@@ -52,7 +53,7 @@ export default function Admin() {
       );
       // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 1개만 등록가능
       if (response.data.ok && response.data.file) {
-        return [response.data.file.path];
+        return [`https://localhost${response.data.file.path}`];
       } else {
         console.error("문제가있다아아아", response);
         return [];
@@ -66,14 +67,19 @@ export default function Admin() {
   // 파일 선택 시, 업로드 함수 호출 및 mainImages 상태 업데이트
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      // 단일 파일 업로드로 제한하기 위해 첫 번째 파일만 사용
-      const uploadedPaths = await uploadFiles([e.target.files[0]]);
+      // 단일 파일 업로드로 제한하기 위해 첫번째 파일만 사용
+      const file = e.target.files[0];
+      // 파일 업로드 함수 호출
+      const uploadedPaths = await uploadFiles([file]);
       // mainImages 상태 업데이트
       setProduct({ ...product, mainImages: uploadedPaths });
+      // 미리보기 URL 생성 및 저장
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewImage(previewUrl);
     }
   };
 
-  // mainImages 상태 업데잍 를 콘솔에 출력 (디버깅)
+  // mainImages 상태 업데이트를 콘솔에 출력 (디버깅)
   useEffect(() => {
     console.log(product.mainImages);
   }, [product.mainImages]);
@@ -169,14 +175,19 @@ export default function Admin() {
               accept="image/*"
               onChange={handleFileChange}
             />
-            {/* {Array.from(files).map((file, index) => (
-              <img
-                key={index}
-                src={URL.createObjectURL(file)}
-                alt={`file-${index}`}
-                style={{ width: "100px", height: "100px", marginRight: "10px" }}
-              />
-            ))} */}
+            <div className="ml-[160px] mt-[40px]">
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  alt="미리보기"
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    marginRight: "10px",
+                  }}
+                />
+              )}
+            </div>
           </div>
           <div className="h-[195px] border-b-[1px] border-tertiary pt-[50px]">
             <label htmlFor="price" className="mr-[100px] text-18 font-bold">
