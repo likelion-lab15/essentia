@@ -8,7 +8,7 @@ export default function ProductDetail() {
       <Header />
       <main className="flex flex-col items-center">
         {/* 메인 섹션 */}
-        <section className="h-[676px] w-[1280px] ">
+        <section className="flex h-[660px] w-[1280px] items-center justify-center ">
           {/* 상품 구매 + 판매 SECTION */}
           <div className="flex h-[560px] w-full flex-row items-center justify-between pl-[60px] pr-[60px]">
             {/* 향수 이미지 */}
