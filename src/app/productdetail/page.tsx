@@ -9,6 +9,7 @@ export default function ProductDetail() {
       <main className="flex flex-col items-center">
         {/* 메인 섹션 */}
         <section className="h-[676px] w-[1280px] ">
+          {/* 상품 구매 + 판매 SECTION */}
           <div className="flex h-[560px] w-full flex-row items-center justify-between pl-[60px] pr-[60px]">
             {/* 향수 이미지 */}
             <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
@@ -19,8 +20,7 @@ export default function ProductDetail() {
                 height={450}
               ></Image>
             </div>
-
-            {/* 상품 정보 및 상호작용 */}
+            {/* 사용자 상호작용 */}
             <div className="h-[444] w-[560px]">
               <p className="mb-[15px] h-[32px] w-[560px] border-b border-primary text-22 font-bold">
                 LE LABO
@@ -64,38 +64,56 @@ export default function ProductDetail() {
             </div>
           </div>
         </section>
+
+        {/* 상세페이지 네비게이션  */}
         <nav
           aria-label="상품 상세 네비게이션"
-          className="flex h-[64px] w-full flex-row justify-center border border-green-400"
+          className="flex h-[64px] w-full flex-row justify-center border-b-2 border-t-2 border-primary"
         >
-          <ul className="text-primary-500 flex h-[62px] w-[500px] justify-center border border-orange-600 text-16">
-            <li>
-              <Link href="/" accessKey="1">
+          <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-tertiary ">
+            <li className="w-[200px]">
+              <Link
+                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                href="/"
+                accessKey="1"
+              >
                 상품 상세정보
               </Link>
             </li>
             <li>
-              <Link href="/" accessKey="2">
+              <Link
+                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                href="/"
+                accessKey="2"
+              >
                 교환 및 반품안내
               </Link>
             </li>
             <li>
-              <Link href="/" accessKey="3">
+              <Link
+                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                href="/"
+                accessKey="3"
+              >
                 리뷰
               </Link>
             </li>
             <li>
-              <Link href="/" accessKey="4">
+              <Link
+                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                href="/"
+                accessKey="4"
+              >
                 추천 상품
               </Link>
             </li>
           </ul>
         </nav>
-        {/* 상세 이미지 섹션 */}
+        {/* 상세 이미지 SECTION */}
         <section className="h-[2000px] w-[1280px] border border-secondary">
           <h3>제품 설명 이미지</h3>
         </section>
-        {/* 상세 이미지 섹션 */}
+        {/* 리뷰, 추천 상품 SECTION */}
         <section className="h-[1450px] w-[1280px] border border-blue-500">
           <div className="h-[555px] border border-pink-700">
             <h3>REVIEW</h3>
