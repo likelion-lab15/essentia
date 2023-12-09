@@ -1,18 +1,13 @@
-"use client";
+import Link from "next/link";
 
-import { useRouter } from "next/navigation";
-
-const MoreButton = ({ path }) => {
-  const router = useRouter();
-
+const MoreButton = ({ href }) => {
   return (
-    <button
-      onClick={() => router.push(`${path}`)}
-      type="button"
+    <Link
+      href={href}
       className="absolute bottom-[-40px] right-0 text-[14px] font-medium text-[#808080] hover:text-[#222]"
     >
       + 더보기
-    </button>
+    </Link>
   );
 };
 
