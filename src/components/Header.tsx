@@ -1,9 +1,27 @@
 "use client";
-import React from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getAccessToken, fetchRefreshToken } from "@/utils/_index";
 
 export default function Header() {
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      const accessToken = getAccessToken();
+      const expirationTime = JSON.parse(atob(accessToken.split(".")[1])).exp;
+      const currentTime = new Date().getTime();
+      if (expirationTime <= currentTime) {
+        fetchRefreshToken()
+          .then(() => {
+            console.log("Your Token was refreshed");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      }
+    }
+  }, []);
+
   return (
     <header
       role="banner"
