@@ -1,9 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header, Button } from "@/components/_index";
 import axios from "axios";
 import Image from "next/image";
-import Link from "next/link";
 
 const REVIEWS_PER_PAGE = 5;
 export default function ProductDetail() {
@@ -11,7 +10,6 @@ export default function ProductDetail() {
   const [reviews, setReviews] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [countReviews, setCountReviews] = useState(0);
-
   const [currentPage, setCurrentPage] = useState(1);
 
   const currentReviews = reviews.slice(
@@ -25,6 +23,18 @@ export default function ProductDetail() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     setActiveIndex(null);
+  };
+
+  // 스크롤 이동
+  const detailInfoRef = useRef(null);
+  const returnInfoRef = useRef(null);
+  const reviewRef = useRef(null);
+  const recommendedProductsRef = useRef(null);
+
+  const scrollToSection = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   async function getProductInfo() {
@@ -123,56 +133,58 @@ export default function ProductDetail() {
         {/* 상세페이지 네비게이션  */}
         <nav
           aria-label="상품 상세 네비게이션"
-          className="flex h-[64px] w-full flex-row justify-center border-b-2 border-t-2 border-primary"
+          className="sticky top-0 z-10 flex h-[64px] w-full flex-row justify-center border-b-2 border-t-2 border-primary bg-white"
         >
-          <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-tertiary ">
+          <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-tertiary">
             <li className="w-[200px]">
-              <Link
+              <button
+                onClick={() => scrollToSection(detailInfoRef)}
                 className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
-                href="/"
-                accessKey="1"
               >
-                상품 상세정보
-              </Link>
+                상세정보
+              </button>
             </li>
             <li>
-              <Link
+              <button
+                onClick={() => scrollToSection(returnInfoRef)}
                 className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
-                href="/"
-                accessKey="2"
               >
                 교환 및 반품안내
-              </Link>
+              </button>
             </li>
             <li>
-              <Link
+              <button
+                onClick={() => scrollToSection(reviewRef)}
                 className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
-                href="/"
-                accessKey="3"
               >
                 리뷰
-              </Link>
+              </button>
             </li>
             <li>
-              <Link
+              <button
+                onClick={() => scrollToSection(recommendedProductsRef)}
                 className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
-                href="/"
-                accessKey="4"
               >
-                구 추천 상품
-              </Link>
+                추천 상품
+              </button>
             </li>
           </ul>
         </nav>
         {/* 상세 이미지 SECTION */}
-        <section className="flex h-[600px] w-[1280px] items-center justify-center border">
+        <section
+          ref={detailInfoRef}
+          className="flex h-[600px] w-[1280px] items-center justify-center border"
+        >
           <h3>제품 설명 이미지</h3>
         </section>
         {/* 구분선 */}
         <div className="mb-[100px] h-0 w-full border-b-2 border-primary"></div>
         <div className="flex h-[1450px] w-[1280px] flex-col items-center ">
           {/* 리뷰 섹션 */}
-          <section className="mb-[100px] w-full overflow-y-auto ">
+          <section
+            ref={reviewRef}
+            className="mb-[100px] w-full overflow-y-auto "
+          >
             <h3 className="border-b-2 border-primary pb-[40px] text-48 font-bold">
               REVIEW ({countReviews})
             </h3>
@@ -227,7 +239,10 @@ export default function ProductDetail() {
             </div>
           </section>
           {/* 추천 상품 */}
-          <section className="h-[600px] w-full border border-pink-700">
+          <section
+            ref={recommendedProductsRef}
+            className="h-[600px] w-full border border-pink-700"
+          >
             <h3 className="text-48 font-bold">추천 상품</h3>
           </section>
         </div>
