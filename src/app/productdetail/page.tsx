@@ -4,52 +4,59 @@ import { Header, Button } from "@/components/_index";
 import axios from "axios";
 import Image from "next/image";
 
-const REVIEWS_PER_PAGE = 5;
 export default function ProductDetail() {
-  // 리뷰 데이터와 아코디언의 상태를 관리할 state를 선언합니다.
+  /* 상태 변수 선언 */
+  // 현재 활성화된 섹션을 추적하기 위한 상태
+  const [activeSection, setActiveSection] = useState("");
+
+  // 리뷰 데이터 관리를 위한 상태
   const [reviews, setReviews] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [countReviews, setCountReviews] = useState(0);
+
+  // 페이지네이션을 위한 상태
   const [currentPage, setCurrentPage] = useState(1);
 
-  const currentReviews = reviews.slice(
-    (currentPage - 1) * REVIEWS_PER_PAGE,
-    currentPage * REVIEWS_PER_PAGE
-  );
-
-  const pageCount = Math.ceil(reviews.length / REVIEWS_PER_PAGE);
-
-  // 페이지 전환 함수
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    setActiveIndex(null);
-  };
-
-  // 스크롤 이동
+  // 각 섹션에 대한 참조
   const detailInfoRef = useRef(null);
   const returnInfoRef = useRef(null);
   const reviewRef = useRef(null);
   const recommendedProductsRef = useRef(null);
 
+  /* 상수 선언 */
+  const REVIEWS_PER_PAGE = 5;
+  const pageCount = Math.ceil(reviews.length / REVIEWS_PER_PAGE);
+
+  // 현재 페이지의 리뷰 데이터
+  const currentReviews = reviews.slice(
+    (currentPage - 1) * REVIEWS_PER_PAGE,
+    currentPage * REVIEWS_PER_PAGE
+  );
+
+  /* 함수 선언 */
+  // 페이지 전환 핸들러
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    setActiveIndex(null);
+  };
+
+  // 특정 섹션으로 스크롤 이동
   const scrollToSection = (ref) => {
     if (ref && ref.current) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  // 네비게이션 포커싱
-  const [activeSection, setActiveSection] = useState("");
-
+  // 스크롤에 따라 현재 섹션을 감지
   const checkActiveSection = () => {
-    // 현재 스크롤 위치 가져오기
     const scrollPosition = window.scrollY + window.innerHeight / 2;
 
-    // 현재 보이는 ref를 확인하고 activeSection 업데이트
     const refs = {
       detailInfo: detailInfoRef,
       review: reviewRef,
       recommendedProducts: recommendedProductsRef,
     };
+
     for (const section in refs) {
       const ref = refs[section];
       if (ref.current) {
@@ -63,6 +70,30 @@ export default function ProductDetail() {
     }
   };
 
+  // API 호출 및 데이터 가져오기
+  async function getProductInfo() {
+    try {
+      const _id = 3;
+      const response = await axios.get(`https://localhost/api/products/${_id}`);
+      const result = response.data;
+      return result.item.replies;
+    } catch (error) {
+      console.error("Error 🥲", error);
+      return [];
+    }
+  }
+
+  // 컴포넌트 마운트 시 API 호출
+  useEffect(() => {
+    const fetchData = async () => {
+      const replies = await getProductInfo();
+      setReviews(replies);
+      setCountReviews(replies.length);
+    };
+    fetchData();
+  }, []);
+
+  // 스크롤 이벤트 리스너 추가
   useEffect(() => {
     window.addEventListener("scroll", checkActiveSection);
 
@@ -71,33 +102,7 @@ export default function ProductDetail() {
     };
   }, []);
 
-  async function getProductInfo() {
-    try {
-      const _id = 3;
-      const response = await axios.get(`https://localhost/api/products/${_id}`);
-      const result = response.data;
-      console.log("리뷰는 ", result.item.replies);
-      return result.item.replies;
-    } catch (error) {
-      console.error("Error 🥲", error);
-      return [];
-    }
-  }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const replies = await getProductInfo();
-        setReviews(replies);
-        setCountReviews(replies.length);
-      } catch (error) {
-        console.error("Error 🥲", error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  // 아코디언을 토글하는 함수입니다.
+  // 리뷰 아코디언 토글 함수
   const toggleAccordion = (index) => {
     setActiveIndex(index === activeIndex ? null : index);
   };
