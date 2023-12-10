@@ -1,7 +1,7 @@
 "use client";
 // 노드 모듈 / 외부 라이브러리 임포트
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axios from "@/api/axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -37,7 +37,7 @@ export default function SignIn() {
     const password = passwordRef.current.value;
 
     await axios
-      .post("https://localhost/api/users/login", {
+      .post("users/login", {
         email: email,
         password: password,
       })
