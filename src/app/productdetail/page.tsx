@@ -37,6 +37,40 @@ export default function ProductDetail() {
     }
   };
 
+  // 네비게이션 포커싱
+  const [activeSection, setActiveSection] = useState("");
+
+  const checkActiveSection = () => {
+    // 현재 스크롤 위치 가져오기
+    const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+    // 현재 보이는 ref를 확인하고 activeSection 업데이트
+    const refs = {
+      detailInfo: detailInfoRef,
+      review: reviewRef,
+      recommendedProducts: recommendedProductsRef,
+    };
+    for (const section in refs) {
+      const ref = refs[section];
+      if (ref.current) {
+        const offsetTop = ref.current.offsetTop;
+        const offsetBottom = offsetTop + ref.current.offsetHeight;
+        if (scrollPosition > offsetTop && scrollPosition < offsetBottom) {
+          setActiveSection(section);
+          break;
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", checkActiveSection);
+
+    return () => {
+      window.removeEventListener("scroll", checkActiveSection);
+    };
+  }, []);
+
   async function getProductInfo() {
     try {
       const _id = 3;
@@ -133,13 +167,15 @@ export default function ProductDetail() {
         {/* 상세페이지 네비게이션  */}
         <nav
           aria-label="상품 상세 네비게이션"
-          className="sticky top-0 z-10 flex h-[64px] w-full flex-row justify-center border-b-2 border-t-2 border-primary bg-white"
+          className="sticky top-0 z-10 mb-[100px] flex h-[64px] w-full flex-row justify-center border-b-2 border-t-2 border-primary bg-white"
         >
           <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-tertiary">
-            <li className="w-[200px]">
+            <li>
               <button
                 onClick={() => scrollToSection(detailInfoRef)}
-                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
+                  activeSection === "detailInfo" ? "font-bold text-primary" : ""
+                }`}
               >
                 상세정보
               </button>
@@ -147,7 +183,9 @@ export default function ProductDetail() {
             <li>
               <button
                 onClick={() => scrollToSection(returnInfoRef)}
-                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
+                  activeSection === "returnInfo" ? "font-bold text-primary" : ""
+                }`}
               >
                 교환 및 반품안내
               </button>
@@ -155,15 +193,21 @@ export default function ProductDetail() {
             <li>
               <button
                 onClick={() => scrollToSection(reviewRef)}
-                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
+                  activeSection === "review" ? "font-bold text-primary" : ""
+                }`}
               >
-                리뷰
+                REVIEW ({countReviews})
               </button>
             </li>
             <li>
               <button
                 onClick={() => scrollToSection(recommendedProductsRef)}
-                className="flex h-[64px] w-[200px] items-center justify-center hover:text-primary"
+                className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
+                  activeSection === "recommendedProducts"
+                    ? "font-bold text-primary"
+                    : ""
+                }`}
               >
                 추천 상품
               </button>
