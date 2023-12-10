@@ -1,9 +1,21 @@
 "use client";
-import React from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getAccessToken, fetchRefreshToken } from "@/utils/_index";
 
 export default function Header() {
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      const accessToken = getAccessToken();
+      const expirationTime = JSON.parse(atob(accessToken.split(".")[1])).exp;
+      const currentTime = Math.floor(new Date().getTime() / 1000);
+
+      // 토큰 만료됐을 경우
+      if (currentTime >= expirationTime) fetchRefreshToken();
+    }
+  }, []);
+
   return (
     <header
       role="banner"
