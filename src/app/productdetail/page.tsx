@@ -1,8 +1,47 @@
+"use client";
+import { useState, useEffect } from "react";
 import { Header, Button } from "@/components/_index";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function ProductDetail() {
+  // 리뷰 데이터와 아코디언의 상태를 관리할 state를 선언합니다.
+  const [reviews, setReviews] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [countReviews, setCountReviews] = useState(0);
+
+  async function getProductInfo() {
+    try {
+      const _id = 3;
+      const response = await axios.get(`https://localhost/api/products/${_id}`);
+      const result = response.data;
+      console.log("리뷰는 ", result.item.replies);
+      return result.item.replies;
+    } catch (error) {
+      console.error("Error 🥲", error);
+      return [];
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const replies = await getProductInfo();
+        setReviews(replies);
+        setCountReviews(replies.length); // Update the countReviews state
+      } catch (error) {
+        console.error("Error 🥲", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // 아코디언을 토글하는 함수입니다.
+  const toggleAccordion = (index) => {
+    setActiveIndex(index === activeIndex ? null : index);
+  };
+
   return (
     <>
       <Header />
@@ -116,13 +155,34 @@ export default function ProductDetail() {
 
         {/* 구분선 */}
         <div className="h-0 w-full border-b-2 border-primary"></div>
-        {/* 리뷰, 추천 상품 SECTION */}
         <div className="flex h-[1450px] w-[1280px] flex-col items-center justify-center">
-          {/* 리뷰 */}
+          {/* 리뷰 섹션 */}
           <section className="mb-[100px] h-[555px] w-full border border-pink-700">
-            <h3 className="mb-[80px] text-48 font-bold">REVIEW</h3>
-            <p className="mb-[16px] border text-20 font-medium">전체후기</p>
-            <div className=""></div>
+            <h3 className="mb-[40px] text-48 font-bold">
+              REVIEW ({countReviews})
+            </h3>
+            {/* 리뷰 아코디언 */}
+            <div className="border-primary text-20 font-medium">
+              {reviews.map((review, index) => (
+                <div
+                  key={review._id}
+                  className="flex flex-col border-b-2 border-primary"
+                >
+                  <button
+                    className="w-full pb-[20px] pt-[20px] text-left font-semibold"
+                    onClick={() => toggleAccordion(index)}
+                  >
+                    {review.extra.title}
+                  </button>
+                  {activeIndex === index && (
+                    <div className="p-[20px]">
+                      {/* <p>평점: {review.rating}점</p> */}
+                      <p>{review.content}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
           {/* 추천 상품 */}
           <section className="h-[600px] w-full border border-pink-700">
