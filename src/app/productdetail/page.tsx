@@ -5,11 +5,27 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
+const REVIEWS_PER_PAGE = 5;
 export default function ProductDetail() {
   // 리뷰 데이터와 아코디언의 상태를 관리할 state를 선언합니다.
   const [reviews, setReviews] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [countReviews, setCountReviews] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const currentReviews = reviews.slice(
+    (currentPage - 1) * REVIEWS_PER_PAGE,
+    currentPage * REVIEWS_PER_PAGE
+  );
+
+  const pageCount = Math.ceil(reviews.length / REVIEWS_PER_PAGE);
+
+  // 페이지 전환 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    setActiveIndex(null);
+  };
 
   async function getProductInfo() {
     try {
@@ -29,7 +45,7 @@ export default function ProductDetail() {
       try {
         const replies = await getProductInfo();
         setReviews(replies);
-        setCountReviews(replies.length); // Update the countReviews state
+        setCountReviews(replies.length);
       } catch (error) {
         console.error("Error 🥲", error);
       }
@@ -143,44 +159,70 @@ export default function ProductDetail() {
                 href="/"
                 accessKey="4"
               >
-                추천 상품
+                구 추천 상품
               </Link>
             </li>
           </ul>
         </nav>
         {/* 상세 이미지 SECTION */}
-        <section className="flex h-[600px] w-[1280px] items-center justify-center border ">
+        <section className="flex h-[600px] w-[1280px] items-center justify-center border">
           <h3>제품 설명 이미지</h3>
         </section>
-
         {/* 구분선 */}
-        <div className="h-0 w-full border-b-2 border-primary"></div>
-        <div className="flex h-[1450px] w-[1280px] flex-col items-center justify-center">
+        <div className="mb-[100px] h-0 w-full border-b-2 border-primary"></div>
+        <div className="flex h-[1450px] w-[1280px] flex-col items-center ">
           {/* 리뷰 섹션 */}
-          <section className="mb-[100px] h-[555px] w-full border border-pink-700">
-            <h3 className="mb-[40px] text-48 font-bold">
+          <section className="mb-[100px] w-full overflow-y-auto ">
+            <h3 className="border-b-2 border-primary pb-[40px] text-48 font-bold">
               REVIEW ({countReviews})
             </h3>
             {/* 리뷰 아코디언 */}
-            <div className="border-primary text-20 font-medium">
-              {reviews.map((review, index) => (
+            <div className="text-20 font-medium">
+              {currentReviews.map((review, index) => (
                 <div
                   key={review._id}
-                  className="flex flex-col border-b-2 border-primary"
+                  className={`flex flex-col border-b-2 border-primary ${
+                    activeIndex === index ? "bg-blue-100" : ""
+                  }`}
                 >
                   <button
-                    className="w-full pb-[20px] pt-[20px] text-left font-semibold"
+                    className="flex w-full items-center justify-between p-[20px] text-left"
                     onClick={() => toggleAccordion(index)}
                   >
-                    {review.extra.title}
+                    <span className="flex-grow">{review.extra.title}</span>
+                    <span className="w-[100px] text-center">
+                      {review.extra.author}
+                    </span>
+                    <span className="w-[200px] text-right">
+                      {new Date(review.createdAt).toLocaleDateString("ko-KR")}
+                    </span>
                   </button>
-                  {activeIndex === index && (
-                    <div className="p-[20px]">
-                      {/* <p>평점: {review.rating}점</p> */}
+                  <div
+                    className={
+                      activeIndex === index ? "max-h-[200px]" : "max-h-0"
+                    }
+                  >
+                    <div
+                      className={`p-[20px] ${
+                        activeIndex === index ? "block" : "hidden"
+                      }`}
+                    >
                       <p>{review.content}</p>
                     </div>
-                  )}
+                  </div>
                 </div>
+              ))}
+            </div>
+            {/* 페이지네이션 컴포넌트 */}
+            <div className="mt-[40px] flex items-center justify-center text-24 font-bold">
+              {Array.from({ length: pageCount }, (_, i) => (
+                <button
+                  className="m-[5px] p-[10px]"
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                >
+                  {i + 1}
+                </button>
               ))}
             </div>
           </section>
