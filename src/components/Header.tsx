@@ -9,16 +9,10 @@ export default function Header() {
     if (localStorage.getItem("user")) {
       const accessToken = getAccessToken();
       const expirationTime = JSON.parse(atob(accessToken.split(".")[1])).exp;
-      const currentTime = new Date().getTime();
-      if (expirationTime <= currentTime) {
-        fetchRefreshToken()
-          .then(() => {
-            console.log("Your Token was refreshed");
-          })
-          .catch((error) => {
-            console.log(error.message);
-          });
-      }
+      const currentTime = Math.floor(new Date().getTime() / 1000);
+
+      // 토큰 만료됐을 경우
+      if (currentTime >= expirationTime) fetchRefreshToken();
     }
   }, []);
 
