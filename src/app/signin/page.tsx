@@ -26,7 +26,7 @@ export default function SignIn() {
     const password = passwordRef.current.value;
 
     await axios
-      .post("https://localhost/api/users/login", {
+      .post("users/login", {
         email: email,
         password: password,
       })

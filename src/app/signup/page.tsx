@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import React, { useState } from "react";
-import { AddressModal, Header } from "@/components/_index";
+import { AddressModal, Header, InputField, Button } from "@/components/_index";
 
 export default function SignUp() {
   type TAddressData = {
@@ -34,9 +34,6 @@ export default function SignUp() {
   const [showPasswordCheckError, setShowPasswordCheckError] = useState(false);
   const [showBirthError, setShowBirthError] = useState(false);
 
-  // 중복확인 했는지 유무 상태 관리
-  const [hasCheckedDuplication, setHasCheckedDuplication] = useState(false);
-
   // 주소 API 관련 상태 관리
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
@@ -60,6 +57,11 @@ export default function SignUp() {
 
   // 이메일 중복확인 통신
   const checkEmailDuplication = async () => {
+    if (!email.trim()) {
+      setShowEmailError(true);
+      setEmailValid(false);
+      return;
+    }
     try {
       const res = await axios.get(
         `https://localhost/api/users/email?email=${email}`
@@ -223,121 +225,87 @@ export default function SignUp() {
   return (
     <div>
       <Header />
-      <main className="flex flex-col items-center pt-[120px]">
+      <main className="flex h-[1500px] flex-col items-center pt-[120px]">
         <h2 className="mb-[66px] text-36 font-bold">회원가입</h2>
 
         <form onSubmit={handleSubmit} className="flex w-[400px] flex-col">
           {/* 이메일 주소 */}
-          <label htmlFor="email">
-            로그인에 사용할 이메일 주소를 입력해주세요
-          </label>
-          <input
+          <InputField
+            label="로그인에 사용할 이메일 주소를 입력해주세요"
             id="email"
             type="email"
-            aria-errormessage="emailError"
-            aria-invalid={!isEmailValid}
-            onChange={handleEmailChange}
             placeholder="example@essentia.co.kr"
+            showError={showEmailError}
+            errorMessage={
+              isEmailUnique
+                ? "이메일 양식을 확인해주세요"
+                : "이미 가입된 이메일입니다"
+            }
+            invalid={!isEmailValid}
+            onChange={handleEmailChange}
           />
-          <button type="button" onClick={checkEmailDuplication}>
-            중복 확인
-          </button>
-          {showEmailError && !isEmailUnique && (
-            <div id="emailError" aria-live="polite" className="text-red-500">
-              중복된 이메일입니다.
-            </div>
-          )}
-          {isEmailValid && isEmailUnique && hasCheckedDuplication && (
-            <div className="text-green-500">사용 가능한 이메일입니다.</div>
-          )}
-          {/* 이메일 오류 경고창 */}
-          {showEmailError && (
-            <div id="emailError" aria-live="polite" className="text-red-500">
-              이메일 오류 메세지
-            </div>
-          )}
-
+          {/* 이메일 중복확인 버튼 */}
+          <Button
+            className="mb-[20px] h-[38px]"
+            label="이메일 중복 확인"
+            type="button"
+            onClick={checkEmailDuplication}
+          ></Button>
           {/* 비밀번호 */}
-          <label htmlFor="password">사용할 비밀번호를 입력해주세요</label>
-          <input
+          <InputField
+            label="사용할 비밀번호를 입력해주세요"
             id="password"
             type="password"
-            aria-errormessage="passwordError"
-            aria-invalid={!isPasswordValid}
+            placeholder="영문 대/소문자와 숫자 또는 특수문자를 포함한 비밀번호"
+            showError={showPasswordError}
+            errorMessage="영문 대/소문자와 숫자 또는 특수문자를 포함한 비밀번호를 입력해주세요"
+            invalid={!isPasswordValid}
             onChange={handlePasswordChange}
-            placeholder="영문 대/소문자, 숫자 및 특수문자를 포함한 비밀번호"
           />
-          {showPasswordError && (
-            <div id="passwordError" aria-live="polite" className="text-red-500">
-              비밀번호 오류 메세지
-            </div>
-          )}
           {/* 비밀번호 확인 */}
-          <input
+          <InputField
+            label="비밀번호 확인"
             id="passwordCheck"
             type="password"
-            aria-errormessage="passwordCheckError"
-            aria-invalid={!isPasswordCheckValid}
-            onChange={handlePasswordCheckChange}
             placeholder="비밀번호 확인"
+            showError={showPasswordCheckError}
+            errorMessage="비밀번호가 일치하지 않습니다."
+            invalid={!isPasswordCheckValid}
+            onChange={handlePasswordCheckChange}
           />
-          {/* 비밀번호 확인 오류 경고창 */}
-          {showPasswordCheckError && (
-            <div
-              id="passwordCheckError"
-              aria-live="polite"
-              className="text-red-500"
-            >
-              비밀번호가 일치하지 않습니다.
-            </div>
-          )}
-
-          {/* 이름 & 휴대폰번호 */}
-          <label htmlFor="name">이름과 휴대폰 번호를 입력해주세요</label>
-          <input
+          {/* 이름 */}
+          <InputField
+            label="이름을 입력해주세요"
             id="name"
             type="text"
-            aria-errormessage="nameError"
-            aria-invalid={!isNameValid}
+            placeholder="예) 현지수"
+            showError={showNameError}
+            errorMessage="정확한 이름을 입력해주세요"
+            invalid={!isNameValid}
             onChange={handleNameChange}
-            placeholder="이름 (한글만 입력)"
           />
-          {showNameError && (
-            <div id="nameError" aria-live="polite" className="text-red-500">
-              한글 이름을 입력해주세요.
-            </div>
-          )}
-          <label htmlFor="phone"></label>
-          <input
+          {/* 휴대폰 번호 */}
+          <InputField
+            label="휴대폰 번호를 입력해주세요"
             id="phone"
             type="tel"
-            aria-errormessage="phoneError"
-            aria-invalid={!isPhoneValid}
+            placeholder="휴대폰 번호('-' 제외)"
+            showError={showPhoneError}
+            errorMessage="'-' 를 제외한 11자리 휴대폰 번호를 입력해주세요"
+            invalid={!isPhoneValid}
             onChange={handlePhoneChange}
-            placeholder="휴대폰 번호('_')제외"
           />
-          {/* 휴대폰번호 오류 경고창*/}
-          {showPhoneError && (
-            <div id="phoneError" aria-live="polite" className="text-red-500">
-              휴대폰 번호 오류 메세지
-            </div>
-          )}
-
           {/* 생년월일 */}
-          <input
+          <InputField
+            label="생년월일을 입력해주세요"
             id="birth"
             type="text"
-            aria-errormessage="birthError"
-            aria-invalid={!isBirthValid}
-            onChange={handleBirthChange}
             placeholder="예) 19990707"
+            showError={showBirthError}
+            errorMessage="올바른 생년월일을 입력해주세요"
+            invalid={!isBirthValid}
+            onChange={handleBirthChange}
           />
-          {showBirthError && (
-            <div id="birthError" aria-live="polite" className="text-red-500">
-              올바른 생년월일을 입력해주세요 (1900~2023년도).
-            </div>
-          )}
-
           {/* 주소 */}
           <label htmlFor="address">주소를 입력해주세요</label>
           <input
@@ -349,9 +317,13 @@ export default function SignUp() {
             readOnly
             onChange={(e) => setAddress(e.target.value)}
           />
-          <button type="button" onClick={() => setAddressModalOpen(true)}>
-            주소 검색
-          </button>
+          {/* 주소 검색 버튼 */}
+          <Button
+            className="mt-[50px] h-[38px]"
+            label="도로명 주소 검색하기"
+            type="button"
+            onClick={() => setAddressModalOpen(true)}
+          ></Button>
           <AddressModal
             isOpen={isAddressModalOpen}
             onClose={() => setAddressModalOpen(false)}
@@ -364,12 +336,13 @@ export default function SignUp() {
             aria-errormessage="addressError"
             placeholder="상세 주소를 입력해주세요"
           />
-          {/* 주소 오류 경고창*/}
-          <div id="addressError" aria-live="polite">
-            주소 오류 메세지
-          </div>
-
-          <button type="submit">회원가입 완료</button>
+          {/* 회원가입 완료 버튼 */}
+          <Button
+            className="mt-[50px]"
+            label="회원가입 완료"
+            type="submit"
+            onClick={checkEmailDuplication}
+          ></Button>
         </form>
       </main>
     </div>

@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-export default function Sell() {
+export default function Admin() {
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -14,31 +14,29 @@ export default function Sell() {
     active: true,
     quantity: 200,
     buyQuantity: 198,
-    extra: { depth: 2, parent: "", restamount: "", date: "" },
+    extra: { depth: 1, amount: "", brand: "" },
   });
-  const [previewImages, setPreviewImages] = useState([]);
+  const [previewImage, setPreviewImage] = useState(null);
 
   // 입력 값이 변경될 때 호출되는 함수
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    // 가격, 배송비, 남은용량, 구매일시 숫자로 변환하여 상태 업데이트
-    if (
-      name === "price" ||
-      name === "shippingFees" ||
-      name === "restamount" ||
-      name === "date"
-    ) {
+    // 가격 및 배송비는 숫자로 변환하여 상태 업데이트
+    if (name === "price" || name === "shippingFees") {
       const intValue = value ? parseInt(value, 10) : 0;
+      setProduct({ ...product, [name]: intValue });
+    } else if (name === "amount" || name === "brand") {
       setProduct({
         ...product,
-        [name]: intValue,
-        extra: {
-          ...product.extra,
-          [name]: intValue,
-        },
+        extra: { ...product.extra, [name]: value },
       });
     } else {
-      setProduct({ ...product, [name]: value });
+      setProduct({
+        ...product,
+        [name]: value,
+      });
     }
   };
 
@@ -59,10 +57,13 @@ export default function Sell() {
           },
         }
       );
-      // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 최대 10개 등록가능
-      return response.data.files.map(
-        (file: any) => `https://localhost${file.path}`
-      );
+      // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 1개만 등록가능
+      if (response.data.ok && response.data.file) {
+        return [`https://localhost${response.data.file.path}`];
+      } else {
+        console.error("문제가있다아아아", response);
+        return [];
+      }
     } catch (error) {
       console.error("파일 업로드 오류", error);
       return [];
@@ -71,21 +72,20 @@ export default function Sell() {
 
   // 파일 선택 시, 업로드 함수 호출 및 mainImages 상태 업데이트
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      // 최대 10개 파일 업로드로 제한
-      const files = Array.from(e.target.files).slice(0, 10);
+    if (e.target.files && e.target.files.length > 0) {
+      // 단일 파일 업로드로 제한하기 위해 첫번째 파일만 사용
+      const file = e.target.files[0];
       // 파일 업로드 함수 호출
-      const uploadedPaths = await uploadFiles(files);
+      const uploadedPaths = await uploadFiles([file]);
       // mainImages 상태 업데이트
       setProduct({ ...product, mainImages: uploadedPaths });
-      // 각 파일에 대한 미리보기 URL 생성
-      const previewUrls = files.map((file) => URL.createObjectURL(file));
-      // 미리보기 URL들을 상태에 저장
-      setPreviewImages(previewUrls);
+      // 미리보기 URL 생성 및 저장
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewImage(previewUrl);
     }
   };
 
-  // mainImages 상태 업데잍 를 콘솔에 출력 (디버깅)
+  // mainImages 상태 업데이트를 콘솔에 출력 (디버깅)
   useEffect(() => {
     console.log(product.mainImages);
   }, [product.mainImages]);
@@ -145,6 +145,19 @@ export default function Sell() {
 
         <form onSubmit={handleSubmit} className="w-[1200px]">
           <div className="h-[138px] border-b-[1px] border-tertiary">
+            <label htmlFor="brand" className="mr-[100px] text-18 font-bold">
+              브랜드
+            </label>
+            <input
+              type="text"
+              name="brand"
+              placeholder="브랜드명"
+              value={product.extra.brand}
+              onChange={handleChange}
+              className="w-[745px] border-b-[5px] border-primary"
+            />
+          </div>
+          <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary pb-[50px]">
             <label htmlFor="name" className="mr-[100px] text-18 font-bold">
               상품명
             </label>
@@ -157,6 +170,20 @@ export default function Sell() {
               className="w-[745px] border-b-[5px] border-primary"
             />
           </div>
+          <div className="h-[138px] border-b-[1px] border-tertiary pt-[50px]">
+            <label htmlFor="amount" className="mr-[100px] text-18 font-bold">
+              향수 용량
+            </label>
+            <select
+              name="amount"
+              id="amount"
+              className="w-[300px]"
+              onChange={handleChange}
+            >
+              <option value="50ml">50ml</option>
+              <option value="100ml">100ml</option>
+            </select>
+          </div>
           <div className="h-[280px] border-b-[1px] border-tertiary pt-[50px]">
             <label htmlFor="file" className="mr-[100px] text-18 font-bold">
               상품이미지
@@ -165,43 +192,24 @@ export default function Sell() {
               type="file"
               name="file"
               accept="image/*"
-              multiple
               onChange={handleFileChange}
             />
-            <div className="ml-[160px] mt-[40px] flex flex-row">
-              {previewImages.map((image, index) => (
+            <div className="ml-[160px] mt-[40px]">
+              {previewImage && (
                 <img
-                  key={index}
-                  src={image}
-                  alt={`Preview ${index + 1}`}
+                  src={previewImage}
+                  alt="미리보기"
                   style={{
                     width: "120px",
                     height: "120px",
                     marginRight: "10px",
                   }}
                 />
-              ))}
+              )}
             </div>
           </div>
           <div className="h-[195px] border-b-[1px] border-tertiary pt-[50px]">
-            <label
-              htmlFor="restamount"
-              className="mr-[100px] text-18 font-bold"
-            >
-              남은 용량
-            </label>
-            <input
-              type="text"
-              name="restamount"
-              placeholder="ml"
-              value={product.extra.restamount}
-              onChange={handleChange}
-              className="w-[250px] border-b-[2px] border-primary"
-            />
-            <label
-              htmlFor="price"
-              className="ml-[120px] mr-[100px] text-18 font-bold"
-            >
+            <label htmlFor="price" className="mr-[100px] text-18 font-bold">
               가격
             </label>
             <input
@@ -212,19 +220,6 @@ export default function Sell() {
               onChange={handleChange}
               className="mr-[270px] w-[250px] border-b-[2px] border-primary"
             />
-            <div className="mt-[40px]">
-              <label htmlFor="date" className="mr-[100px] text-18 font-bold">
-                구매 일시
-              </label>
-              <input
-                type="text"
-                name="date"
-                placeholder="예) 20220707"
-                value={product.extra.date}
-                onChange={handleChange}
-                className="w-[250px] border-b-[2px] border-primary"
-              />
-            </div>
           </div>
           <div className="relative h-[320px] border-b-[1px] border-tertiary pt-[50px]">
             <label
@@ -238,7 +233,7 @@ export default function Sell() {
               id="text"
               cols={100}
               rows={8}
-              placeholder="제품의 상태 (사용감, 하자 유무) 등을 입력해 주세요."
+              placeholder="상품 상세 설명을 입력해주세요."
               value={product.content}
               onChange={handleChange}
               className="absolute left-[100px] border-[1px] border-tertiary pl-[16px] pt-[16px]"
