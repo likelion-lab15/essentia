@@ -5,7 +5,6 @@ interface ProductCardProps {
     name: string;
     price: number;
     extra: {
-      amount: number;
       brand: string;
     };
   };
@@ -17,7 +16,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     mainImages,
     name,
     price,
-    extra: { amount, brand },
+    extra: { brand },
   } = product;
 
   return (
@@ -29,9 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       />
       <div>
         <h3 className="ml-[17px] text-14 font-bold">{brand}</h3>
-        <p className="ml-[17px] text-16 font-medium">
-          {name} / {amount}ml
-        </p>
+        <p className="ml-[17px] text-16 font-medium">{name}</p>
         <p className="ml-[17px] text-14 font-semibold">
           {price.toLocaleString()}원
         </p>
