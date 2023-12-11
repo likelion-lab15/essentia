@@ -1,13 +1,21 @@
 "use client";
 
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-type TUser = {
+type TUserData = {
   user: object;
-  setUser: (userData: object) => void;
 };
 
-export const useUserStore = create<TUser>()((set) => ({
-  user: {},
-  setUser: (userData) => set(() => ({ user: userData })),
-}));
+export const useUserStore = create<TState & TAction>()(
+  persist(
+    (set) => ({
+      user: {},
+      setUser: (userData: TUserData) => set(() => ({ user: userData })),
+    }),
+    {
+      name: "user",
+      storage: createJSONStorage(() => sessionStorage),
+    }
+  )
+);
