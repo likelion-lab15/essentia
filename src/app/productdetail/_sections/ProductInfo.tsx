@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { Button } from "@/components/_index";
-import { useEffect, useState } from "react";
+import { useOutsideClick } from "@/hooks/_index"; // Adjust the import path as needed
+
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 export default function ProductInfo() {
@@ -18,13 +20,12 @@ export default function ProductInfo() {
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
   const [amountView, setAmountView] = useState(false);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(wrapperRef, () => setAmountView(false));
+
   const handleSizeSelection = (size) => {
     setSelectedSize(size + "ml");
     setAmountView(false);
-  };
-
-  const setView = (event) => {
-    setSelectedSize(event.target.value);
   };
 
   async function getProductInfo() {
@@ -90,7 +91,7 @@ export default function ProductInfo() {
           </div>
 
           {/* 드롭다운 박스 */}
-          <div className="mb-[16px] h-[46px] w-[560px]">
+          <div ref={wrapperRef} className="mb-[16px] h-[46px] w-[560px]">
             <div>
               <button
                 onClick={() => {
