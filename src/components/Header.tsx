@@ -19,7 +19,7 @@ export default function Header() {
   return (
     <header
       role="banner"
-      className="h-[80px] border-b border-primary pl-[60px] pr-[60px]"
+      className="z-99 sticky top-0 h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
     >
       <nav
         aria-label="메인 네비게이션"
