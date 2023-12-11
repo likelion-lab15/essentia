@@ -52,7 +52,10 @@ export default function SignIn() {
       <form className="flex w-[400px] flex-col" onSubmit={handleFormSubmit}>
         {/* 이메일 */}
         <div className="mb-[6px] flex flex-col">
-          <label htmlFor="email" className="h-[32px] text-[14px] font-bold">
+          <label
+            htmlFor="email"
+            className="flex h-[32px] items-center text-[14px] font-bold"
+          >
             이메일 주소
           </label>
           <input
@@ -61,18 +64,25 @@ export default function SignIn() {
             type="email"
             value={email}
             onChange={handleInputValue(setEmail)}
+            className="h-[32px] border-b border-black text-[14px] font-medium"
           />
-          <div
-            aria-live="polite"
-            className={cn("hidden text-[12px] text-red-500", {
+          <div className="mb-[6px] flex h-[20px] items-center">
+            <span
+              className={cn("hidden text-[12px] text-red-500", {
                 block: message,
-            })}
-          >
-            아이디를 확인해주세요
+              })}
+            >
+              아이디를 확인해주세요
+            </span>
           </div>
         </div>
 
         {/* 비밀번호 */}
+        <div className="mb-[46px] flex flex-col">
+          <label
+            htmlFor="password"
+            className="flex h-[32px] items-center text-[14px] font-bold"
+          >
             비밀번호
           </label>
           <input
@@ -81,14 +91,16 @@ export default function SignIn() {
             type="password"
             value={password}
             onChange={handleInputValue(setPassword)}
+            className="h-[32px] border-b border-black text-[14px] font-medium"
           />
-          <div
-            aria-live="polite"
-            className={cn("hidden text-[12px] text-red-500", {
+          <div className="h-[20px]">
+            <span
+              className={cn("hidden text-[12px] text-red-500", {
                 block: message,
-            })}
-          >
-            비밀번호를 확인해주세요
+              })}
+            >
+              비밀번호를 확인해주세요
+            </span>
           </div>
         </div>
 
