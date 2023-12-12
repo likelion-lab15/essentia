@@ -8,7 +8,7 @@ type TUserData = {
 export const useUserStore = create()(
   persist(
     (set) => ({
-      user: {},
+      user: null,
       setUser: (userData: TUserData) => set(() => ({ user: userData })),
     }),
     {
