@@ -1,13 +1,13 @@
 "use client";
 
+import axios from "axios";
 import Image from "next/image";
 import { Button } from "@/components/_index";
-import { useOutsideClick } from "@/hooks/_index"; // Adjust the import path as needed
-
+import { useOutsideClick } from "@/hooks/_index";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 
 export default function ProductInfo() {
+  // 향수 정보 상태 관리
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -16,36 +16,37 @@ export default function ProductInfo() {
     content: "",
     image: "",
   });
-
+  // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
+  // 사이즈 드롭다운박스 리스트 상태 관리
   const [amountView, setAmountView] = useState(false);
-
+  // useRef를 이용하여 외부 클릭 감지
   const wrapperRef = useRef<HTMLDivElement>(null);
+  // 외부 클릭 시 드롭다운박스 닫기
   useOutsideClick(wrapperRef, () => setAmountView(false));
-
-  const handleSizeSelection = (size) => {
+  // 사이즈 선택 시 드롭다운박스 제목 변경 함수
+  const handleSizeSelection = (size: number) => {
     setSelectedSize(size + "ml");
     setAmountView(false);
   };
 
+  // 향수 정보 가져오기
   async function getProductInfo() {
     try {
+      // 상품 id 1로 임시 고정
       const _id = 1;
       const response = await axios.get(`https://localhost/api/products/${_id}`);
-      const result = response.data;
-      console.log("response.data", result.item);
+      const result = response.data.item;
       setProduct({
-        name: result.item.name,
-        price: result.item.price,
-        brand: result.item.extra.brand,
-        amount: result.item.extra.amount,
-        content: result.item.content,
-        image: result.item.mainImages[0].url,
+        name: result.name,
+        price: result.price,
+        brand: result.extra.brand,
+        amount: result.extra.amount,
+        content: result.content,
+        image: result.mainImages[0].url,
       });
-      console.log(result.item.mainImages[0].url);
-      return result.item;
     } catch (error) {
-      console.error("Error 🥲", error);
+      console.error("Axios Error 🥲", error);
       return [];
     }
   }
