@@ -7,8 +7,8 @@ export default function ScrollTopButton() {
 
   // 스크롤 이벤트 핸들러
   const toggleVisibility = () => {
-    if (window.scrollY > 10) {
-      // 300px 이상 스크롤 시 버튼 표시
+    // 100px 이상 스크롤 시 버튼 표시
+    if (window.scrollY > 100) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
