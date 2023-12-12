@@ -1,106 +1,110 @@
 "use client";
+
 // 노드 모듈 / 외부 라이브러리 임포트
-import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { postUserSignin } from "./_functions/_index";
+import { useUserStore } from "@/stores/useUserStore";
 
 // 프로젝트 내부 임포트
-import { useUserStore } from "@/stores/useUserStore";
 import { cn } from "@/utils/_index";
 
 export default function SignIn() {
-  /* 상태 변수 */
-  const user = useUserStore((state) => state.user);
+  /* 상태 */
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(false);
+
+  /* 전역상태 */
   const setUser = useUserStore((state) => state.setUser);
 
-  const [checkUser, setCheckUser] = useState(false);
-
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-
-  /* 훅스 */
+  /* 훅 */
   const router = useRouter();
 
-  /* 라이프 사이클 */
-  useEffect(() => {
-    if (user._id) {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
-  }, [user]);
-
   /* 이벤트 핸들러 */
-  const handleSignIn = async (e) => {
+  const handleInputValue = (setter) => (e) => {
+    setter(e.target.value);
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
+    const data = await postUserSignin({ email, password });
 
-    await axios
-      .post("https://localhost/api/users/login", {
-        email: email,
-        password: password,
-      })
-      .then((res) => {
-        setUser(res.data.item);
-        setCheckUser(false);
-        alert("로그인 성공!");
-        router.push("/");
-      })
-      .catch((err) => {
-        setCheckUser(true);
-        console.log(err.message);
-        alert("로그인 실패!");
-      });
+    if (data) {
+      setUser(data);
+      setMessage(false);
+      alert("로그인에 성공했습니다!");
+      router.push("/");
+    } else {
+      setMessage(true);
+      alert("로그인에 실패했습니다!");
+    }
   };
 
   return (
     <main className="flex h-screen flex-col items-center justify-center">
+      {/* 1.제목 */}
       <h2 className="mb-[57px] text-[36px] font-bold">로그인</h2>
 
-      <form className="flex w-[400px] flex-col" onSubmit={handleSignIn}>
+      {/* 2.이메일과 비밀번호 */}
+      <form className="flex w-[400px] flex-col" onSubmit={handleFormSubmit}>
+        {/* 이메일 */}
         <div className="mb-[6px] flex flex-col">
-          <label htmlFor="email" className="h-[32px] text-[14px] font-bold">
+          <label
+            htmlFor="email"
+            className="flex h-[32px] items-center text-[14px] font-bold"
+          >
             이메일 주소
           </label>
           <input
             id="email"
-            type="email"
             name="email"
-            ref={emailRef}
-            placeholder="example@essentia.co.kr"
-            className="mb-[26px] h-[32px] border-b border-black text-[14px] font-medium"
+            type="email"
+            value={email}
+            onChange={handleInputValue(setEmail)}
+            className="h-[32px] border-b border-black text-[14px] font-medium"
           />
-          <div
-            aria-live="polite"
-            className={cn("hidden text-[12px] text-red-500", {
-              block: checkUser,
-            })}
-          >
-            아이디를 확인해주세요
+          <div className="mb-[6px] flex h-[20px] items-center">
+            <span
+              className={cn("hidden text-[12px] text-red-500", {
+                block: message,
+              })}
+            >
+              아이디를 확인해주세요
+            </span>
           </div>
         </div>
-        <div className="mb-[26px] flex flex-col">
-          <label htmlFor="password" className="h-[32px] text-[14px] font-bold">
+
+        {/* 비밀번호 */}
+        <div className="mb-[46px] flex flex-col">
+          <label
+            htmlFor="password"
+            className="flex h-[32px] items-center text-[14px] font-bold"
+          >
             비밀번호
           </label>
           <input
             id="password"
-            type="password"
             name="password"
-            ref={passwordRef}
-            placeholder="영문 대/소문자, 숫자 및 특수문자를 포함한 비밀번호"
-            className="mb-[26px] h-[32px] border-b border-black text-[14px] font-medium"
+            type="password"
+            value={password}
+            onChange={handleInputValue(setPassword)}
+            className="h-[32px] border-b border-black text-[14px] font-medium"
           />
-          <div
-            aria-live="polite"
-            className={cn("hidden text-[12px] text-red-500", {
-              block: checkUser,
-            })}
-          >
-            비밀번호를 확인해주세요
+          <div className="h-[20px]">
+            <span
+              className={cn("hidden text-[12px] text-red-500", {
+                block: message,
+              })}
+            >
+              비밀번호를 확인해주세요
+            </span>
           </div>
         </div>
+
+        {/* 로그인 버튼 */}
         <button
           type="submit"
           className="mb-[20px] h-[50px] bg-black text-[18px] font-bold text-white"
@@ -109,6 +113,7 @@ export default function SignIn() {
         </button>
       </form>
 
+      {/* 3. 회원가입 */}
       <div className="mb-[20px] flex w-[400px] items-center justify-around">
         <Link
           href="/signup"
@@ -130,6 +135,7 @@ export default function SignIn() {
         </button>
       </div>
 
+      {/* 4. 라이브러리 회원가입 */}
       <div className="flex w-[400px] items-center justify-around">
         <button
           type="button"
