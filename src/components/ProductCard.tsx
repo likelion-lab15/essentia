@@ -22,7 +22,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <li key={_id} className="mr-[16px] h-[354px] w-[234px]">
       <img
-        src={mainImages[0]}
+        src={mainImages[0].url}
         alt={name}
         className="mb-[42px] h-[230px] w-[234px]"
       />

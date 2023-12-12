@@ -135,7 +135,6 @@ export default function Admin() {
 
   return (
     <>
-      <Header />
       <section className="flex flex-col items-center">
         <div className="flex h-[180px] items-center justify-center">
           <h2 className="w-[900px] text-center text-36 font-bold">
