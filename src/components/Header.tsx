@@ -3,12 +3,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 // import { getAccessToken, fetchRefreshToken } from "@/utils/_index";
 
 export default function Header() {
   /* 로고 효과를 위한 상태 */
   const [isHovered, setIsHovered] = useState(false);
-  
+
+  const router = useRouter();
+
   /*   useEffect(() => {
     if (localStorage.getItem("user")) {
       const accessToken = getAccessToken();
@@ -49,13 +52,18 @@ export default function Header() {
             </Link>
           </li>
           <li>
-            <Link href="/best" className="text-primary-500" accessKey="2">
-              BEST
+            <Link href="/products" className="text-primary-500" accessKey="2">
+              SHOP
             </Link>
           </li>
           <li>
-            <Link href="/brand" className="text-primary-500" accessKey="3">
-              BRAND
+            <Link
+              href="/productdetail"
+              className="text-primary-500"
+              accessKey="3"
+            >
+              {/* BRAND */}
+              DETAIL
             </Link>
           </li>
           <li>
@@ -102,7 +110,7 @@ export default function Header() {
           </button>
           <button
             aria-label="로그인 또는 로그아웃하기"
-            onClick={() => {}}
+            onClick={() => router.push("/signin")}
             className="bg-center bg-no-repeat"
           >
             <Image
