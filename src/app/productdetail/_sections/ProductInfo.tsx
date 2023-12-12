@@ -86,8 +86,10 @@ export default function ProductInfo() {
             {product.content}
           </p>
           <div className="mb-[15px] flex w-[560px] flex-row items-baseline justify-end">
-            <p className="mr-[14px] text-14 font-medium">50ml</p>
-            <p className="text-28 font-bold">{product.price}원</p>
+            <p className="mr-[14px] text-16 font-medium">발매가</p>
+            <p className="text-28 font-bold">
+              {product.price.toLocaleString()} 원
+            </p>
           </div>
 
           {/* 드롭다운 박스 */}
