@@ -4,6 +4,7 @@ import Products from "./_components/Products";
 import Filter from "@/containers/Filter";
 import brandList from "@/constants/brandList";
 import { useState } from "react";
+import ScrollTopButton from "@/components/ScrollTopButton";
 
 export default function AllProducts() {
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -13,6 +14,7 @@ export default function AllProducts() {
 
   return (
     <>
+      <ScrollTopButton />
       <main className="flex flex-col items-center">
         <div className="flex h-[400px] items-center justify-center">
           <h1 className=" w-[900px] border-b-[5px] border-black text-center text-50 font-bold">

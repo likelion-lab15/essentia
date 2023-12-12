@@ -4,3 +4,4 @@ export { default as Header } from "./Header";
 export { default as ProductCard } from "./ProductCard";
 export { default as InputField } from "./Input";
 export { default as Button } from "./Button";
+export { default as ScrollTopButton } from "./ScrollTopButton";
