@@ -1,20 +1,31 @@
 "use client";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-// import { getAccessToken, fetchRefreshToken } from "@/utils/_index";
+import { useUserStore } from "@/stores/useUserStore";
+import useTokens from "@/hooks/useTokens";
 
 export default function Header() {
-  /*   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      const accessToken = getAccessToken();
+  const user = useUserStore((state) => state.user);
+  const { getNewAccessToken } = useTokens();
+
+  useEffect(() => {
+    if (user) {
+      const accessToken = user.token.accessToken;
       const expirationTime = JSON.parse(atob(accessToken.split(".")[1])).exp;
       const currentTime = Math.floor(new Date().getTime() / 1000);
 
       // 토큰 만료됐을 경우
-      if (currentTime >= expirationTime) fetchRefreshToken();
+      if (currentTime >= expirationTime) {
+        const newAccessToken = getNewAccessToken();
+        console.log(newAccessToken);
+      } else {
+        console.log("토큰이 아직 멀쩡합니다!");
+      }
+    } else {
+      console.log("현재 토큰이 없는 상태입니다");
     }
-  }, []); */
+  }, [user, getNewAccessToken]);
 
   return (
     <header
