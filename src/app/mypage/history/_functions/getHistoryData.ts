@@ -1,11 +1,13 @@
 import axios from "axios";
-import { getAccessToken } from "@/utils/_index";
+import { getTokens } from "@/utils/_index";
+
+const { accessToken } = getTokens();
 
 export default async function getHistoryData(url) {
   try {
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     return response.data.item;

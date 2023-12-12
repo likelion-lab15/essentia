@@ -1,11 +1,13 @@
 import axios from "axios";
-import { getRefreshToken } from "./_index";
+import { getTokens } from "./_index";
 
 export default async function fetchRefreshToken() {
+  const { refreshToken } = getTokens();
+
   await axios
     .get("https://localhost/api/users/refresh", {
       headers: {
-        Authorization: `Bearer ${getRefreshToken()}`,
+        Authorization: `Bearer ${refreshToken}`,
       },
     })
     .then((res) => {
