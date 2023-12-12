@@ -1,10 +1,10 @@
 "use client";
 
-import axios from "axios";
 import Image from "next/image";
 import { Button } from "@/components/_index";
 import { useOutsideClick } from "@/hooks/_index";
 import { useEffect, useState, useRef } from "react";
+import axios from "@/api/axios";
 
 export default function ProductInfo() {
   // 향수 정보 상태 관리
@@ -35,7 +35,7 @@ export default function ProductInfo() {
     try {
       // 상품 id 1로 임시 고정
       const _id = 1;
-      const response = await axios.get(`https://localhost/api/products/${_id}`);
+      const response = await axios.get(`/products/${_id}`);
       const result = response.data.item;
       setProduct({
         name: result.name,
