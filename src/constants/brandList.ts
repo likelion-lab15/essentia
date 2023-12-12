@@ -4,23 +4,23 @@ const brandList = {
   data: [
     {
       title: "LE LABO",
-      href: "/",
+      href: "/products",
     },
     {
-      title: "구매내역",
-      href: "/mypage/history/buyhistory",
+      title: "BYREDO",
+      href: "/products",
     },
     {
-      title: "판매내역",
-      href: "/mypage/history/sellhistory",
+      title: "Aesop",
+      href: "/products",
     },
     {
-      title: "관심상품",
-      href: "/mypage/history",
+      title: "Diptyque",
+      href: "/products",
     },
     {
-      title: "리뷰",
-      href: "/mypage/history",
+      title: "Creed",
+      href: "/products",
     },
   ],
 };
