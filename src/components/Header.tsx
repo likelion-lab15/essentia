@@ -2,9 +2,13 @@
 // import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 // import { getAccessToken, fetchRefreshToken } from "@/utils/_index";
 
 export default function Header() {
+  /* 로고 효과를 위한 상태 */
+  const [isHovered, setIsHovered] = useState(false);
+  
   /*   useEffect(() => {
     if (localStorage.getItem("user")) {
       const accessToken = getAccessToken();
@@ -28,11 +32,13 @@ export default function Header() {
         <Link
           href="/"
           className="flex h-[80px] w-[140px] items-center justify-center"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           <Image
-            src="/Logo.png"
-            alt="홈페이지로 이동하는 로고 이미지"
-            width={120}
+            src={isHovered ? "/ONYX.svg" : "/ONYX-black.svg"}
+            alt="Logo image to go to homepage"
+            width={140}
             height={55}
           />
         </Link>
