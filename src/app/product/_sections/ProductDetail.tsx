@@ -39,6 +39,7 @@ export default function ProductPlus() {
     setActiveIndex(null);
   };
 
+  // 해당 섹션으로 스크롤 이동
   const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
     const headerHeight = 240;
     if (ref && ref.current) {
@@ -110,6 +111,17 @@ export default function ProductPlus() {
     setActiveIndex(index === activeIndex ? null : index);
   };
 
+  const navItems = [
+    { label: "상세정보", ref: detailInfoRef, section: "detailInfo" },
+    { label: "교환 및 반품안내", ref: returnInfoRef, section: "returnInfo" },
+    { label: `REVIEW (${countReviews})`, ref: reviewRef, section: "review" },
+    {
+      label: "추천 상품",
+      ref: recommendedProductsRef,
+      section: "recommendedProducts",
+    },
+  ];
+
   return (
     <>
       {/* 상세페이지 네비게이션  */}
@@ -118,48 +130,18 @@ export default function ProductPlus() {
         className="sticky top-[79px] z-10 flex h-[64px] w-full flex-row justify-center border-b border-t border-primary bg-white"
       >
         <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-tertiary">
-          <li>
-            <button
-              onClick={() => scrollToSection(detailInfoRef)}
-              className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
-                activeSection === "detailInfo" ? "font-bold text-primary" : ""
-              }`}
-            >
-              상세정보
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => scrollToSection(returnInfoRef)}
-              className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
-                activeSection === "returnInfo" ? "font-bold text-primary" : ""
-              }`}
-            >
-              교환 및 반품안내
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => scrollToSection(reviewRef)}
-              className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
-                activeSection === "review" ? "font-bold text-primary" : ""
-              }`}
-            >
-              REVIEW ({countReviews})
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => scrollToSection(recommendedProductsRef)}
-              className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
-                activeSection === "recommendedProducts"
-                  ? "font-bold text-primary"
-                  : ""
-              }`}
-            >
-              추천 상품
-            </button>
-          </li>
+          {navItems.map((item) => (
+            <li key={item.section}>
+              <button
+                onClick={() => scrollToSection(item.ref)}
+                className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
+                  activeSection === item.section ? "font-bold text-primary" : ""
+                }`}
+              >
+                {item.label}
+              </button>
+            </li>
+          ))}
         </ul>
       </nav>
       {/* 상세 이미지 SECTION */}
