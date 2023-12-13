@@ -67,11 +67,7 @@ export default function Header() {
             </Link>
           </li>
           <li>
-            <Link
-              href="/productdetail"
-              className="text-primary-500"
-              accessKey="3"
-            >
+            <Link href="/product" className="text-primary-500" accessKey="3">
               {/* BRAND */}
               DETAIL
             </Link>
