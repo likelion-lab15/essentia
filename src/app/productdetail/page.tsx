@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { Header } from "@/components/_index";
 import {
   ProductInfo,
   DetailNavigation,
@@ -11,7 +10,6 @@ import {
 
 export default function ProductDetail() {
   const [activeSection, setActiveSection] = useState("");
-
   const detailInfoRef = useRef(null);
   const reviewRef = useRef(null);
   const recommendRef = useRef(null);
@@ -52,7 +50,6 @@ export default function ProductDetail() {
 
   return (
     <>
-      <Header />
       <main className="flex flex-col items-center">
         <ProductInfo />
         <DetailNavigation

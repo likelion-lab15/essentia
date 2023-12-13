@@ -12,7 +12,7 @@ export default function DetailNavigation({
   return (
     <nav
       aria-label="상품 상세 네비게이션"
-      className="sticky top-0 z-10 mb-[100px] flex h-[64px] w-full flex-row justify-center border-b-2 border-t-2 border-primary bg-white"
+      className="z-99 sticky top-[79px] mb-[100px] flex h-[64px] w-full flex-row justify-center border-b-2 border-t-2 border-primary bg-white"
     >
       <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-tertiary">
         <li>
