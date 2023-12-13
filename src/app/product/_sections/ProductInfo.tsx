@@ -31,12 +31,21 @@ export default function ProductInfo() {
   };
 
   // 향수 정보 가져오기
-  async function getProductInfo() {
-    try {
-      // 상품 id 1로 임시 고정
-      const _id = 1;
-      const response = await axios.get(`/products/${_id}`);
-      const result = response.data.item;
+  useEffect(() => {
+    async function getProductInfo() {
+      try {
+        // 상품 id 1로 임시 고정
+        const _id = 1;
+        const response = await axios.get(`/products/${_id}`);
+        const result = response.data.item;
+        return result;
+      } catch (error) {
+        console.error("Axios Error 🥲", error);
+        return [];
+      }
+    }
+
+    getProductInfo().then((result) => {
       setProduct({
         name: result.name,
         price: result.price,
@@ -45,15 +54,10 @@ export default function ProductInfo() {
         content: result.content,
         image: result.mainImages[0].url,
       });
-    } catch (error) {
-      console.error("Axios Error 🥲", error);
-      return [];
-    }
-  }
-
-  useEffect(() => {
-    getProductInfo();
+    });
   }, []);
+
+  console.log(product.image);
 
   return (
     <section className="flex h-[660px] w-[1280px] items-center justify-center ">
@@ -63,8 +67,8 @@ export default function ProductInfo() {
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
           <Image
             alt="blanche"
-            src="/blanche.webp"
-            // src={product.image}
+            // src="/blanche.webp"
+            src={`https://localhost:443${product.image}`}
             width={450}
             height={450}
             className="bg-[#F4F4F4]"
