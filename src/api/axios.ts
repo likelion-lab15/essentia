@@ -1,9 +1,13 @@
-// "use client";
+"use client";
 
 import axios from "axios";
 
 const BASE_URL = "https://localhost/api/";
-const user = JSON.parse(sessionStorage.getItem("user")).state.user;
+
+const user =
+  typeof window !== "undefined"
+    ? JSON.parse(sessionStorage.getItem("user")).state.user
+    : null;
 
 let accessToken;
 
