@@ -1,14 +1,16 @@
 import React from "react";
+import cn from "@/utils/cn";
 
 type TInputField = {
   label: string;
   id: string;
   type: string;
-  placeholder: string;
-  showError: boolean;
-  errorMessage: string;
-  invalid: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  showError?: boolean;
+  errorMessage?: string;
+  invalid?: boolean;
+  value?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function InputField({
@@ -20,6 +22,8 @@ export default function InputField({
   errorMessage,
   invalid,
   onChange,
+  value,
+  srOnly,
 }: TInputField) {
   return (
     <div className="flex h-[106px] w-[400px] flex-col text-14">
@@ -37,6 +41,7 @@ export default function InputField({
         aria-errormessage={id + "Error"}
         aria-invalid={invalid}
         onChange={onChange}
+        value={value}
       />
       {showError && (
         <div
