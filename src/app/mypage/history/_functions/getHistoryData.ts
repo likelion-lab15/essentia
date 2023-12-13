@@ -1,15 +1,12 @@
-import axios from "axios";
-import { getAccessToken } from "@/utils/_index";
+import { axiosPrivate } from "@/api/axios";
 
-export default async function getHistoryData(url) {
+export default async function getHistoryData(url: string) {
   try {
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    });
+    const response = await axiosPrivate.get(url);
     return response.data.item;
   } catch (err) {
-    console.log(err);
+    if (err instanceof Error) {
+      console.log(err.message);
+    }
   }
 }
