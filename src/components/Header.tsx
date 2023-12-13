@@ -1,13 +1,42 @@
 "use client";
-import React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/stores/useUserStore";
+import useTokens from "@/hooks/useTokens";
 
 export default function Header() {
+  /* user 토큰을 위한 상태 */
+  const user = useUserStore((state) => state.user);
+  const { getNewAccessToken } = useTokens();
+  
+   /* 로고 효과를 위한 상태 */
+  const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      const accessToken = user.token.accessToken;
+      const expirationTime = JSON.parse(atob(accessToken.split(".")[1])).exp;
+      const currentTime = Math.floor(new Date().getTime() / 1000);
+
+      // 토큰 만료됐을 경우
+      if (currentTime >= expirationTime) {
+        const newAccessToken = getNewAccessToken();
+        console.log(newAccessToken);
+      } else {
+        console.log("토큰이 아직 멀쩡합니다!");
+      }
+    } else {
+      console.log("현재 토큰이 없는 상태입니다");
+    }
+  }, [user, getNewAccessToken]);
+
   return (
     <header
       role="banner"
-      className="h-[80px] border-b border-primary pl-[60px] pr-[60px]"
+      className="z-99 sticky top-0 h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
     >
       <nav
         aria-label="메인 네비게이션"
@@ -16,11 +45,13 @@ export default function Header() {
         <Link
           href="/"
           className="flex h-[80px] w-[140px] items-center justify-center"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           <Image
-            src="/Logo.png"
-            alt="홈페이지로 이동하는 로고 이미지"
-            width={120}
+            src={isHovered ? "/ONYX.svg" : "/ONYX-black.svg"}
+            alt="Logo image to go to homepage"
+            width={140}
             height={55}
           />
         </Link>
@@ -31,13 +62,18 @@ export default function Header() {
             </Link>
           </li>
           <li>
-            <Link href="/best" className="text-primary-500" accessKey="2">
-              BEST
+            <Link href="/products" className="text-primary-500" accessKey="2">
+              SHOP
             </Link>
           </li>
           <li>
-            <Link href="/brand" className="text-primary-500" accessKey="3">
-              BRAND
+            <Link
+              href="/productdetail"
+              className="text-primary-500"
+              accessKey="3"
+            >
+              {/* BRAND */}
+              DETAIL
             </Link>
           </li>
           <li>
@@ -84,7 +120,7 @@ export default function Header() {
           </button>
           <button
             aria-label="로그인 또는 로그아웃하기"
-            onClick={() => {}}
+            onClick={() => router.push("/signin")}
             className="bg-center bg-no-repeat"
           >
             <Image

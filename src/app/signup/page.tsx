@@ -225,7 +225,7 @@ export default function SignUp() {
   return (
     <div>
       <Header />
-      <main className="flex flex-col items-center pt-[120px]">
+      <main className="flex h-[1500px] flex-col items-center pt-[120px]">
         <h2 className="mb-[66px] text-36 font-bold">회원가입</h2>
 
         <form onSubmit={handleSubmit} className="flex w-[400px] flex-col">

@@ -1,6 +1,19 @@
+"use client";
+
 import Link from "next/link";
 
-export default function FilterList({ list }) {
+type FilterListProps = {
+  list: {
+    title: string;
+    data: {
+      title: string;
+      href: string;
+    }[];
+  };
+  onClick?: () => void;
+};
+
+export default function FilterList({ list, onClick }: FilterListProps) {
   const { title, data } = list;
 
   return (
@@ -15,6 +28,7 @@ export default function FilterList({ list }) {
             <li
               key={index}
               className="flex h-[36px] cursor-pointer items-center px-[25px] font-medium text-[#808080] hover:bg-[#A0D1EF] hover:text-[#222]"
+              onClick={onClick}
             >
               <Link href={href}>{title}</Link>
             </li>
