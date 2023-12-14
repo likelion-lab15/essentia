@@ -1,5 +1,4 @@
 "use client";
-import Header from "@/components/Header";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
@@ -77,7 +76,14 @@ export default function Sell() {
       // 파일 업로드 함수 호출
       const uploadedPaths = await uploadFiles(files);
       // mainImages 상태 업데이트
-      setProduct({ ...product, mainImages: uploadedPaths });
+      setProduct({
+        ...product,
+        mainImages: uploadedPaths.map((path) => ({
+          url: path,
+          fileName: files.name,
+          orgName: files.name,
+        })),
+      });
       // 각 파일에 대한 미리보기 URL 생성
       const previewUrls = files.map((file) => URL.createObjectURL(file));
       // 미리보기 URL들을 상태에 저장
@@ -105,10 +111,10 @@ export default function Sell() {
 
       console.log("서버에서의 대답", product); // 서버로 보내기 전에 콘솔 확인 (디버깅)
 
-      // localStorage에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
-      const userDataString = localStorage.getItem("user");
+      // sessionStorage에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
+      const userDataString = sessionStorage.getItem("user");
       const accessToken = userDataString
-        ? JSON.parse(userDataString).token.accessToken
+        ? JSON.parse(userDataString).state.user.token.accessToken
         : null;
       // 서버에 상품 정보를 POST 요청
       const response = await axios.post(
