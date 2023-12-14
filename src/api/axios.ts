@@ -4,15 +4,15 @@ import axios from "axios";
 
 const BASE_URL = "https://localhost/api/";
 
-const user =
+const token =
   typeof window !== "undefined"
-    ? JSON.parse(sessionStorage.getItem("user")).state.user
+    ? JSON.parse(sessionStorage.getItem("token")).state.token
     : null;
 
 let accessToken;
 
-if (user) {
-  accessToken = user.token.accessToken;
+if (token) {
+  accessToken = token.accessToken;
 } else {
   accessToken = "";
 }

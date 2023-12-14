@@ -3,21 +3,21 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/stores/useUserStore";
+import { useTokenStore } from "@/stores/_index";
 import useTokens from "@/hooks/useTokens";
 
 export default function Header() {
   /* user 토큰을 위한 상태 */
-  const user = useUserStore((state) => state.user);
+  const token = useTokenStore((state) => state.token);
   const { getNewAccessToken } = useTokens();
-  
-   /* 로고 효과를 위한 상태 */
+
+  /* 로고 효과를 위한 상태 */
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      const accessToken = user.token.accessToken;
+    if (token) {
+      const accessToken = token.accessToken;
       const expirationTime = JSON.parse(atob(accessToken.split(".")[1])).exp;
       const currentTime = Math.floor(new Date().getTime() / 1000);
 
@@ -31,7 +31,7 @@ export default function Header() {
     } else {
       console.log("현재 토큰이 없는 상태입니다");
     }
-  }, [user, getNewAccessToken]);
+  }, [token, getNewAccessToken]);
 
   return (
     <header
