@@ -27,7 +27,9 @@ export default function EditUser() {
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
     e.preventDefault();
-    console.log("전송 완료");
+  // input값 업데이트 기능
+  const handleInputValue = (setter) => (e) => {
+    setter(e.target.value);
   };
 
   // 주소 변경 기능
