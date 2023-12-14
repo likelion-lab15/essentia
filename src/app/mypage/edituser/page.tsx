@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button, AddressModal } from "@/components/_index";
 import { useUserStore } from "@/stores/useUserStore";
+import { axiosPrivate } from "@/api/axios";
 import { cn } from "@/utils/_index";
 
 export default function EditUser() {
@@ -26,7 +27,37 @@ export default function EditUser() {
   // 주소 API 관련 상태 관리
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
+  // 회원정보 수정기능
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    const newUser = {
+      name: name,
+      phone: phone,
+      password: newPassword,
+      extra: {
+        addressBook: {
+          value: address,
+          detail: detailAddress,
+        },
+        birthday: birthday,
+      },
+    };
+
+    try {
+      const res = await axiosPrivate.patch(`users/${user._id}`, newUser);
+      const res2 = await axiosPrivate.get(`users/${user._id}`);
+
+      setUser(res2.data.item);
+      alert("회원정보 수정을 성공했습니다!");
+    } catch (err) {
+      if (err instanceof Error) {
+        console.log(err.message);
+      }
+      alert("회원정보 수정을 실패했습니다!");
+    }
+  };
+
   // input값 업데이트 기능
   const handleInputValue = (setter) => (e) => {
     setter(e.target.value);
