@@ -1,16 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { Button, InputField } from "@/components/_index";
-
-function getUserData() {
-  const userData = JSON.parse(localStorage.getItem("user"));
-  return userData;
-}
+import { Button, AddressModal } from "@/components/_index";
+import { useUserStore } from "@/stores/useUserStore";
+import { cn } from "@/utils/_index";
 
 export default function EditUser() {
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const [name, setName] = useState(user?.name);
+  const [phone, setPhone] = useState(user?.phone);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassowrd] = useState("");
+
+  const [birthday, setBirthday] = useState(user?.extra.birthday);
+  const [address, setAddress] = useState(user?.extra.addressBook.value);
+  const [detailAddress, setDetailAddress] = useState(
+    user?.extra.addressBook.detail
+  );
+
   // 이벤트 핸들러
   const handleSubmit = (e) => {
+
+  // 주소 API 관련 상태 관리
+  const [isAddressModalOpen, setAddressModalOpen] = useState(false);
+
     e.preventDefault();
     console.log("전송 완료");
   };
@@ -19,92 +34,252 @@ export default function EditUser() {
 
   return (
     <section className="w-[1000px]">
+      {/* 1. 제목 */}
       <div className="mb-[40px] flex h-[70px] items-center border-b-[3px] border-[#222]">
         <p className="text-[28px] font-bold">회원정보 수정</p>
       </div>
-      {/* <Form> */}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-[60px] flex justify-start gap-[100px]">
-          <div className="w-full">
+      {/* 2. 회원정보 */}
+      <form className="flex w-[900px] flex-col" onSubmit={handleFormSubmit}>
+        <div className="mb-[60px] flex gap-[100px]">
+          <div className="w-[400px]">
             {/* 이메일 */}
-            <InputField
-              label="이메일"
-              id="email"
-              type="email"
-              value={userData.email}
-            />
-
-            {/* 이름 */}
-            <InputField
-              label="이름"
-              id="name"
-              type="text"
-              value={userData.name}
-            />
-
-            {/* 휴대폰 */}
-            <InputField
-              label="휴대폰 번호"
-              id="phone"
-              type="tel"
-              value={userData.phone}
-            />
-
-            {/* 비밀번호 */}
-            <InputField label="현재 비밀번호" id="password" type="password" />
-
-            {/* 비밀번호 중복 */}
-            <InputField
-              label="새로운 비밀번호"
-              id="passwordCheck"
-              type="password"
-            />
-          </div>
-
-          <div className="w-full">
-            {/* 생년월일 */}
-            <InputField
-              label="생년월일"
-              id="birthday"
-              type="text"
-              value={userData.extra.birthday}
-            />
-            {/* 배송지1 */}
-            <InputField
-              label="등록된 배송지"
-              id="address1"
-              type="text"
-              value={userData.extra.addressBook[0].value}
-            />
-            {/* 배송지2 */}
-            {/* <InputField
-            label="등록된 배송지2"
-            id="address2"
-            type="text"
-            value={userData.extra.addressBook[1].value}
-          /> */}
-            {/* <InputField label="새로운 배송지 등록" id="newAddress" type="text" /> */}
-            <div className="w-[400px]">
+            <div className="mb-[40px] flex h-[94px] flex-col">
               <label
-                htmlFor="newAddress"
-                className="flex h-[38px] w-full items-center font-semibold"
+                htmlFor="email"
+                className="flex h-[32px] items-center text-[14px] font-bold"
               >
-                새로운 배송지 등록
+                이메일 주소
               </label>
-              <Button type="button" label="주소 검색" className="mb-[14px]" />
               <input
-                type="text"
-                id="newAddress"
-                className="h-[38px] w-full border-b border-primary"
+              id="email"
+                name="email"
+              type="email"
+                readOnly={true}
+                value={user?.email}
+                className="h-[32px] border-b border-black text-[14px] font-medium"
               />
+              <div
+                className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                  "flex items-center": message,
+                })}
+              >
+                아이디를 확인해주세요
+              </div>
             </div>
+
+            {/* 이름과 휴대폰 번호 */}
+            <fieldset className="mb-[40px]">
+              <legend className="flex h-[32px] items-center text-[14px] font-bold">
+                이름과 휴대폰 번호
+              </legend>
+
+              <div className="flex h-[62px] flex-col">
+                <label
+                  htmlFor="name"
+                  className="sr-only flex h-[32px] items-center text-[14px] font-bold"
+                >
+                  이름
+                </label>
+                <input
+              id="name"
+                  name="name"
+              type="text"
+                  value={name}
+                  onChange={handleInputValue(setName)}
+                  className="h-[32px] border-b border-black text-[14px] font-medium"
+                />
+                <div
+                  className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                    "flex items-center": message,
+                  })}
+                >
+                  이름을 확인해주세요
+                </div>
+              </div>
+
+              <div className="flex h-[62px] flex-col">
+                <label
+                  htmlFor="phone"
+                  className="sr-only flex h-[32px] items-center text-[14px] font-bold"
+                >
+                  휴대폰 번호를 확인해주세요
+                </label>
+                <input
+              id="phone"
+                  name="phone"
+              type="tel"
+                  value={phone}
+                  onChange={handleInputValue(setPhone)}
+                  className="h-[32px] border-b border-black text-[14px] font-medium"
+                />
+                <div
+                  className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                    "flex items-center": message,
+                  })}
+                >
+                  이름을 확인해주세요
+                </div>
+              </div>
+            </fieldset>
+
+            {/* 비밀번호 수정 */}
+            <fieldset>
+              <legend className="flex h-[32px] items-center text-[14px] font-bold">
+                비밀번호 수정
+              </legend>
+
+              <div className="flex h-[62px] flex-col">
+                <label
+                  htmlFor="oldPassword"
+                  className="sr-only flex h-[32px] items-center text-[14px] font-bold"
+                >
+                  현재 비밀번호
+                </label>
+                <input
+                  id="oldPassword"
+                  name="oldPassword"
+                  type="password"
+                  placeholder="현재 비밀번호"
+                  value={oldPassword}
+                  onChange={handleInputValue(setOldPassword)}
+                  className="h-[32px] border-b border-black text-[14px] font-medium"
+                />
+                <div
+                  className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                    "flex items-center": message,
+                  })}
+                >
+                  비밀번호를 확인해주세요
+                </div>
+              </div>
+
+              <div className="flex h-[62px] flex-col">
+                <label
+                  htmlFor="newPassword"
+                  className="sr-only flex h-[32px] items-center text-[14px] font-bold"
+                >
+                  새로운 비밀번호
+                </label>
+                <input
+                  id="newPassword"
+                  name="newPassword"
+              type="password"
+                  placeholder="새로운 비밀번호"
+                  value={newPassword}
+                  onChange={handleInputValue(setNewPassowrd)}
+                  className="h-[32px] border-b border-black text-[14px] font-medium"
+                />
+                <div
+                  className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                    "flex items-center": message,
+                  })}
+                >
+                  새로운 비밀번호를 확인해주세요
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div className="w-[400px]">
+            {/* 생년월일 */}
+            <div className="mb-[40px] flex h-[94px] flex-col">
+              <label
+                htmlFor="birthday"
+                className="flex h-[32px] items-center text-[14px] font-bold"
+              >
+                생년월일
+              </label>
+              <input
+                id="birthday"
+                name="birthday"
+                type="text"
+                value={birthday}
+                onChange={handleInputValue(setBirthday)}
+                className="h-[32px] border-b border-black text-[14px] font-medium"
+              />
+              <div
+                className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                  "flex items-center": message,
+                })}
+              >
+                생년월일을 확인해주세요
+              </div>
+            </div>
+
+            {/* 주소 */}
+            <fieldset className="mb-[40px]">
+              <legend className="flex h-[32px] items-center text-[14px] font-bold">
+                주소
+              </legend>
+
+              <div className="flex h-[62px] flex-col">
+                <label
+                  htmlFor="address"
+                  className="sr-only flex h-[32px] items-center text-[14px] font-bold"
+                >
+                  주소
+                </label>
+                <input
+                  id="address"
+                  name="address"
+                  type="text"
+                  value={address}
+                  readOnly={true}
+                  onChange={handleInputValue(setAddress)}
+                  className="h-[32px] border-b border-black text-[14px] font-medium"
+                />
+                <div
+                  className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                    "flex items-center": message,
+                  })}
+                >
+                  주소를 확인해주세요
+                </div>
+              </div>
+
+              <div className="flex h-[62px] flex-col">
+                <label
+                  htmlFor="detailAdress"
+                  className="sr-only flex h-[32px] items-center text-[14px] font-bold"
+                >
+                  상세 주소
+                </label>
+                <input
+                  id="detailAdress"
+                  name="detailAdress"
+                  type="text"
+                  value={detailAddress}
+                  onChange={handleInputValue(setDetailAddress)}
+                  className="h-[32px] border-b border-black text-[14px] font-medium"
+                />
+                <div
+                  className={cn("hidden h-[30px] text-[12px] text-red-500", {
+                    "flex items-center": message,
+                  })}
+                >
+                  상세 주소를 확인해주세요
+                </div>
+              </div>
+
+              <Button
+                label="새로운 주소 등록"
+                type="button"
+                onClick={() => setAddressModalOpen(true)}
+              />
+            </fieldset>
           </div>
         </div>
 
-        <div className="flex w-full justify-center">
-          <Button type="button" label="회원정보 수정 완료" className="m-auto" />
-        </div>
+        {/* 3. 수정 버튼 */}
+        <Button label="회원정보 수정" type="submit" className="mx-auto" />
       </form>
+
+      {/* 주소 모달창 */}
+      <AddressModal
+        isOpen={isAddressModalOpen}
+        onClose={() => setAddressModalOpen(false)}
+        onSelectAddress={handleAddressChange}
+      />
     </section>
   );
 }
