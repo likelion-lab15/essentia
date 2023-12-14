@@ -21,8 +21,8 @@ export default function EditUser() {
     user?.extra.addressBook.detail
   );
 
-  // 이벤트 핸들러
-  const handleSubmit = (e) => {
+  // 경고 메세지 상태 관리
+  const [message, setMessage] = useState(false);
 
   // 주소 API 관련 상태 관리
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
@@ -49,11 +49,13 @@ export default function EditUser() {
       const res2 = await axiosPrivate.get(`users/${user._id}`);
 
       setUser(res2.data.item);
+      setMessage(false);
       alert("회원정보 수정을 성공했습니다!");
     } catch (err) {
       if (err instanceof Error) {
         console.log(err.message);
       }
+      setMessage(true);
       alert("회원정보 수정을 실패했습니다!");
     }
   };
@@ -88,9 +90,9 @@ export default function EditUser() {
                 이메일 주소
               </label>
               <input
-              id="email"
+                id="email"
                 name="email"
-              type="email"
+                type="email"
                 readOnly={true}
                 value={user?.email}
                 className="h-[32px] border-b border-black text-[14px] font-medium"
@@ -118,9 +120,9 @@ export default function EditUser() {
                   이름
                 </label>
                 <input
-              id="name"
+                  id="name"
                   name="name"
-              type="text"
+                  type="text"
                   value={name}
                   onChange={handleInputValue(setName)}
                   className="h-[32px] border-b border-black text-[14px] font-medium"
@@ -142,9 +144,9 @@ export default function EditUser() {
                   휴대폰 번호를 확인해주세요
                 </label>
                 <input
-              id="phone"
+                  id="phone"
                   name="phone"
-              type="tel"
+                  type="tel"
                   value={phone}
                   onChange={handleInputValue(setPhone)}
                   className="h-[32px] border-b border-black text-[14px] font-medium"
@@ -200,7 +202,7 @@ export default function EditUser() {
                 <input
                   id="newPassword"
                   name="newPassword"
-              type="password"
+                  type="password"
                   placeholder="새로운 비밀번호"
                   value={newPassword}
                   onChange={handleInputValue(setNewPassowrd)}
