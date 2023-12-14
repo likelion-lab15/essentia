@@ -30,7 +30,11 @@ export default function EditUser() {
     console.log("전송 완료");
   };
 
-  const [userData, setUserData] = useState(getUserData());
+  // 주소 변경 기능
+  const handleAddressChange = (data) => {
+    setAddress(data.address);
+    setAddressModalOpen(false);
+  };
 
   return (
     <section className="w-[1000px]">
