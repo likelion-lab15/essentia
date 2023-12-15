@@ -1,13 +1,22 @@
 "use client";
 
-import { useUserStore } from "@/stores/_index";
+import { useState, useEffect } from "react";
 
 export default function UserName() {
-  const user = useUserStore((state) => state.user);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const user = sessionStorage.getItem("user");
+
+    if (user) {
+      const userName = JSON.parse(user).state.user.name;
+      setUserName(userName);
+    }
+  }, []);
 
   return (
     <>
-      <span className="text-[48px] font-bold">{user.name} </span>님 환영합니다
+      <span className="text-[48px] font-bold">{userName} </span>님 환영합니다
     </>
   );
 }
