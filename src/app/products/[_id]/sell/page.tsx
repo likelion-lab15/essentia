@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useTokenStore } from "@/stores/_index";
 
 export default function Sell() {
   const [product, setProduct] = useState({
@@ -16,6 +17,7 @@ export default function Sell() {
     extra: { depth: 2, parent: "", restamount: "", date: "" },
   });
   const [previewImages, setPreviewImages] = useState([]);
+  const token = useTokenStore((state) => state.token);
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,11 +113,9 @@ export default function Sell() {
 
       console.log("서버에서의 대답", product); // 서버로 보내기 전에 콘솔 확인 (디버깅)
 
-      // sessionStorage에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
-      const userDataString = sessionStorage.getItem("user");
-      const accessToken = userDataString
-        ? JSON.parse(userDataString).state.user.token.accessToken
-        : null;
+      // useTokenStore에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
+      const accessToken = token.accessToken;
+
       // 서버에 상품 정보를 POST 요청
       const response = await axios.post(
         "https://localhost/api/seller/products/",
