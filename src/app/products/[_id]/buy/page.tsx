@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/_index";
 
-export default function Select() {
+export default function Buy() {
   return (
     <div className="flex flex-col items-center justify-center">
       {/* 페이지 제목 */}
