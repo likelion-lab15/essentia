@@ -1,21 +1,21 @@
 "use client";
 
 import { axiosPrivate } from "@/api/axios";
-import { useUserStore } from "@/stores/useUserStore";
+import { useTokenStore } from "@/stores/_index";
 
 export default function useTokens() {
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
+  const token = useTokenStore((state) => state.token);
+  const setToken = useTokenStore((state) => state.setToken);
 
   // accessToken 가져오기
   const getAccessToken = () => {
-    const accessToken = user.token.accessToken;
+    const accessToken = token.accessToken;
     return accessToken;
   };
 
   // refreshToken 가져오기
   const getRefreshToken = () => {
-    const refreshToken = user.token.refreshToken;
+    const refreshToken = token.refreshToken;
     return refreshToken;
   };
 
@@ -31,9 +31,10 @@ export default function useTokens() {
       });
 
       const newAccessToken = res.data.accessToken;
-      const newUser = user;
-      newUser.token.accessToken = newAccessToken;
-      setUser(newUser);
+      const newToken = token;
+      newToken.accessToken = newAccessToken;
+      setToken(newToken);
+      console.log("토큰 업데이트 성공!");
     } catch (err) {
       if (err instanceof Error) {
         console.log(err.message);

@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { postUserSignin } from "./_functions/_index";
-import { useUserStore } from "@/stores/useUserStore";
+import { useUserStore, useTokenStore } from "@/stores/_index";
 
 // 프로젝트 내부 임포트
 import { cn } from "@/utils/_index";
@@ -18,6 +18,7 @@ export default function SignIn() {
 
   /* 전역상태 */
   const setUser = useUserStore((state) => state.setUser);
+  const setToken = useTokenStore((state) => state.setToken);
 
   /* 훅 */
   const router = useRouter();
@@ -33,7 +34,8 @@ export default function SignIn() {
     const data = await postUserSignin({ email, password });
 
     if (data) {
-      setUser(data);
+      setUser(data.user);
+      setToken(data.token);
       setMessage(false);
       alert("로그인에 성공했습니다!");
       router.push("/");
