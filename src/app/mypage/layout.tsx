@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { userInfoList, shoppingInfoList } from "@/constants/_index";
 import { FilterList } from "@/components/_index";
 import { Filter } from "@/containers/_index";
+import { UserName } from "./_components/_index";
 
 export default function layout({ children }: { children: ReactNode }) {
   return (
@@ -10,7 +11,8 @@ export default function layout({ children }: { children: ReactNode }) {
       {/* 상단 콘텐츠 */}
       <div className="relative mb-[62px] h-[300px] items-center border-b-[1px] border-black text-[32px]">
         <div className="absolute left-0 top-[50%]">
-          <span className="text-[48px] font-bold">현지수 </span>님 환영합니다
+          {/* 사용자 이름 */}
+          <UserName />
         </div>
       </div>
       {/* 하단 콘텐츠 */}
