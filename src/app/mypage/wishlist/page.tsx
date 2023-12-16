@@ -3,6 +3,7 @@
 import { axiosPrivate } from "@/api/axios";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function WishList() {
   const [wishList, setWishList] = useState([]);
@@ -29,7 +30,9 @@ export default function WishList() {
   };
 
   // 찜 제거하기
-  const deleteWish = async (id: number) => {
+  const deleteWish = async (e, id: number) => {
+    e.stopPropagation();
+
     try {
       await axiosPrivate.delete(`bookmarks/${id}`);
       setUpdateFlag((prev) => !prev);
@@ -50,12 +53,13 @@ export default function WishList() {
 
       {/* 2. 장바구니 품목 */}
       <div className="flex flex-wrap">
-        {wishList.map((item, index) => {
+        {wishList.map((item) => {
           const { image, name, price } = item.product;
 
           return (
-            <div
+            <Link
               key={item._id}
+              href={`/products/${item._id}`}
               className="relative mr-[16px] h-[354px] w-[234px]"
             >
               <Image
@@ -78,7 +82,7 @@ export default function WishList() {
               >
                 <Image src="/heart_fill.svg" alt="찜" width={20} height={20} />
               </button>
-            </div>
+            </Link>
           );
         })}
       </div>
