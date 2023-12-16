@@ -28,6 +28,19 @@ export default function WishList() {
     }
   };
 
+  // 찜 제거하기
+  const deleteWish = async (id: number) => {
+    try {
+      await axiosPrivate.delete(`bookmarks/${id}`);
+      setUpdateFlag((prev) => !prev);
+      alert(`${id}번 상품을 제거했습니다`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  };
+
   return (
     <section className="flex w-[1000px] flex-wrap">
       {wishList.map((item, index) => {
