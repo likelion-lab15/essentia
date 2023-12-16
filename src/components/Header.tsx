@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useTokenStore } from "@/stores/_index";
+import { useTokenStore, useUserStore } from "@/stores/_index";
 import { useTokens } from "@/hooks/_index";
 
 export default function Header() {
   /* user 토큰을 위한 상태 */
   const token = useTokenStore((state) => state.token);
+  const userToken = useUserStore((state) => state.user);
+
   const { getNewAccessToken } = useTokens();
 
   /* 로고 효과를 위한 상태 */
@@ -121,7 +123,7 @@ export default function Header() {
             className="bg-center bg-no-repeat"
           >
             <Image
-              src="/signin-icon.svg"
+              src={userToken ? "/signout-icon.svg" : "/signin-icon.svg"}
               alt="로그인 로그아웃 아이콘"
               width={24}
               height={24}
