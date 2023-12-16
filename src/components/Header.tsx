@@ -1,19 +1,36 @@
 "use client";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useTokenStore } from "@/stores/_index";
 import { useTokens } from "@/hooks/_index";
+import { useState, useEffect } from "react";
+import { useTokenStore, useUserStore } from "@/stores/_index";
+import naviList from "@/constants/naviList";
 
 export default function Header() {
-  /* user 토큰을 위한 상태 */
+  /* User 토큰을 위한 상태 관리 */
   const token = useTokenStore((state) => state.token);
-  const { getNewAccessToken } = useTokens();
+  const user = useUserStore((state) => state.user);
+
+  /* 로그아웃을 위한 토큰 상태 관리 */
+  const setToken = useTokenStore((state) => state.setToken);
+  const setUser = useUserStore((state) => state.setUser);
+
+  /* 로그인 상태를 위한 상태 */
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  /* 로그아웃 처리 함수 */
+  const handleLogout = () => {
+    setUser(null);
+    setToken(null);
+    alert("로그아웃 되었습니다");
+  };
 
   /* 로고 효과를 위한 상태 */
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+
+  const { getNewAccessToken } = useTokens();
 
   useEffect(() => {
     if (token) {
@@ -34,10 +51,19 @@ export default function Header() {
     }
   }, [token, getNewAccessToken]);
 
+  /* 마운트될 때 로그인, 토큰 상태를 확인하고 아이콘 변경 */
+  useEffect(() => {
+    if (token && user) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [token, user]);
+
   return (
     <header
       role="banner"
-      className="z-99 sticky top-0 h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
+      className="sticky top-0 z-[99px] h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
     >
       <nav
         aria-label="메인 네비게이션"
@@ -45,7 +71,7 @@ export default function Header() {
       >
         <Link
           href="/"
-          className="flex h-[80px] w-[140px] items-center justify-center"
+          className="mr-[60px] flex h-[80px] w-[140px] items-center justify-center"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -57,40 +83,20 @@ export default function Header() {
           />
         </Link>
         <ul className="text-primary-500 flex w-[500px] justify-between text-16 ">
-          <li>
-            <Link href="/about" className="" accessKey="1">
-              ABOUT
-            </Link>
-          </li>
-          <li>
-            <Link href="/products" className="text-primary-500" accessKey="2">
-              SHOP
-            </Link>
-          </li>
-          <li>
-            <Link href="/product" className="text-primary-500" accessKey="3">
-              {/* BRAND */}
-              DETAIL
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="text-primary-500" accessKey="4">
-              WOMEN
-            </Link>
-          </li>
-          <li>
-            <Link href="/men" className="text-primary-500" accessKey="4">
-              MEN
-            </Link>
-          </li>
-          <li>
-            <Link href="/magazine" className="text-primary-500" accessKey="4">
-              MAGAZINE
-            </Link>
-          </li>
+          {naviList.map((naviList, index) => (
+            <li key={naviList.href}>
+              <Link
+                href={naviList.href}
+                className="text-primary-500"
+                accessKey={`${index + 1}`}
+              >
+                {naviList.text}
+              </Link>
+            </li>
+          ))}
         </ul>
 
-        <div className="flex h-[80px] w-[280px] justify-between pl-[80px] ">
+        <div className="ml-[100px] flex h-[80px] w-[180px] justify-between">
           <button
             aria-label="검색창 열기"
             onClick={() => {}}
@@ -105,23 +111,23 @@ export default function Header() {
           </button>
           <button
             aria-label="마이페이지로 이동하기"
-            onClick={() => {}}
+            onClick={() => router.push("/mypage")}
             className="bg-center bg-no-repeat"
           >
             <Image
               src="/user-icon.svg"
-              alt="유저 아이콘"
+              alt=" 마이페이지 아이콘"
               width={24}
               height={24}
             />
           </button>
           <button
             aria-label="로그인 또는 로그아웃하기"
-            onClick={() => router.push("/signin")}
+            onClick={isLoggedIn ? handleLogout : () => router.push("/signin")}
             className="bg-center bg-no-repeat"
           >
             <Image
-              src="/signin-icon.svg"
+              src={isLoggedIn ? "/signout-icon.svg" : "/signin-icon.svg"}
               alt="로그인 로그아웃 아이콘"
               width={24}
               height={24}
@@ -129,7 +135,7 @@ export default function Header() {
           </button>
           <button
             aria-label="찜 목록 보기"
-            onClick={() => {}}
+            onClick={() => router.push("/mypage/wishlist")}
             className="bg-center bg-no-repeat"
           >
             <Image
