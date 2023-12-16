@@ -16,6 +16,9 @@ export default function Header() {
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useUserStore((state) => state.setUser);
 
+  /* 로그인 상태를 위한 상태 */
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   /* 로그아웃 처리 함수 */
   const handleLogout = () => {
     setUser(null);
@@ -47,6 +50,15 @@ export default function Header() {
       console.log("현재 토큰이 없는 상태입니다");
     }
   }, [token, getNewAccessToken]);
+
+  /* 마운트될 때 로그인, 토큰 상태를 확인하고 아이콘 변경 */
+  useEffect(() => {
+    if (token && user) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [token, user]);
 
   return (
     <header
@@ -111,11 +123,11 @@ export default function Header() {
           </button>
           <button
             aria-label="로그인 또는 로그아웃하기"
-            onClick={user ? handleLogout : () => router.push("/signin")}
+            onClick={isLoggedIn ? handleLogout : () => router.push("/signin")}
             className="bg-center bg-no-repeat"
           >
             <Image
-              src={user ? "/signout-icon.svg" : "/signin-icon.svg"}
+              src={isLoggedIn ? "/signout-icon.svg" : "/signin-icon.svg"}
               alt="로그인 로그아웃 아이콘"
               width={24}
               height={24}
