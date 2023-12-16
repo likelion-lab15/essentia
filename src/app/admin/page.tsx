@@ -58,7 +58,7 @@ export default function Admin() {
       );
       // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 1개만 등록가능
       if (response.data.ok && response.data.file) {
-        return [`https://localhost${response.data.file.path}`];
+        return [`https://localhost/api/${response.data.file.path}`];
       } else {
         console.error("문제가있다아아아", response);
         return [];

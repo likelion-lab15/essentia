@@ -60,7 +60,7 @@ export default function Sell() {
       );
       // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 최대 10개 등록가능
       return response.data.files.map(
-        (file: any) => `https://localhost${file.path}`
+        (file: any) => `https://localhost/api/${file.path}`
       );
     } catch (error) {
       console.error("파일 업로드 오류", error);
