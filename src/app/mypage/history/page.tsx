@@ -15,13 +15,11 @@ export default function History() {
 
   useEffect(() => {
     (async () => {
-      const buyData = await getHistoryData("https://localhost/api/orders");
+      const buyData = await getHistoryData("orders");
       const buySlicedData = buyData.slice(0, 5);
       setBuySlicedHistoryData(buySlicedData);
 
-      const sellData = await getHistoryData(
-        "https://localhost/api/seller/products"
-      );
+      const sellData = await getHistoryData("seller/products");
       const sellSlicedData = sellData.slice(0, 5);
       setSellSlicedHistoryData(sellSlicedData);
     })();
