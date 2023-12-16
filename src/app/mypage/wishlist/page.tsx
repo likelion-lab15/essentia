@@ -3,11 +3,13 @@
 import { axiosPrivate } from "@/api/axios";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function WishList() {
   const [wishList, setWishList] = useState([]);
   const [updateFlag, setUpdateFlag] = useState(false);
+
+  const router = useRouter();
 
   // 찜 목록 불러오기
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function WishList() {
   };
 
   // 찜 제거하기
-  const deleteWish = async (e, id: number) => {
+  const deleteWish = (id: number) => async (e) => {
     e.stopPropagation();
 
     try {
@@ -57,10 +59,11 @@ export default function WishList() {
           const { image, name, price } = item.product;
 
           return (
-            <Link
+            <div
               key={item._id}
-              href={`/products/${item._id}`}
+              // href={`/products/${item._id}`}
               className="relative mr-[16px] h-[354px] w-[234px]"
+              onClick={() => router.push(`/products/${item._id}`)}
             >
               <Image
                 src={image.url}
@@ -78,11 +81,11 @@ export default function WishList() {
               </div>
               <button
                 className="absolute right-[10px] top-[10px]"
-                onClick={() => deleteWish(item._id)}
+                onClick={deleteWish(item._id)}
               >
                 <Image src="/heart_fill.svg" alt="찜" width={20} height={20} />
               </button>
-            </Link>
+            </div>
           );
         })}
       </div>
