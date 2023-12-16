@@ -9,7 +9,16 @@ import { useTokens } from "@/hooks/_index";
 export default function Header() {
   /* user 토큰을 위한 상태 */
   const token = useTokenStore((state) => state.token);
-  const userToken = useUserStore((state) => state.user);
+  const setToken = useTokenStore((state) => state.setToken);
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  /* 로그아웃 처리 */
+  const handleLogout = () => {
+    setUser(null);
+    setToken(null);
+    alert("로그아웃 되었습니다");
+  };
 
   const { getNewAccessToken } = useTokens();
 
@@ -119,11 +128,11 @@ export default function Header() {
           </button>
           <button
             aria-label="로그인 또는 로그아웃하기"
-            onClick={() => router.push("/signin")}
+            onClick={user ? handleLogout : () => router.push("/signin")}
             className="bg-center bg-no-repeat"
           >
             <Image
-              src={userToken ? "/signout-icon.svg" : "/signin-icon.svg"}
+              src={user ? "/signout-icon.svg" : "/signin-icon.svg"}
               alt="로그인 로그아웃 아이콘"
               width={24}
               height={24}
