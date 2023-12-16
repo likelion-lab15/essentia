@@ -42,38 +42,46 @@ export default function WishList() {
   };
 
   return (
-    <section className="flex w-[1000px] flex-wrap">
-      {wishList.map((item, index) => {
-        const { image, name, price } = item.product;
+    <section className="w-[1000px]">
+      {/* 1. 제목 */}
+      <div className="mb-[40px] flex h-[70px] items-center border-b-[3px] border-[#222]">
+        <p className="text-[28px] font-bold">찜목록</p>
+      </div>
 
-        return (
-          <div
-            key={item._id}
-            className="relative mr-[16px] h-[354px] w-[234px]"
-          >
-            <Image
-              src={image.url}
-              alt={name}
-              width={243}
-              height={230}
-              className="mb-[42px] bg-gray-500"
-            />
-            <div>
-              <h3 className="ml-[17px] text-14 font-bold">Brand</h3>
-              <p className="ml-[17px] text-16 font-medium">{name}</p>
-              <p className="ml-[17px] text-14 font-semibold">
-                {price.toLocaleString()}원
-              </p>
-            </div>
-            <button
-              className="absolute right-[10px] top-[10px]"
-              onClick={() => deleteWish(item._id)}
+      {/* 2. 장바구니 품목 */}
+      <div className="flex flex-wrap">
+        {wishList.map((item, index) => {
+          const { image, name, price } = item.product;
+
+          return (
+            <div
+              key={item._id}
+              className="relative mr-[16px] h-[354px] w-[234px]"
             >
-              <Image src="/heart_fill.svg" alt="찜" width={20} height={20} />
-            </button>
-          </div>
-        );
-      })}
+              <Image
+                src={image.url}
+                alt={name}
+                width={243}
+                height={230}
+                className="mb-[42px] bg-gray-500"
+              />
+              <div>
+                <h3 className="ml-[17px] text-14 font-bold">Brand</h3>
+                <p className="ml-[17px] text-16 font-medium">{name}</p>
+                <p className="ml-[17px] text-14 font-semibold">
+                  {price.toLocaleString()}원
+                </p>
+              </div>
+              <button
+                className="absolute right-[10px] top-[10px]"
+                onClick={() => deleteWish(item._id)}
+              >
+                <Image src="/heart_fill.svg" alt="찜" width={20} height={20} />
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
