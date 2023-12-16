@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTokenStore } from "@/stores/_index";
-import useTokens from "@/hooks/useTokens";
+import { useTokens } from "@/hooks/_index";
 
 export default function Header() {
   /* user 토큰을 위한 상태 */
@@ -23,8 +23,9 @@ export default function Header() {
 
       // 토큰 만료됐을 경우
       if (currentTime >= expirationTime) {
-        const newAccessToken = getNewAccessToken();
-        console.log(newAccessToken);
+        (async () => {
+          const newAccessToken = await getNewAccessToken();
+        })();
       } else {
         console.log("토큰이 아직 멀쩡합니다!");
       }
