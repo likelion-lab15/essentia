@@ -1,12 +1,51 @@
+"use client";
+
+import { axiosPrivate } from "@/api/axios";
 import Image from "next/image";
 import { Button } from "@/components/_index";
+import { useReviewStore } from "@/stores/_index";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function Review() {
+  const reviewData = useReviewStore((state) => state.review);
+
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
+
+  const router = useRouter();
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      order_id: reviewData.order_id,
+      product_id: reviewData.product_id,
+      rating: 1,
+      content: contentInput,
+      extra: {
+        title: titleInput,
+      },
+    };
+
+    try {
+      const res = await axiosPrivate.post("replies", data);
+      console.log(res);
+      alert("리뷰 등록 완료!");
+      router.push("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        alert("리뷰 등록 실패!");
+      }
+    }
+  };
+
   const handleInput = (setter) => (e) => {
     setter(e.target.value);
   };
+
+  // review에 name이 있으면 렌더링 시작
   return (
     <section className="mx-auto w-[680px]">
       {/* 1. 제목 */}
