@@ -14,6 +14,7 @@ const getProducts = async () => {
 };
 
 export default function Products({ selectedBrand }) {
+  // 향수 목록 상태 관리
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -35,9 +36,39 @@ export default function Products({ selectedBrand }) {
     fetchData();
   }, [selectedBrand]);
 
+  // 상품 정렬 함수
+  const handleSortChange = (event) => {
+    const sortValue = event.target.value;
+    const sortedProducts = [...products].sort((a, b) => {
+      if (sortValue === "price-desc") {
+        return b.price - a.price;
+      } else {
+        return a.price - b.price;
+      }
+    });
+    setProducts(sortedProducts);
+  };
+
   return (
     <div className="w-[984px]">
-      <p className="mb-[110px]">{products.length}개의 상품이 있습니다.</p>
+      <div className="flex justify-between">
+        {/* 상품 개수 */}
+        <p className="mb-[110px]">{products.length}개의 상품이 있습니다.</p>
+        {/* 드롭다운 박스 */}
+        <select
+          onChange={handleSortChange}
+          className="mb-[110px] border-[1px] border-primary px-[15px] py-[10px]"
+        >
+          <option
+            value="price-desc"
+            className="flex items-center justify-center"
+          >
+            높은 가격순
+          </option>
+          <option value="price-asc">낮은 가격순</option>
+        </select>
+      </div>
+      {/* 상품 목록 */}
       <ul className="flex w-[1000px] flex-row flex-wrap">
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />
