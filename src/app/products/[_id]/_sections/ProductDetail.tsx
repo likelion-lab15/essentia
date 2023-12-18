@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-export default function ProductPlus() {
+export default function ProductDetail({ id }) {
   /* 상태 변수 선언 */
   // 현재 활성화된 섹션을 추적하기 위한 상태
   const [activeSection, setActiveSection] = useState("");
@@ -77,8 +77,8 @@ export default function ProductPlus() {
   // API 호출 및 데이터 가져오기
   async function getProductInfo() {
     try {
-      const _id = 3;
-      const response = await axios.get(`https://localhost/api/products/${_id}`);
+      console.log("getProductDetail Id: ", id);
+      const response = await axios.get(`https://localhost/api/products/${id}`);
       const result = response.data;
       return result.item.replies;
     } catch (error) {
