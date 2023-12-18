@@ -76,17 +76,17 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
                     <button
                       type="button"
                       className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                      onClick={handleClick(buyHistory, product)}
+                      disabled
                     >
-                      작성
+                      완료
                     </button>
                   ) : (
                     <button
                       type="button"
                       className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                      disabled
+                      onClick={handleClick(buyHistory, product)}
                     >
-                      완료
+                      작성
                     </button>
                   )}
                 </td>
