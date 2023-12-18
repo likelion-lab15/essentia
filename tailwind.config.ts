@@ -4,6 +4,7 @@ const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/containers/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
@@ -26,6 +27,7 @@ const config: Config = {
         "15": "0.9375rem",
         "14": "0.875rem",
         "12": "0.75rem",
+        "10": "0.625rem",
       },
       fontWeight: {
         regular: "400",
