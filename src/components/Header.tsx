@@ -6,6 +6,7 @@ import { useTokens } from "@/hooks/_index";
 import { useState, useEffect } from "react";
 import { useTokenStore, useUserStore } from "@/stores/_index";
 import naviList from "@/constants/naviList";
+import SearchBar from "./SearchBar";
 
 export default function Header() {
   /* User 토큰을 위한 상태 관리 */
@@ -31,6 +32,9 @@ export default function Header() {
   const router = useRouter();
 
   const { getNewAccessToken } = useTokens();
+
+  /* 검색바 노출 */
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -99,7 +103,9 @@ export default function Header() {
         <div className="ml-[100px] flex h-[80px] w-[180px] justify-between">
           <button
             aria-label="검색창 열기"
-            onClick={() => {}}
+            onClick={() => {
+              setShowSearchBar(!showSearchBar);
+            }}
             className="bg-center bg-no-repeat"
           >
             <Image
@@ -109,6 +115,7 @@ export default function Header() {
               height={24}
             />
           </button>
+          {showSearchBar && <SearchBar />}
           <button
             aria-label="마이페이지로 이동하기"
             onClick={() => router.push("/mypage")}
