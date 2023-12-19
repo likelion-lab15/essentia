@@ -36,6 +36,10 @@ export default function Header() {
   /* 검색바 노출 */
   const [showSearchBar, setShowSearchBar] = useState(false);
 
+  const handleCloseSearchBar = () => {
+    setShowSearchBar(false);
+  };
+
   useEffect(() => {
     if (token) {
       const accessToken = token.accessToken;
@@ -115,7 +119,6 @@ export default function Header() {
               height={24}
             />
           </button>
-          {showSearchBar && <SearchBar />}
           <button
             aria-label="마이페이지로 이동하기"
             onClick={() => router.push("/mypage")}
@@ -154,6 +157,7 @@ export default function Header() {
           </button>
         </div>
       </nav>
+      {showSearchBar && <SearchBar onClose={handleCloseSearchBar} />}
     </header>
   );
 }
