@@ -1,15 +1,19 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type TUserData = {
+type TState = {
   user: object;
 };
 
-export const useUserStore = create()(
+type TAction = {
+  setUser: (newUser: TState) => void;
+};
+
+export const useUserStore = create<TState & TAction>()(
   persist(
     (set) => ({
-      user: null,
-      setUser: (userData: TUserData) => set(() => ({ user: userData })),
+      user: {},
+      setUser: (newUser) => set(() => ({ user: newUser })),
     }),
     {
       name: "user",
