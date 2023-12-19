@@ -1,19 +1,37 @@
+/* eslint-disable no-unused-vars */
+
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type TState = {
-  user: object;
+type TUser = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+  extra: {
+    birthday: string;
+    membershipClass: string;
+    addressBook: {
+      value: string;
+      detail: string;
+    };
+  };
 };
 
-type TAction = {
-  setUser: (newUser: TState) => void;
+type TuseUserStore = {
+  user: TUser | null;
+  setUser: (user: TUser | null) => void;
 };
 
-export const useUserStore = create<TState & TAction>()(
+export const useUserStore = create<TuseUserStore>()(
   persist(
     (set) => ({
-      user: {},
-      setUser: (newUser) => set(() => ({ user: newUser })),
+      user: null,
+      setUser: (user) => set({ user }),
     }),
     {
       name: "user",
