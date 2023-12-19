@@ -4,9 +4,10 @@ import Image from "next/image";
 import { Button } from "@/components/_index";
 import { useOutsideClick } from "@/hooks/_index";
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
 
-export default function ProductInfo() {
+export default function ProductInfo({ id }) {
   // 향수 정보 상태 관리
   const [product, setProduct] = useState({
     name: "",
@@ -16,6 +17,7 @@ export default function ProductInfo() {
     content: "",
     image: "",
   });
+
   // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
   // 사이즈 드롭다운박스 리스트 상태 관리
@@ -34,13 +36,13 @@ export default function ProductInfo() {
   useEffect(() => {
     async function getProductInfo() {
       try {
-        // 상품 id 1로 임시 고정
-        const _id = 1;
-        const response = await axios.get(`/products/${_id}`);
+        const response = await axios.get(`/products/${id}`);
+        console.log("productInfo Id : ", id);
         const result = response.data.item;
+        console.log(result);
         return result;
       } catch (error) {
-        console.error("Axios Error 🥲", error);
+        console.error("향수 정보 Axios Error 🥲", error);
         return [];
       }
     }
@@ -55,7 +57,33 @@ export default function ProductInfo() {
         image: result.mainImages[0].url,
       });
     });
-  }, []);
+  }, [id]);
+
+  /* 라우터 설정을 위한 useRouter 사용 */
+  const router = useRouter();
+
+  /* 구매 선택 페이지로 이동시키는 함수 */
+  const navigateToBuyPage = () => {
+    if (selectedSize === "사이즈를 선택해주세요") {
+      alert("사이즈를 선택해주세요.");
+    } else {
+      router.push(
+        `/products/${id}/buy/?&brand=${product.brand}&name=${product.name}&amount=${selectedSize}&price=${product.price}`
+      );
+    }
+  };
+
+  /* 판매 페이지로 이동시키는 함수 */
+  // brand, name, amount, id를 쿼리스트링으로 넘겨줌
+  const navigateToSellPage = () => {
+    if (selectedSize === "사이즈를 선택해주세요") {
+      alert("사이즈를 선택해주세요.");
+    } else {
+      router.push(
+        `/products/${id}/sell/?&brand=${product.brand}&name=${product.name}&amount=${selectedSize}`
+      );
+    }
+  };
 
   console.log(product.image);
 
@@ -131,11 +159,13 @@ export default function ProductInfo() {
               className="mr-[10px] h-[46px] w-[275px] border border-primary bg-white text-primary"
               label="바로 구매하기"
               type="button"
+              onClick={navigateToBuyPage}
             ></Button>
             <Button
               className="h-[46px] w-[275px]"
               label="판매하기"
               type="button"
+              onClick={navigateToSellPage}
             ></Button>
           </div>
           <Button
