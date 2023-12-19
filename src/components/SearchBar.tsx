@@ -33,24 +33,22 @@ export default function SearchBar({ onClose }) {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-[800px] border-b-[5px] border-primary bg-transparent text-36 font-bold"
           />
-          <button type="submit">
+          <button type="submit" className="absolute right-[10px] top-[-5px]">
             <Image
               src="/search-big-icon.svg"
               alt="검색 아이콘"
               width={55}
               height={55}
-              className="absolute right-[10px] top-[-5px]"
             />
           </button>
         </form>
         {/* 닫기 버튼 */}
-        <button onClick={onClose}>
+        <button onClick={onClose} className="fixed right-[40px] top-[100px]">
           <Image
             src="/close-icon.svg"
             alt="닫기 아이콘"
             width={60}
             height={60}
-            className="absolute bottom-[180px] right-[10px]"
           />
         </button>
         {/* 검색 결과 표시 */}
