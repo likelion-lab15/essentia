@@ -10,6 +10,12 @@ export default function Buy(props: any) {
   const searchParams = useSearchParams();
   const getBrand = searchParams.get("brand");
   const getAmount = searchParams.get("amount");
+  let targetAmount = 0;
+  if (getAmount == "50ml") {
+    targetAmount = 50;
+  }
+  targetAmount = 100;
+
   const getName = searchParams.get("name");
   const getPriceOrigin = parseFloat(searchParams.get("price"));
   const getPrice = getPriceOrigin.toLocaleString();
@@ -19,7 +25,9 @@ export default function Buy(props: any) {
   // 상태 추가
   const [items, setItems] = useState([]);
 
-  const renderItems = items.filter((item) => item.extra.amount === getAmount);
+  const renderItems = items.filter((item) => item.extra.amount === targetAmount);
+
+  console.log("여기는 buy페이지", renderItems);
 
   // API 호출 및 데이터 가져오기
   async function buyInfo() {
