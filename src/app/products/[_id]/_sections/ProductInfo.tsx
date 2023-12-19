@@ -1,22 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/_index";
 import { useOutsideClick } from "@/hooks/_index";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
+import { useProductStore } from "@/stores/useProductStore";
 
 export default function ProductInfo({ id }) {
-  // 향수 정보 상태 관리
-  const [product, setProduct] = useState({
-    name: "",
-    price: "",
-    brand: "",
-    amount: [],
-    content: "",
-    image: "",
-  });
+  // 향수 정보 전역으로 상태 관리
+  const { product, setProduct } = useProductStore();
 
   // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
@@ -32,14 +25,24 @@ export default function ProductInfo({ id }) {
     setAmountView(false);
   };
 
-  // 향수 정보 가져오기
   useEffect(() => {
     async function getProductInfo() {
       try {
         const response = await axios.get(`/products/${id}`);
-        console.log("productInfo Id : ", id);
         const result = response.data.item;
         console.log(result);
+
+        const product = {
+          name: result.name,
+          price: result.price,
+          brand: result.extra.brand,
+          amount: result.extra.amount,
+          content: result.content,
+          image: result.mainImages[0].path,
+        };
+
+        setProduct(product); // Zustand 스토어에 상품 정보 저장
+
         return result;
       } catch (error) {
         console.error("향수 정보 Axios Error 🥲", error);
@@ -47,17 +50,8 @@ export default function ProductInfo({ id }) {
       }
     }
 
-    getProductInfo().then((result) => {
-      setProduct({
-        name: result.name,
-        price: result.price,
-        brand: result.extra.brand,
-        amount: result.extra.amount,
-        content: result.content,
-        image: result.mainImages[0].path,
-      });
-    });
-  }, [id]);
+    getProductInfo();
+  }, [id, setProduct]);
 
   /* 라우터 설정을 위한 useRouter 사용 */
   const router = useRouter();
@@ -67,9 +61,7 @@ export default function ProductInfo({ id }) {
     if (selectedSize === "사이즈를 선택해주세요") {
       alert("사이즈를 선택해주세요.");
     } else {
-      router.push(
-        `/products/${id}/buy/?&brand=${product.brand}&name=${product.name}&amount=${selectedSize}&price=${product.price}`
-      );
+      router.push(`/products/${id}/buy/?&amount=${selectedSize}`);
     }
   };
 
@@ -109,11 +101,12 @@ export default function ProductInfo({ id }) {
           </p>
           <p className="text-30 font-medium">{product.name}</p>
           <div className="flex-rowtext-16 mb-[34px] flex font-medium text-tertiary">
-            {product.amount.map((amount, index) => (
-              <p className=" pr-[10px]" key={index}>
-                {amount}ml
-              </p>
-            ))}
+            {product.amount &&
+              product.amount.map((amount, index) => (
+                <p className=" pr-[10px]" key={index}>
+                  {amount}ml
+                </p>
+              ))}
           </div>
           <p className="mb-[18px] w-[560px] text-14 font-medium text-tertiary">
             {product.content}

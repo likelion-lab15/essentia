@@ -3,33 +3,32 @@ import Image from "next/image";
 import { Button } from "@/components/_index";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useProductStore } from "@/stores/useProductStore";
 import axios from "@/api/axios";
 
 export default function Buy(props: any) {
+  const [items, setItems] = useState([]);
+  const { product } = useProductStore(); // Zustand store에서 제품 정보 가져오기
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const getId = props.params._id;
 
-  const getBrand = searchParams.get("brand");
+  const getId = props.params._id;
+  const getBrand = product.brand;
+  const getName = product.name;
+  const getImage = product.image;
+  const getPriceOrigin = product.price;
+  const getPrice = getPriceOrigin.toLocaleString();
+  const searchParams = useSearchParams();
   const getAmount = searchParams.get("amount");
   let targetAmount = 0;
   if (getAmount == "50ml") {
     targetAmount = 50;
+  } else {
+    targetAmount = 100;
   }
-  targetAmount = 100;
 
-  const getName = searchParams.get("name");
-  const getPriceOrigin = parseFloat(searchParams.get("price"));
-  const getPrice = getPriceOrigin.toLocaleString();
+  const renderItems = items.filter((item) => item.extra.amount == targetAmount);
 
-  console.log(getId, getBrand, getName, getAmount, getPriceOrigin, getPrice);
-
-  // 상태 추가
-  const [items, setItems] = useState([]);
-
-  const renderItems = items.filter(
-    (item) => item.extra.amount === targetAmount
-  );
+  console.log("getImage", getImage);
 
   console.log("여기는 buy페이지", renderItems);
 
@@ -40,7 +39,7 @@ export default function Buy(props: any) {
       const response = await axios.get(`/products/${getId}`);
       const result = response.data.item.options.item;
       console.log(`result`, result);
-      setItems(result); // 상태 업데이트
+      setItems(result);
       return result;
     } catch (error) {
       console.error("axios Error 🥲", error);
@@ -62,13 +61,13 @@ export default function Buy(props: any) {
         {/* 구매할 상품 정보 */}
         <div className="mb-[25px] flex h-[300px] w-[800px] items-center justify-center border-b-2 border-primary">
           {/* 이미지 */}
-          <Image
-            src="/blanche.webp"
+          <img
+            src={`https://localhost/api/${getImage}`}
             width={200}
             height={200}
             alt="상품 이미지"
             className="border-2 border-primary bg-[#F4F4F4]"
-          ></Image>
+          ></img>
           {/* 상품 정보 */}
           <div className="ml-[40px] flex h-[200px] w-[500px] flex-col justify-between">
             <div>
@@ -104,7 +103,7 @@ export default function Buy(props: any) {
                   남은용량 : {item.extra.restamount}ml
                 </p>
                 <p className="flex h-[60px] flex-1 items-center justify-center">
-                  판매금액 : {item.price}원
+                  판매금액 : {item.price.toLocaleString()}원
                 </p>
                 <p className="flex h-[60px] flex-1 items-center justify-center">
                   구매일자 : {item.extra.date}
@@ -114,7 +113,11 @@ export default function Buy(props: any) {
                 className="h-[60px] w-[120px] border-2 border-primary bg-secondary text-primary hover:bg-primary hover:text-secondary"
                 label="구매하기"
                 type="button"
-                onClick={() => router.push(`/products/${getId}/order`)}
+                onClick={() =>
+                  router.push(
+                    `/products/${getId}/order?&perchaseItem=${item._id}&amount=${item.extra.restamount}&price=${item.price}`
+                  )
+                }
               />
             </div>
           ))}
