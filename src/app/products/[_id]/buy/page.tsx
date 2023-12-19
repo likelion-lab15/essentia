@@ -1,13 +1,15 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@/components/_index";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "@/api/axios";
 
 export default function Buy(props: any) {
-  const getId = props.params._id;
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const getId = props.params._id;
+
   const getBrand = searchParams.get("brand");
   const getAmount = searchParams.get("amount");
   let targetAmount = 0;
@@ -25,7 +27,9 @@ export default function Buy(props: any) {
   // 상태 추가
   const [items, setItems] = useState([]);
 
-  const renderItems = items.filter((item) => item.extra.amount === targetAmount);
+  const renderItems = items.filter(
+    (item) => item.extra.amount === targetAmount
+  );
 
   console.log("여기는 buy페이지", renderItems);
 
@@ -56,7 +60,7 @@ export default function Buy(props: any) {
       </h2>
       <div>
         {/* 구매할 상품 정보 */}
-        <div className="mb-[25px] flex h-[300px] w-[800px] items-center justify-center border-b-2 border-tertiary">
+        <div className="mb-[25px] flex h-[300px] w-[800px] items-center justify-center border-b-2 border-primary">
           {/* 이미지 */}
           <Image
             src="/blanche.webp"
@@ -95,12 +99,12 @@ export default function Buy(props: any) {
               key={index}
               className="flex w-[800px] flex-row justify-between"
             >
-              <div className="flex h-[60px] w-[600px] border-2 bg-white text-primary hover:bg-secondary">
+              <div className="flex h-[60px] w-[600px] border-b-2 border-t-2 border-primary bg-white text-primary hover:bg-secondary">
                 <p className="flex h-[60px] flex-1 items-center justify-center">
-                  남은용량 : {item.extra.restamount}
+                  남은용량 : {item.extra.restamount}ml
                 </p>
                 <p className="flex h-[60px] flex-1 items-center justify-center">
-                  판매금액 : {item.price}
+                  판매금액 : {item.price}원
                 </p>
                 <p className="flex h-[60px] flex-1 items-center justify-center">
                   구매일자 : {item.extra.date}
@@ -110,13 +114,18 @@ export default function Buy(props: any) {
                 className="h-[60px] w-[120px] border-2 border-primary bg-secondary text-primary hover:bg-primary hover:text-secondary"
                 label="구매하기"
                 type="button"
+                onClick={() => router.push(`/products/${getId}/order`)}
               />
             </div>
           ))}
         </div>
         {/* 뒤로가기 버튼 */}
         <div className="flex h-[100px] w-[800px] items-center justify-center">
-          <Button label="뒤로가기" type="button" />
+          <Button
+            label="뒤로가기"
+            type="button"
+            onClick={() => router.back()}
+          />
         </div>
       </div>
     </div>
