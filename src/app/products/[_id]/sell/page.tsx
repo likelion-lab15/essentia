@@ -89,9 +89,9 @@ export default function Sell({ id }) {
       setProduct({
         ...product,
         mainImages: uploadedPaths.map((path) => ({
-          url: path,
-          fileName: files.name,
-          orgName: files.name,
+          path: path,
+          name: files.name,
+          originalname: files.name,
         })),
       });
       // 각 파일에 대한 미리보기 URL 생성
