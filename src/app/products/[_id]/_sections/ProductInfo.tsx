@@ -54,7 +54,7 @@ export default function ProductInfo({ id }) {
         brand: result.extra.brand,
         amount: result.extra.amount,
         content: result.content,
-        image: result.mainImages[0].url,
+        image: result.mainImages[0].path,
       });
     });
   }, [id]);
@@ -93,14 +93,14 @@ export default function ProductInfo({ id }) {
       <div className="flex h-[560px] w-full flex-row items-center justify-between pl-[60px] pr-[60px]">
         {/* 향수 이미지 */}
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
-          <Image
+          <img
             alt="blanche"
             // src="/blanche.webp"
-            src={`https://localhost:443${product.image}`}
+            src={`https://localhost/api/${product.image}`}
             width={450}
             height={450}
             className="bg-[#F4F4F4]"
-          ></Image>
+          ></img>
         </div>
         {/* 사용자 상호작용 */}
         <div className="h-[444] w-[560px]">

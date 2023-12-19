@@ -36,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       onClick={handleClick}
     >
       <img
-        src={mainImages[0].url}
+        src={`https://localhost/api/${mainImages[0].path}`}
         alt={name}
         className="mb-[42px] h-[230px] w-[234px]"
       />
