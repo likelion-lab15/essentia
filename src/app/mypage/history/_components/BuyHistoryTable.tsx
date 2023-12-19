@@ -1,13 +1,38 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useReviewStore } from "@/stores/_index";
+import { axiosPrivate } from "@/api/axios";
 
 const BuyHistoryTable = ({ buyHistoryData }) => {
   const setReview = useReviewStore((state) => state.setReview);
 
+  const [reviewdProducts, setReviewedProducts] = useState([]);
+
   const router = useRouter();
 
+  useEffect(() => {
+    // 리뷰된 상품의 목록들
+    (async () => {
+      try {
+        const res = await axiosPrivate.get("replies");
+        const repliesData = res.data.item;
+
+        const reviewdProductsData = repliesData.map((reply) => {
+          return reply.product._id;
+        });
+
+        setReviewedProducts(reviewdProductsData);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
+    })();
+  }, []);
+
+  // 이벤트 핸들러
   const handleClick = (buyHistory, product) => () => {
     const { _id: orderId } = buyHistory;
     const { _id: productId, name, image } = product;
@@ -17,7 +42,7 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
       name: name,
       image: image,
     });
-    router.push(`/review`);
+    router.push("/review");
   };
 
   return (
@@ -36,7 +61,7 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
           const { createdAt, products } = buyHistory;
 
           return products.map((product, index) => {
-            const { name, price } = product;
+            const { _id, name, price } = product;
 
             return (
               <tr
@@ -47,19 +72,23 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
                 <td className="w-[30%] text-left">{name}</td>
                 <td className="w-[10%]">{price.toLocaleString("ko-KR")} 원</td>
                 <td className="w-[10%]">
-                  <button
-                    type="button"
-                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                    onClick={handleClick(buyHistory, product)}
-                  >
-                    작성
-                  </button>
-                  <button
-                    type="button"
-                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                  >
-                    수정
-                  </button>
+                  {reviewdProducts.includes(_id) ? (
+                    <button
+                      type="button"
+                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                      disabled
+                    >
+                      완료
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                      onClick={handleClick(buyHistory, product)}
+                    >
+                      작성
+                    </button>
+                  )}
                 </td>
               </tr>
             );
