@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
   product: {
@@ -21,22 +21,32 @@ export default function ProductCard({ product }: ProductCardProps) {
     extra: { brand },
   } = product;
 
+  /* 라우터 설정을 위한 useRouter 사용 */
+  const router = useRouter();
+
+  /* prudcts/[id]로 이동시키는 함수 */
+  const handleClick = () => {
+    router.push(`/products/${_id}`);
+  };
+
   return (
-    <Link href={`/products/${_id}`}>
-      <li key={_id} className="mr-[16px] h-[354px] w-[234px]">
-        <img
-          src={mainImages[0].url}
-          alt={name}
-          className="mb-[42px] h-[230px] w-[234px]"
-        />
-        <div>
-          <h3 className="ml-[17px] text-14 font-bold">{brand}</h3>
-          <p className="ml-[17px] text-16 font-medium">{name}</p>
-          <p className="ml-[17px] text-14 font-semibold">
-            {price.toLocaleString()}원
-          </p>
-        </div>
-      </li>
-    </Link>
+    <li
+      key={_id}
+      className="mr-[16px] h-[354px] w-[234px]"
+      onClick={handleClick}
+    >
+      <img
+        src={mainImages[0].url}
+        alt={name}
+        className="mb-[42px] h-[230px] w-[234px]"
+      />
+      <div>
+        <h3 className="ml-[17px] text-14 font-bold">{brand}</h3>
+        <p className="ml-[17px] text-16 font-medium">{name}</p>
+        <p className="ml-[17px] text-14 font-semibold">
+          {price.toLocaleString()}원
+        </p>
+      </div>
+    </li>
   );
 }
