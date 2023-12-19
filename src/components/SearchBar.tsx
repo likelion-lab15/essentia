@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function SearchBar({ onClose }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,6 +20,15 @@ export default function SearchBar({ onClose }) {
     } catch (error) {
       console.error("검색 중 오류 발생 🥲", error);
     }
+  };
+
+  /* 라우터 설정을 위한 useRouter 사용 */
+  const router = useRouter();
+
+  /* prudcts/[id]로 이동시킨 후 검색창 닫는 함수 */
+  const handleItemClick = (itemId) => {
+    router.push(`/products/${itemId}`);
+    onClose(); // 검색창 닫기
   };
 
   return (
@@ -57,7 +67,8 @@ export default function SearchBar({ onClose }) {
             {searchResults.map((item) => (
               <li
                 key={item._id}
-                className="py-[15px] pl-[20px] hover:bg-secondary"
+                onClick={() => handleItemClick(item._id)}
+                className="cursor-pointer py-[15px] pl-[20px] hover:bg-secondary"
               >
                 {item.name}
               </li>
