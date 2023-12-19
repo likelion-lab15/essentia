@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 type TUser = {
-  id: number;
+  _id: number;
   name: string;
   email: string;
   phone: string;

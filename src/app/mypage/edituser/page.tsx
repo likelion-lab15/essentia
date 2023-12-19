@@ -1,34 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useState,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  FormEvent,
+} from "react";
 import { Button, AddressModal } from "@/components/_index";
 import { useUserStore } from "@/stores/useUserStore";
 import { axiosPrivate } from "@/api/axios";
 import { cn } from "@/utils/_index";
 
 export default function EditUser() {
+  // user
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
 
-  const [name, setName] = useState(user?.name);
-  const [phone, setPhone] = useState(user?.phone);
+  // input.value
+  const [name, setName] = useState(user?.name || "");
+  const [phone, setPhone] = useState(user?.phone || "");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassowrd] = useState("");
-
-  const [birthday, setBirthday] = useState(user?.extra.birthday);
-  const [address, setAddress] = useState(user?.extra.addressBook.value);
+  const [birthday, setBirthday] = useState(user?.extra.birthday || "");
+  const [address, setAddress] = useState(user?.extra.addressBook.value || "");
   const [detailAddress, setDetailAddress] = useState(
-    user?.extra.addressBook.detail
+    user?.extra.addressBook.detail || ""
   );
 
-  // 경고 메세지 상태 관리
+  // warning
   const [message, setMessage] = useState(false);
 
-  // 주소 API 관련 상태 관리
+  // address
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
+  // input값 업데이트 기능
+  const handleInputValue =
+    (setter: Dispatch<SetStateAction<string>>) =>
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+    };
+
+  // 주소 변경 기능
+  const handleAddressChange = (data: any) => {
+    setAddress(data.address);
+    setAddressModalOpen(false);
+  };
+
   // 회원정보 수정기능
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newUser = {
@@ -45,11 +65,19 @@ export default function EditUser() {
     };
 
     try {
-      const res = await axiosPrivate.patch(`users/${user._id}`, newUser);
-      const res2 = await axiosPrivate.get(`users/${user._id}`);
+      // 1. PATCH로 유저 정보 업데이트
+      if (user) {
+        await axiosPrivate.patch(`users/${user._id}`, newUser);
+      }
 
-      setUser(res2.data.item);
-      setMessage(false);
+      // 2. GET으로 업데이트된 유저 정보 불러오기
+      if (user) {
+        const res = await axiosPrivate.get(`users/${user._id}`);
+        setUser(res.data.item);
+        setMessage(false);
+      }
+
+      console.log(user);
       alert("회원정보 수정을 성공했습니다!");
     } catch (err) {
       if (err instanceof Error) {
@@ -58,17 +86,6 @@ export default function EditUser() {
       setMessage(true);
       alert("회원정보 수정을 실패했습니다!");
     }
-  };
-
-  // input값 업데이트 기능
-  const handleInputValue = (setter) => (e) => {
-    setter(e.target.value);
-  };
-
-  // 주소 변경 기능
-  const handleAddressChange = (data) => {
-    setAddress(data.address);
-    setAddressModalOpen(false);
   };
 
   return (
@@ -102,7 +119,7 @@ export default function EditUser() {
                   "flex items-center": message,
                 })}
               >
-                아이디를 확인해주세요
+                이메일을 확인해주세요
               </div>
             </div>
 
