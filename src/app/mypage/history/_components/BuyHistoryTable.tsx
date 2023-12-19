@@ -1,6 +1,25 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useReviewStore } from "@/stores/_index";
+
 const BuyHistoryTable = ({ buyHistoryData }) => {
+  const setReview = useReviewStore((state) => state.setReview);
+
+  const router = useRouter();
+
+  const handleClick = (buyHistory, product) => () => {
+    const { _id: orderId } = buyHistory;
+    const { _id: productId, name, image } = product;
+    setReview({
+      order_id: orderId,
+      product_id: productId,
+      name: name,
+      image: image,
+    });
+    router.push(`/review`);
+  };
+
   return (
     <table className="mb-[66px] w-[100%]">
       <caption className="h-[64px] border-b-[3px] border-black text-left text-[28px] font-bold">
@@ -13,38 +32,38 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
           <th className="w-[10%]">결제금액</th>
           <th className="w-[10%]">리뷰</th>
         </tr>
-        {buyHistoryData?.map((item, index) => {
-          const { cost, createdAt, products } = item;
+        {buyHistoryData?.map((buyHistory) => {
+          const { createdAt, products } = buyHistory;
 
-          // 구매 상품이 1개 이상일 때
-          const etc = products.length > 1 ? `외 ${products.length}개` : "";
+          return products.map((product, index) => {
+            const { name, price } = product;
 
-          return (
-            <tr
-              key={index}
-              className="h-[50px] border-b-[1px] border-black text-center text-[18px] font-medium"
-            >
-              <td className="w-[10%]">{createdAt.split(" ")[0]}</td>
-              <td className="w-[30%] text-left">{`${products[0].name} ${etc}`}</td>
-              <td className="w-[10%]">
-                {cost.total.toLocaleString("ko-KR")} 원
-              </td>
-              <td className="w-[10%]">
-                <button
-                  type="button"
-                  className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                >
-                  작성
-                </button>
-                <button
-                  type="button"
-                  className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                >
-                  수정
-                </button>
-              </td>
-            </tr>
-          );
+            return (
+              <tr
+                key={index}
+                className="h-[50px] border-b-[1px] border-black text-center text-[18px] font-medium"
+              >
+                <td className="w-[10%]">{createdAt.split(" ")[0]}</td>
+                <td className="w-[30%] text-left">{name}</td>
+                <td className="w-[10%]">{price.toLocaleString("ko-KR")} 원</td>
+                <td className="w-[10%]">
+                  <button
+                    type="button"
+                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                    onClick={handleClick(buyHistory, product)}
+                  >
+                    작성
+                  </button>
+                  <button
+                    type="button"
+                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                  >
+                    수정
+                  </button>
+                </td>
+              </tr>
+            );
+          });
         })}
       </tbody>
     </table>
