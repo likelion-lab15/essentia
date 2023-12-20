@@ -3,20 +3,72 @@
 import { useRouter } from "next/navigation";
 import { useReviewStore } from "@/stores/_index";
 
-const BuyHistoryTable = ({ buyHistoryData }) => {
-  const setReview = useReviewStore((state) => state.setReview);
+type TProduct = {
+  _id: number;
+  quantity: number;
+  seller_id: number;
+  name: string;
+  image: {
+    path: string;
+    name: string;
+    originalname: string;
+  };
+  price: number;
+  extra: {
+    brand: string;
+    category: [];
+    parent: number;
+    depth: number;
+    amount: number;
+    restamount: number;
+    date: string;
+  };
+};
 
+type TBuyHistory = {
+  _id: number;
+  products: TProduct[];
+  address: {
+    name: string;
+    value: string;
+  };
+  state: string;
+  user_id: number;
+  createdAt: string;
+  updatedAt: string;
+  cost: {
+    products: number;
+    shippingFees: number;
+    discount: {
+      products: number;
+      shippingFees: number;
+    };
+    total: number;
+  };
+};
+
+type TBuyHistoryData = TBuyHistory[];
+
+const BuyHistoryTable = ({
+  buyHistoryData,
+}: {
+  buyHistoryData: TBuyHistoryData;
+}) => {
+  const setReview = useReviewStore((state) => state.setReview);
   const router = useRouter();
 
-  const handleClick = (buyHistory, product) => () => {
+  const handleClick = (buyHistory: TBuyHistory, product: TProduct) => () => {
     const { _id: orderId } = buyHistory;
-    const { _id: productId, name, image } = product;
+    const { name, image, extra } = product;
+
     setReview({
       order_id: orderId,
-      product_id: productId,
+      product_id: extra.parent,
+      brand: extra.brand,
       name: name,
       image: image,
     });
+
     router.push(`/review`);
   };
 
