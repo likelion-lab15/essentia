@@ -116,6 +116,7 @@ const BuyHistoryTable = ({
       name: name,
       image: image,
     });
+
     router.push("/review");
   };
 
