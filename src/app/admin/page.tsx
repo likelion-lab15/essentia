@@ -82,9 +82,9 @@ export default function Admin() {
       setProduct({
         ...product,
         mainImages: uploadedPaths.map((path) => ({
-          url: path,
-          fileName: file.name,
-          orgName: file.name,
+          path: path, // path로 수정
+          name: file.name,
+          originalname: file.name,
         })),
       });
       // 미리보기 URL 생성 및 저장

@@ -5,3 +5,4 @@ export { default as ProductCard } from "./ProductCard";
 export { default as InputField } from "./InputField";
 export { default as Button } from "./Button";
 export { default as ScrollTopButton } from "./ScrollTopButton";
+export { default as SearchBar } from "./SearchBar";
