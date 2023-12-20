@@ -16,6 +16,7 @@ export default function SignUp() {
   const [phone, setPhone] = useState("");
   const [birth, setBirth] = useState("");
   const [address, setAddress] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
 
   // 유효성 상태 관리
   const [isEmailValid, setEmailValid] = useState(true);
@@ -37,6 +38,9 @@ export default function SignUp() {
   // 주소 API 관련 상태 관리
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
+  // 이메일 중복확인 상태 관리
+  const [hasCheckedDuplication, setHasCheckedDuplication] = useState(false);
+
   // 회원가입 제출 통신
   const sendPostRequest = async () => {
     const type = "seller";
@@ -45,9 +49,17 @@ export default function SignUp() {
         email,
         password,
         name,
+        address,
         type,
         phone,
-        address,
+        extra: {
+          birthday: birth,
+          membershipClass: "MC01",
+          addressBook: {
+            value: address,
+            detail: addressDetail,
+          },
+        },
       });
       console.log(response.data);
     } catch (error) {
@@ -224,7 +236,6 @@ export default function SignUp() {
 
   return (
     <div>
-      <Header />
       <main className="flex h-[1500px] flex-col items-center pt-[120px]">
         <h2 className="mb-[66px] text-36 font-bold">회원가입</h2>
 
@@ -335,6 +346,7 @@ export default function SignUp() {
             type="text"
             aria-errormessage="addressError"
             placeholder="상세 주소를 입력해주세요"
+            onChange={(e) => setAddressDetail(e.target.value)}
           />
           {/* 회원가입 완료 버튼 */}
           <Button
