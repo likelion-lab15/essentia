@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 export default function ProductDetail({ id }) {
   /* 상태 변수 선언 */
@@ -147,9 +148,14 @@ export default function ProductDetail({ id }) {
       {/* 상세 이미지 SECTION */}
       <section
         ref={detailInfoRef}
-        className="mb-[100px] mt-[100px] flex h-[600px] w-[1280px] items-center justify-center border"
+        className="mb-[100px] flex h-[1800px] w-[1280px] items-center justify-center"
       >
-        <h3>제품 설명 이미지</h3>
+        <Image
+          src="/detailImage.png"
+          alt="제품 상세 이미지"
+          width={800}
+          height={1789}
+        ></Image>
       </section>
       <section
         ref={returnInfoRef}
