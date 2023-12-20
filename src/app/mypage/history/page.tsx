@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import getHistoryData from "./_functions/getHistoryData";
+import getHistoryData, { getHistoryData2 } from "./_functions/getHistoryData";
 import {
   BuyHistoryTable,
   Membership,
@@ -17,7 +17,7 @@ export default function History() {
     (async () => {
       const [buyData, sellData] = await Promise.all([
         getHistoryData("orders"),
-        getHistoryData("seller/products"),
+        getHistoryData2("products"),
       ]);
 
       const buySlicedData = buyData.slice(0, 5);
