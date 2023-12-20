@@ -77,7 +77,6 @@ export default function EditUser() {
         setMessage(false);
       }
 
-      console.log(user);
       alert("회원정보 수정을 성공했습니다!");
     } catch (err) {
       if (err instanceof Error) {

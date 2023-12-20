@@ -30,8 +30,7 @@ export default function Review() {
     };
 
     try {
-      const res = await axiosPrivate.post("replies", data);
-      console.log(res);
+      await axiosPrivate.post("replies", data);
       alert("리뷰 등록 완료!");
       router.push("/mypage/history");
     } catch (error) {
@@ -42,9 +41,11 @@ export default function Review() {
     }
   };
 
-  const handleInput = (setter: any) => (e: ChangeEvent<HTMLInputElement>) => {
-    setter(e.target.value);
-  };
+  const handleInput =
+    (setter: any) =>
+    (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
+      setter(e.target.value);
+    };
 
   // review에 name이 있으면 렌더링 시작
   return (

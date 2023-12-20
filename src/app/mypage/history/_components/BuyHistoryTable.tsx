@@ -81,7 +81,7 @@ const BuyHistoryTable = ({
 }) => {
   const setReview = useReviewStore((state) => state.setReview);
 
-  const [reviewdProducts, setReviewedProducts] = useState([]);
+  const [reviewdProducts, setReviewedProducts] = useState<number[]>([]);
 
   const router = useRouter();
 
@@ -96,8 +96,6 @@ const BuyHistoryTable = ({
           return reply.product._id;
         });
 
-        console.log(reviewdProductsData);
-
         setReviewedProducts(reviewdProductsData);
       } catch (error) {
         if (error instanceof Error) {
@@ -109,11 +107,11 @@ const BuyHistoryTable = ({
 
   const handleClick = (buyHistory: TBuyHistory, product: TProduct) => () => {
     const { _id: orderId } = buyHistory;
-    const { name, image, extra } = product;
+    const { _id: productId, name, image, extra } = product;
 
     setReview({
       order_id: orderId,
-      product_id: extra.parent,
+      product_id: productId,
       brand: extra.brand,
       name: name,
       image: image,
@@ -138,7 +136,6 @@ const BuyHistoryTable = ({
 
           return products.map((product, index) => {
             const { _id, name, price } = product;
-            console.log(product);
 
             return (
               <tr
