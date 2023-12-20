@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useReviewStore } from "@/stores/_index";
+import { axiosPrivate } from "@/api/axios";
 
 type TProduct = {
   _id: number;
@@ -88,7 +90,7 @@ const BuyHistoryTable = ({
           const { createdAt, products } = buyHistory;
 
           return products.map((product, index) => {
-            const { name, price } = product;
+            const { _id, name, price } = product;
 
             return (
               <tr
@@ -99,19 +101,23 @@ const BuyHistoryTable = ({
                 <td className="w-[30%] text-left">{name}</td>
                 <td className="w-[10%]">{price.toLocaleString("ko-KR")} 원</td>
                 <td className="w-[10%]">
-                  <button
-                    type="button"
-                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                    onClick={handleClick(buyHistory, product)}
-                  >
-                    작성
-                  </button>
-                  <button
-                    type="button"
-                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                  >
-                    수정
-                  </button>
+                  {reviewdProducts.includes(_id) ? (
+                    <button
+                      type="button"
+                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                      disabled
+                    >
+                      완료
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                      onClick={handleClick(buyHistory, product)}
+                    >
+                      작성
+                    </button>
+                  )}
                 </td>
               </tr>
             );
