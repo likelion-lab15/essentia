@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
+
 "use client";
 
-import { useState, FormEvent } from "react";
-import Image from "next/image";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { axiosPrivate } from "@/api/axios";
 import { useReviewStore } from "@/stores/_index";
@@ -32,7 +33,7 @@ export default function Review() {
       const res = await axiosPrivate.post("replies", data);
       console.log(res);
       alert("리뷰 등록 완료!");
-      router.push("/");
+      router.push("/mypage/history");
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -41,7 +42,7 @@ export default function Review() {
     }
   };
 
-  const handleInput = (setter) => (e) => {
+  const handleInput = (setter: any) => (e: ChangeEvent<HTMLInputElement>) => {
     setter(e.target.value);
   };
 
@@ -56,8 +57,8 @@ export default function Review() {
       <div className="flex border-b-[1px] border-[#808080] p-[25px]">
         <div className="mr-[42px] h-[100px] w-[100px]">
           <img
-            src={`https://localhost/api${reviewData.image.path}`}
-            alt={reviewData.image.originalname}
+            src={`https://localhost/api${reviewData?.image.path}`}
+            alt={reviewData?.image.originalname}
             width={100}
             height={100}
           />
