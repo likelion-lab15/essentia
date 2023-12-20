@@ -1,9 +1,17 @@
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTokenStore } from "@/stores/_index";
 
-export default function Sell() {
+export default function Sell({ id }) {
+  const searchParams = useSearchParams();
+  const getBrand = searchParams.get("brand");
+  const getAmount = searchParams.get("amount");
+  const getName = searchParams.get("name");
+
+  console.log(getBrand, getAmount, getName);
+
   const [product, setProduct] = useState({
     name: "",
     price: "",

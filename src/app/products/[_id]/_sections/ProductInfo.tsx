@@ -1,21 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/_index";
 import { useOutsideClick } from "@/hooks/_index";
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
+import { useProductStore } from "@/stores/useProductStore";
 
-export default function ProductInfo() {
-  // 향수 정보 상태 관리
-  const [product, setProduct] = useState({
-    name: "",
-    price: "",
-    brand: "",
-    amount: [],
-    content: "",
-    image: "",
-  });
+export default function ProductInfo({ id }) {
+  // 향수 정보 전역으로 상태 관리
+  const { product, setProduct } = useProductStore();
+
   // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
   // 사이즈 드롭다운박스 리스트 상태 관리
@@ -30,32 +25,57 @@ export default function ProductInfo() {
     setAmountView(false);
   };
 
-  // 향수 정보 가져오기
   useEffect(() => {
     async function getProductInfo() {
       try {
-        // 상품 id 1로 임시 고정
-        const _id = 1;
-        const response = await axios.get(`/products/${_id}`);
+        const response = await axios.get(`/products/${id}`);
         const result = response.data.item;
+        console.log(result);
+
+        const product = {
+          name: result.name,
+          price: result.price,
+          brand: result.extra.brand,
+          amount: result.extra.amount,
+          content: result.content,
+          image: result.mainImages[0].path,
+        };
+
+        setProduct(product); // Zustand 스토어에 상품 정보 저장
+
         return result;
       } catch (error) {
-        console.error("Axios Error 🥲", error);
+        console.error("향수 정보 Axios Error 🥲", error);
         return [];
       }
     }
 
-    getProductInfo().then((result) => {
-      setProduct({
-        name: result.name,
-        price: result.price,
-        brand: result.extra.brand,
-        amount: result.extra.amount,
-        content: result.content,
-        image: result.mainImages[0].url,
-      });
-    });
-  }, []);
+    getProductInfo();
+  }, [id, setProduct]);
+
+  /* 라우터 설정을 위한 useRouter 사용 */
+  const router = useRouter();
+
+  /* 구매 선택 페이지로 이동시키는 함수 */
+  const navigateToBuyPage = () => {
+    if (selectedSize === "사이즈를 선택해주세요") {
+      alert("사이즈를 선택해주세요.");
+    } else {
+      router.push(`/products/${id}/buy/?&amount=${selectedSize}`);
+    }
+  };
+
+  /* 판매 페이지로 이동시키는 함수 */
+  // brand, name, amount, id를 쿼리스트링으로 넘겨줌
+  const navigateToSellPage = () => {
+    if (selectedSize === "사이즈를 선택해주세요") {
+      alert("사이즈를 선택해주세요.");
+    } else {
+      router.push(
+        `/products/${id}/sell/?&brand=${product.brand}&name=${product.name}&amount=${selectedSize}`
+      );
+    }
+  };
 
   console.log(product.image);
 
@@ -65,14 +85,14 @@ export default function ProductInfo() {
       <div className="flex h-[560px] w-full flex-row items-center justify-between pl-[60px] pr-[60px]">
         {/* 향수 이미지 */}
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
-          <Image
+          <img
             alt="blanche"
             // src="/blanche.webp"
-            src={`https://localhost:443${product.image}`}
+            src={`https://localhost/api/${product.image}`}
             width={450}
             height={450}
             className="bg-[#F4F4F4]"
-          ></Image>
+          ></img>
         </div>
         {/* 사용자 상호작용 */}
         <div className="h-[444] w-[560px]">
@@ -81,11 +101,12 @@ export default function ProductInfo() {
           </p>
           <p className="text-30 font-medium">{product.name}</p>
           <div className="flex-rowtext-16 mb-[34px] flex font-medium text-tertiary">
-            {product.amount.map((amount, index) => (
-              <p className=" pr-[10px]" key={index}>
-                {amount}ml
-              </p>
-            ))}
+            {product.amount &&
+              product.amount.map((amount, index) => (
+                <p className=" pr-[10px]" key={index}>
+                  {amount}ml
+                </p>
+              ))}
           </div>
           <p className="mb-[18px] w-[560px] text-14 font-medium text-tertiary">
             {product.content}
@@ -131,11 +152,13 @@ export default function ProductInfo() {
               className="mr-[10px] h-[46px] w-[275px] border border-primary bg-white text-primary"
               label="바로 구매하기"
               type="button"
+              onClick={navigateToBuyPage}
             ></Button>
             <Button
               className="h-[46px] w-[275px]"
               label="판매하기"
               type="button"
+              onClick={navigateToSellPage}
             ></Button>
           </div>
           <Button
