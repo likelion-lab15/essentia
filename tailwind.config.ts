@@ -42,6 +42,7 @@ const config: Config = {
         tertiary: "#808080",
         secondary: "#A0D1EF",
         warning: "#D7260D",
+        pagenation: "#d4d4d4",
         accent: "#ff4800",
         product: "#F5F5F5",
       },
