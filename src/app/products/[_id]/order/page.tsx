@@ -64,7 +64,7 @@ export default function Order() {
       {/* 구매할 향수 정보 */}
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
-          src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
+          src={`${process.env.NEXT_PUBLIC_API_SERVER}${product.image}`}
           alt="구매할 상품 이미지"
           className=" h-[150px] w-[150px] border-2 border-primary bg-product"
         />

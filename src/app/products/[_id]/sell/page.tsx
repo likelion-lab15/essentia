@@ -181,7 +181,7 @@ export default function Sell(props: any) {
               {previewImages.map((image, index) => (
                 <img
                   key={index}
-                  src={`${process.env.NEXT_PUBLIC_IMG}${image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_SERVER}${image}`}
                   alt={`Preview ${index + 1}`}
                   style={{
                     width: "120px",

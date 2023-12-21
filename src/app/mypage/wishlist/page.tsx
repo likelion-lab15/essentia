@@ -66,7 +66,7 @@ export default function WishList() {
               onClick={() => router.push(`/products/${item._id}`)}
             >
               <Image
-                src={`${process.env.NEXT_PUBLIC_IMG}${image.url}`}
+                src={`${process.env.NEXT_PUBLIC_API_SERVER}${image.url}`}
                 alt={name}
                 width={243}
                 height={230}

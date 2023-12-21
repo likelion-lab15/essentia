@@ -75,7 +75,7 @@ export default function Buy(props: TProductProps) {
         <div className="mb-[25px] flex h-[300px] w-[800px] items-center justify-center border-b-2 border-primary">
           {/* 이미지 */}
           <img
-            src={`${process.env.NEXT_PUBLIC_IMG}${getImage}`}
+            src={`${process.env.NEXT_PUBLIC_API_SERVER}${getImage}`}
             width={200}
             height={200}
             alt="상품 이미지"
