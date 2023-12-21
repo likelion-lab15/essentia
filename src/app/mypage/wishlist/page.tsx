@@ -1,9 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { axiosPrivate } from "@/api/axios";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function WishList() {
   const [wishList, setWishList] = useState([]);
@@ -61,16 +62,15 @@ export default function WishList() {
           return (
             <div
               key={item._id}
-              // href={`/products/${item._id}`}
               className="relative mr-[16px] h-[354px] w-[234px]"
               onClick={() => router.push(`/products/${item._id}`)}
             >
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMG}${image.url}`}
-                alt={name}
+              <img
+                src={`${process.env.NEXT_PUBLIC_API_SERVER}${image.path}`}
+                alt={image.originalname}
                 width={243}
                 height={230}
-                className="mb-[42px] bg-gray-500"
+                className="mb-[42px]"
               />
               <div>
                 <h3 className="ml-[17px] text-14 font-bold">Brand</h3>

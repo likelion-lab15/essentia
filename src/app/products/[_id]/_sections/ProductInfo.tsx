@@ -5,12 +5,16 @@ import { Button } from "@/components/_index";
 import { useOutsideClick } from "@/hooks/_index";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import axios from "@/api/axios";
+import axios, { axiosPrivate } from "@/api/axios";
 import { useProductStore } from "@/stores/useProductStore";
+import { useUserStore } from "@/stores/useUserStore";
 
-export default function ProductInfo({ id }) {
+export default function ProductInfo({ id }: { id: string }) {
   // 향수 정보 전역으로 상태 관리
   const { product, setProduct } = useProductStore();
+  const { user } = useUserStore();
+  const productId = Number(id);
+  const userId = user?._id;
 
   // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
@@ -72,13 +76,23 @@ export default function ProductInfo({ id }) {
     if (selectedSize === "사이즈를 선택해주세요") {
       alert("사이즈를 선택해주세요.");
     } else {
-      router.push(
-        `/products/${id}/sell/?&brand=${product.brand}&name=${product.name}&amount=${selectedSize}`
-      );
+      router.push(`/products/${id}/sell/?&amount=${selectedSize}`);
     }
   };
 
-  console.log(product.image);
+  const addWishList = async () => {
+    try {
+      const response = await axiosPrivate.post("/bookmarks", {
+        product_id: productId,
+        user_id: userId,
+        memo: "test",
+      });
+      console.log("위시리스트 POST 통신 성공", response.data);
+      alert("상품이 위시리스트에 추가되었습니다.");
+    } catch (error) {
+      console.error("위시리스트 POST 통신 에러 발생", error);
+    }
+  };
 
   return (
     <section className="flex h-[660px] w-[1280px] items-center justify-center ">
@@ -87,11 +101,11 @@ export default function ProductInfo({ id }) {
         {/* 향수 이미지 */}
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
           <img
-            alt="blanche"
-            src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
+            alt="향수 이미지"
+            src={`${process.env.NEXT_PUBLIC_API_SERVER}${product.image}`}
             width={450}
             height={450}
-            className="bg-[#F4F4F4]"
+            className="bg-product"
           ></img>
         </div>
         {/* 사용자 상호작용 */}
@@ -165,6 +179,7 @@ export default function ProductInfo({ id }) {
             className="h-[46px] w-[560px] border border-primary bg-white text-primary"
             label="위시 리스트에 추가하기"
             type="button"
+            onClick={() => addWishList()}
           ></Button>
         </div>
       </div>

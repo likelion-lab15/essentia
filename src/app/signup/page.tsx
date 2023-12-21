@@ -1,8 +1,10 @@
 "use client";
-import axios from "axios";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AddressModal, InputField, Button } from "@/components/_index";
+import axios from "@/api/axios";
+import { AxiosError } from "axios";
 
 export default function SignUp() {
   const router = useRouter();
@@ -43,6 +45,10 @@ export default function SignUp() {
   // 이메일 중복확인 상태 관리
   const [hasCheckedDuplication, setHasCheckedDuplication] = useState(false);
 
+  const isAxiosError = (error: any): error is AxiosError => {
+    return error.isAxiosError;
+  };
+
   // 이메일 중복확인 통신
   const checkEmailDuplication = async () => {
     if (!email.trim()) {
@@ -51,16 +57,14 @@ export default function SignUp() {
       return;
     }
     try {
-      const res = await axios.get(
-        `https://localhost/api/users/email?email=${email}`
-      );
+      const res = await axios.get(`/users/email?email=${email}`);
       setEmailUnique(true);
       setShowEmailError(false);
       setHasCheckedDuplication(true);
       console.log(res);
       console.log("사용가능한 이메일입니다");
     } catch (error) {
-      if (error instanceof Error) {
+      if (isAxiosError(error)) {
         if (error.response && error.response.status === 409) {
           // Handle duplicate email case
           setEmailUnique(false);

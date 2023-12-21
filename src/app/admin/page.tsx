@@ -1,10 +1,27 @@
 "use client";
-import axios from "axios";
+
+import { axiosPrivate, axiosForm } from "@/api/axios";
 import React, { useState, useEffect } from "react";
-import { useTokenStore } from "@/stores/_index";
+
+// 상품 정보 타입 정의
+type TProduct = {
+  name: string;
+  price: number | string;
+  content: string;
+  mainImages: { path: string; name: string; originalname: string }[];
+  shippingFees: number;
+  show: boolean;
+  active: boolean;
+  quantity: number;
+  buyQuantity: number;
+  extra: { depth: number; amount: string; brand: string };
+};
+
+// 미리보기 이미지의 URL 타입 정의
+type TPreviewImage = string | null;
 
 export default function Admin() {
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<TProduct>({
     name: "",
     price: "",
     content: "",
@@ -16,12 +33,13 @@ export default function Admin() {
     buyQuantity: 198,
     extra: { depth: 1, amount: "", brand: "" },
   });
-  const [previewImage, setPreviewImage] = useState(null);
-  const token = useTokenStore((state) => state.token);
+  const [previewImage, setPreviewImage] = useState<TPreviewImage>(null);
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     // 가격 및 배송비는 숫자로 변환하여 상태 업데이트
@@ -49,18 +67,10 @@ export default function Admin() {
 
     try {
       // 파일을 서버로 전송하고, 업로드된 파일의 경로를 반환 받음
-      const response = await axios.post(
-        "https://localhost/api/files/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosForm.post("/files/", formData);
       // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 1개만 등록가능
       if (response.data.ok && response.data.file) {
-        return [`https://localhost/api/${response.data.file.path}`];
+        return [`${response.data.file.path}`];
       } else {
         console.error("문제가있다아아아", response);
         return [];
@@ -113,20 +123,8 @@ export default function Admin() {
 
       console.log("서버에서의 대답", product); // 서버로 보내기 전에 콘솔 확인 (디버깅)
 
-      // useTokenStore에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
-      const accessToken = token.accessToken;
-
       // 서버에 상품 정보를 POST 요청
-      const response = await axios.post(
-        "https://localhost/api/seller/products/",
-        product,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await axiosPrivate.post("/seller/products/", product);
       console.log(response); // 서버 응답 로그 출력 (디버깅)
     } catch (error) {
       console.error("Error 🥲", error);

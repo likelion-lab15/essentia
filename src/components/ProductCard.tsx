@@ -1,19 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/navigation";
 
-interface ProductCardProps {
+// 상품 타입 정의
+type TProductCardProps = {
   product: {
     _id: string;
-    mainImages: string[];
+    mainImages: { path: string }[];
     name: string;
     price: number;
     extra: {
       brand: string;
     };
   };
-}
+};
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product }: TProductCardProps) {
   const {
     _id,
     mainImages,
@@ -37,16 +38,14 @@ export default function ProductCard({ product }: ProductCardProps) {
       onClick={handleClick}
     >
       <img
-        src={`${process.env.NEXT_PUBLIC_IMG}${mainImages[0].path}`}
+        src={`${process.env.NEXT_PUBLIC_API_SERVER}${mainImages[0].path}`}
         alt={name}
-        className="bg-product mb-[42px] h-[230px] w-[234px]"
+        className="mb-[12px] h-[230px] w-[234px] bg-product"
       />
       <div>
-        <h3 className="ml-[17px] text-14 font-bold">{brand}</h3>
-        <p className="ml-[17px] text-16 font-medium">{name}</p>
-        <p className="ml-[17px] text-14 font-semibold">
-          {price.toLocaleString()}원
-        </p>
+        <h3 className="text-14 font-bold">{brand}</h3>
+        <p className="text-16 font-medium">{name}</p>
+        <p className="text-14 font-semibold">{price.toLocaleString()}원</p>
       </div>
     </li>
   );

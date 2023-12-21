@@ -57,7 +57,7 @@ export default function MyReview() {
             <div className="mr-[42px] flex flex-col">
               <div className="mb-[10px] h-[200px] w-[200px]">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_IMG}${product.image.path}`}
+                  src={`${process.env.NEXT_PUBLIC_API_SERVER}${product.image.path}`}
                   alt={product.image.originalname}
                   width="100%"
                   height="100%"

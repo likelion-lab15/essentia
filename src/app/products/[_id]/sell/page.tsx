@@ -1,15 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import axios from "axios";
+
+import { axiosPrivate, axiosForm } from "@/api/axios";
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useTokenStore } from "@/stores/_index";
 import { useProductStore } from "@/stores/useProductStore";
+
+type TItem = {
+  name: string;
+  price: string;
+  content: string;
+  mainImages: { path: string; name: string; originalname: string }[];
+  shippingFees: number;
+  show: boolean;
+  active: boolean;
+  quantity: number;
+  buyQuantity: number;
+  extra: {
+    depth: number;
+    restamount: string;
+    date: string;
+    brand: string;
+    parent: number;
+    amount: number;
+  };
+};
 
 export default function Sell(props: any) {
   const searchParams = useSearchParams();
   const { product } = useProductStore();
-  const [item, setItem] = useState({
+  const [item, setItem] = useState<TItem>({
     name: product.name,
     price: "",
     content: "",
@@ -25,15 +45,16 @@ export default function Sell(props: any) {
       date: "",
       brand: product.brand,
       parent: parseInt(props.params._id),
-      amount: parseInt(searchParams.get("amount")),
+      amount: parseInt(searchParams.get("amount") || "0"),
     },
   });
 
-  const [previewImages, setPreviewImages] = useState([]);
-  const token = useTokenStore((state) => state.token);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
 
   // 입력 값이 변경될 때 호출되는 함수
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
 
     // 'extra' 필드 내부의 값을 업데이트할 필요가 있는 경우
@@ -62,19 +83,9 @@ export default function Sell(props: any) {
 
     try {
       // 파일을 서버로 전송하고, 업로드된 파일의 경로를 반환 받음
-      const response = await axios.post(
-        "https://localhost/api/files/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosForm.post("/files/", formData);
       // 서버 응답에서 파일 경로를 추출하고, 배열로 반환 -> 이미지 파일 최대 10개 등록가능
-      return response.data.files.map(
-        (file: any) => `https://localhost/api/${file.path}`
-      );
+      return response.data.files.map((file: any) => `${file.path}`);
     } catch (error) {
       console.error("파일 업로드 오류", error);
       return [];
@@ -91,10 +102,10 @@ export default function Sell(props: any) {
       // mainImages 상태 업데이트
       setItem({
         ...item,
-        mainImages: uploadedPaths.map((path) => ({
+        mainImages: uploadedPaths.map((path: string, index: number) => ({
           path: path,
-          name: files.name,
-          originalname: files.name,
+          name: files[index].name,
+          originalname: files[index].name,
         })),
       });
       // 각 파일에 대한 미리보기 URL 생성
@@ -115,20 +126,8 @@ export default function Sell(props: any) {
 
       console.log("서버에서의 대답", item); // 서버로 보내기 전에 콘솔 확인 (디버깅)
 
-      // useTokenStore에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
-      const accessToken = token.accessToken;
-
       // 서버에 상품 정보를 POST 요청
-      const response = await axios.post(
-        "https://localhost/api/seller/products/",
-        item,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await axiosPrivate.post("/seller/products/", item);
       console.log(response); // 서버 응답 로그 출력 (디버깅)
     } catch (error) {
       console.error("Error 🥲", error);
@@ -182,7 +181,7 @@ export default function Sell(props: any) {
               {previewImages.map((image, index) => (
                 <img
                   key={index}
-                  src={`${process.env.NEXT_PUBLIC_IMG}${image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_SERVER}${image}`}
                   alt={`Preview ${index + 1}`}
                   style={{
                     width: "120px",

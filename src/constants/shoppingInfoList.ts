@@ -16,11 +16,11 @@ const shoppingInfoList = {
     },
     {
       title: "관심상품",
-      href: "/mypage/history",
+      href: "/mypage/wishlist",
     },
     {
       title: "리뷰",
-      href: "/mypage/history",
+      href: "/mypage/myreview",
     },
   ],
 };
