@@ -1,4 +1,8 @@
-import { MagazineSection, PerfumeCarousel } from "./_sections/_index";
+import {
+  BrandListSection,
+  MagazineSection,
+  PerfumeCarousel,
+} from "./_sections/_index";
 
 export default function Home() {
   return (
@@ -10,8 +14,8 @@ export default function Home() {
       <section className="flex h-[800px] w-[1440px] items-center justify-center border-2">
         <MagazineSection />
       </section>
-      <section className="flex h-[800px] w-[1280px] items-center justify-center border-2">
-        <h1>브랜드 리스트</h1>
+      <section className="flex h-[800px] w-[1280px] items-center justify-center">
+        <BrandListSection />
       </section>
     </main>
   );
