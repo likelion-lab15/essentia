@@ -1,27 +1,37 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import axios from "@/api/axios";
 
-export default function ProductDetail({ id }) {
+type TReview = {
+  _id: string;
+  extra: {
+    title: string;
+    author: string;
+  };
+  createdAt: string;
+  content: string;
+};
+
+export default function ProductDetail({ id }: { id: string }) {
   /* 상태 변수 선언 */
   // 현재 활성화된 섹션을 추적하기 위한 상태
   const [activeSection, setActiveSection] = useState("");
 
   // 리뷰 데이터 관리를 위한 상태
-  const [reviews, setReviews] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [reviews, setReviews] = useState<TReview[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [countReviews, setCountReviews] = useState(0);
 
   // 페이지네이션을 위한 상태
   const [currentPage, setCurrentPage] = useState(1);
 
   // 각 섹션에 대한 참조
-  const detailInfoRef = useRef(null);
-  const returnInfoRef = useRef(null);
-  const reviewRef = useRef(null);
-  const recommendedProductsRef = useRef(null);
+  const detailInfoRef = useRef<HTMLElement>(null);
+  const returnInfoRef = useRef<HTMLElement>(null);
+  const reviewRef = useRef<HTMLElement>(null);
+  const recommendedProductsRef = useRef<HTMLElement>(null);
 
   /* 상수 선언 */
   const REVIEWS_PER_PAGE = 5;
@@ -55,7 +65,7 @@ export default function ProductDetail({ id }) {
   const checkActiveSection = () => {
     const scrollPosition = window.scrollY + window.innerHeight / 2;
 
-    const refs: { [key: string]: React.MutableRefObject<null> } = {
+    const refs: { [key: string]: React.RefObject<HTMLElement> } = {
       detailInfo: detailInfoRef,
       returnInfo: returnInfoRef,
       review: reviewRef,
@@ -76,19 +86,18 @@ export default function ProductDetail({ id }) {
   };
 
   // API 호출 및 데이터 가져오기
-  async function getProductInfo() {
+  const getProductInfo = useCallback(async () => {
     try {
-      console.log("getProductDetail Id: ", id);
-      const response = await axios.get(`https://localhost/api/products/${id}`);
+      const response = await axios.get(`/products/${id}`);
       const result = response.data;
+      console.log("products/[id] GET 통신 성공", result);
       return result.item.replies;
     } catch (error) {
-      console.error("Error 🥲", error);
+      console.error("products/[id] GET 통신 에러 발생 🥲", error);
       return [];
     }
-  }
+  }, [id]);
 
-  // 컴포넌트 마운트 시 API 호출
   useEffect(() => {
     const fetchData = async () => {
       const replies = await getProductInfo();
@@ -96,7 +105,7 @@ export default function ProductDetail({ id }) {
       setCountReviews(replies.length);
     };
     fetchData();
-  }, []);
+  }, [getProductInfo]);
 
   // 스크롤 이벤트 리스너 추가
   useEffect(() => {
@@ -108,7 +117,7 @@ export default function ProductDetail({ id }) {
   }, []);
 
   // 리뷰 아코디언 토글 함수
-  const toggleAccordion = (index) => {
+  const toggleAccordion = (index: number) => {
     setActiveIndex(index === activeIndex ? null : index);
   };
 
@@ -248,7 +257,7 @@ export default function ProductDetail({ id }) {
           </h3>
           {/* 리뷰 아코디언 */}
           <div className="text-20 font-medium">
-            {currentReviews.map((review, index) => (
+            {currentReviews.map((review, index: number) => (
               <div
                 key={review._id}
                 className={`flex flex-col border-b-2 border-primary ${
