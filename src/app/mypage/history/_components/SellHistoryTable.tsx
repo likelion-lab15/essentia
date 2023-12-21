@@ -1,6 +1,63 @@
-// "use client";
+"use client";
 
-const SellHistoryTable = ({ sellHistoryData }) => {
+import { axiosPrivate } from "@/api/axios";
+import { useRouter } from "next/navigation";
+
+type TSellHistoryData = {
+  _id: number;
+  seller_id: number;
+  price: number;
+  show: boolean;
+  active: boolean;
+  name: string;
+  quantity: number;
+  buyQuantity: number;
+  mainImages: [
+    {
+      path: string;
+      name: string;
+      originalname: string;
+    },
+  ];
+  createdAt: string;
+  updatedAt: string;
+  extra: {
+    brand: string;
+    category: [];
+    parent: number;
+    depth: number;
+    amount: number;
+    restamount: number;
+    date: string;
+  };
+  replies: number;
+  bookmarks: number;
+};
+
+const SellHistoryTable = ({
+  sellHistoryData,
+}: {
+  sellHistoryData: TSellHistoryData[];
+}) => {
+  const router = useRouter();
+
+  // 상품 수정 페이지로 이동
+  const editProduct = (id: number) => {
+    router.push(`/products/${id}/editsell/`);
+  };
+
+  // 상품 삭제
+  const deleteProduct = async (id: number) => {
+    try {
+      await axiosPrivate.delete(`/seller/products/${id}`);
+      alert("상품을 삭제했습니다!");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  };
+
   return (
     <table className="mb-[66px] w-[100%]">
       <caption className="h-[64px] border-b-[3px] border-black text-left text-[28px] font-bold">
@@ -13,8 +70,8 @@ const SellHistoryTable = ({ sellHistoryData }) => {
           <th className="w-[10%]">판매금액</th>
           <th className="w-[10%]">상품관리</th>
         </tr>
-        {sellHistoryData.map((item, index) => {
-          const { createdAt, name, price } = item;
+        {sellHistoryData?.map((item) => {
+          const { _id, createdAt, name, price } = item;
 
           // 상품 이름이 너무 길 때
           const truncateName =
@@ -22,7 +79,7 @@ const SellHistoryTable = ({ sellHistoryData }) => {
 
           return (
             <tr
-              key={index}
+              key={_id}
               className="h-[50px] border-b-[1px] border-black text-center text-[18px] font-medium"
             >
               <td className="w-[10%]">{createdAt.split(" ")[0]}</td>
@@ -32,14 +89,16 @@ const SellHistoryTable = ({ sellHistoryData }) => {
                 <button
                   type="button"
                   className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                  onClick={() => editProduct(_id)}
                 >
-                  작성
+                  수정
                 </button>
                 <button
                   type="button"
                   className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                  onClick={() => deleteProduct(_id)}
                 >
-                  수정
+                  삭제
                 </button>
               </td>
             </tr>

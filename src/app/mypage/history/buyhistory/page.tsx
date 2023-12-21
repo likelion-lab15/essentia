@@ -9,7 +9,7 @@ export default function BuyHistory() {
 
   useEffect(() => {
     (async () => {
-      const data = await getHistoryData("https://localhost/api/orders");
+      const data = await getHistoryData("orders");
       setBuyHistoryData(data);
     })();
   }, []);

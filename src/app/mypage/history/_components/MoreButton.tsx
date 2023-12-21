@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const MoreButton = ({ href }) => {
+const MoreButton = ({ href }: { href: string }) => {
   return (
     <Link
       href={href}
