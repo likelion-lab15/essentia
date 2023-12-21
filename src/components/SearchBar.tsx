@@ -1,7 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
 import Image from "next/image";
-import axios from "axios";
+import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
 
 type TSearchBar = {
@@ -21,9 +21,7 @@ export default function SearchBar({ onClose }: TSearchBarProps) {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `https://localhost/api/products?keyword=${encodeURIComponent(
-          searchTerm
-        )}`
+        `/products?keyword=${encodeURIComponent(searchTerm)}`
       );
       setSearchResults(response.data.item);
     } catch (error) {

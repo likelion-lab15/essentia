@@ -1,6 +1,6 @@
 "use client";
 import ProductCard from "@/components/ProductCard";
-import axios from "axios";
+import axios from "@/api/axios";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -25,9 +25,7 @@ const getProducts = async (
       page: page.toString(), // 페이지 번호
       limit: limit.toString(), // 페이지 항목 수
     });
-    const response = await axios.get(
-      `https://localhost/api/products?${params}`
-    );
+    const response = await axios.get(`/products?${params}`);
     return response.data.item || [];
   } catch (error) {
     console.error("Error 🥲", error);
