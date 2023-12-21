@@ -5,10 +5,83 @@ import { useRouter } from "next/navigation";
 import { useReviewStore } from "@/stores/_index";
 import { axiosPrivate } from "@/api/axios";
 
-const BuyHistoryTable = ({ buyHistoryData }) => {
+type TReview = {
+  _id: number;
+  rating: number;
+  content: string;
+  extra: {
+    title: string;
+  };
+  createdAt: string;
+  product: {
+    _id: number;
+    image: {
+      path: string;
+      name: string;
+      originalname: string;
+    };
+    name: string;
+  };
+  user: {
+    _id: number;
+    name: string;
+  };
+};
+
+type TProduct = {
+  _id: number;
+  quantity: number;
+  seller_id: number;
+  name: string;
+  image: {
+    path: string;
+    name: string;
+    originalname: string;
+  };
+  price: number;
+  extra: {
+    brand: string;
+    category: [];
+    parent: number;
+    depth: number;
+    amount: number;
+    restamount: number;
+    date: string;
+  };
+};
+
+type TBuyHistory = {
+  _id: number;
+  products: TProduct[];
+  address: {
+    name: string;
+    value: string;
+  };
+  state: string;
+  user_id: number;
+  createdAt: string;
+  updatedAt: string;
+  cost: {
+    products: number;
+    shippingFees: number;
+    discount: {
+      products: number;
+      shippingFees: number;
+    };
+    total: number;
+  };
+};
+
+type TBuyHistoryData = TBuyHistory[];
+
+const BuyHistoryTable = ({
+  buyHistoryData,
+}: {
+  buyHistoryData: TBuyHistoryData;
+}) => {
   const setReview = useReviewStore((state) => state.setReview);
 
-  const [reviewdProducts, setReviewedProducts] = useState([]);
+  const [reviewdProducts, setReviewedProducts] = useState<number[]>([]);
 
   const router = useRouter();
 
@@ -19,7 +92,7 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
         const res = await axiosPrivate.get("replies");
         const repliesData = res.data.item;
 
-        const reviewdProductsData = repliesData.map((reply) => {
+        const reviewdProductsData = repliesData.map((reply: TReview) => {
           return reply.product._id;
         });
 
@@ -32,16 +105,18 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
     })();
   }, []);
 
-  // 이벤트 핸들러
-  const handleClick = (buyHistory, product) => () => {
+  const handleClick = (buyHistory: TBuyHistory, product: TProduct) => () => {
     const { _id: orderId } = buyHistory;
-    const { _id: productId, name, image } = product;
+    const { _id: productId, name, image, extra } = product;
+
     setReview({
       order_id: orderId,
       product_id: productId,
+      brand: extra.brand,
       name: name,
       image: image,
     });
+
     router.push("/review");
   };
 

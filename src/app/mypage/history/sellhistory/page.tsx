@@ -9,9 +9,7 @@ export default function SellHistory() {
 
   useEffect(() => {
     (async () => {
-      const data = await getHistoryData(
-        "https://localhost/api/seller/products"
-      );
+      const data = await getHistoryData("seller/products");
       setSellHistoryData(data);
     })();
   }, []);

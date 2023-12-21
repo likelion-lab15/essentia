@@ -32,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <li
       key={_id}
-      className="mr-[16px] h-[354px] w-[234px]"
+      className="mb-[100px] mr-[16px] h-[354px] w-[234px] cursor-pointer"
       onClick={handleClick}
     >
       <img
