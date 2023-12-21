@@ -1,23 +1,123 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useReviewStore } from "@/stores/_index";
+import { axiosPrivate } from "@/api/axios";
 
-const BuyHistoryTable = ({ buyHistoryData }) => {
+type TReview = {
+  _id: number;
+  rating: number;
+  content: string;
+  extra: {
+    title: string;
+  };
+  createdAt: string;
+  product: {
+    _id: number;
+    image: {
+      path: string;
+      name: string;
+      originalname: string;
+    };
+    name: string;
+  };
+  user: {
+    _id: number;
+    name: string;
+  };
+};
+
+type TProduct = {
+  _id: number;
+  quantity: number;
+  seller_id: number;
+  name: string;
+  image: {
+    path: string;
+    name: string;
+    originalname: string;
+  };
+  price: number;
+  extra: {
+    brand: string;
+    category: [];
+    parent: number;
+    depth: number;
+    amount: number;
+    restamount: number;
+    date: string;
+  };
+};
+
+type TBuyHistory = {
+  _id: number;
+  products: TProduct[];
+  address: {
+    name: string;
+    value: string;
+  };
+  state: string;
+  user_id: number;
+  createdAt: string;
+  updatedAt: string;
+  cost: {
+    products: number;
+    shippingFees: number;
+    discount: {
+      products: number;
+      shippingFees: number;
+    };
+    total: number;
+  };
+};
+
+type TBuyHistoryData = TBuyHistory[];
+
+const BuyHistoryTable = ({
+  buyHistoryData,
+}: {
+  buyHistoryData: TBuyHistoryData;
+}) => {
   const setReview = useReviewStore((state) => state.setReview);
+
+  const [reviewdProducts, setReviewedProducts] = useState<number[]>([]);
 
   const router = useRouter();
 
-  const handleClick = (buyHistory, product) => () => {
+  useEffect(() => {
+    // 리뷰된 상품의 목록들
+    (async () => {
+      try {
+        const res = await axiosPrivate.get("replies");
+        const repliesData = res.data.item;
+
+        const reviewdProductsData = repliesData.map((reply: TReview) => {
+          return reply.product._id;
+        });
+
+        setReviewedProducts(reviewdProductsData);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
+    })();
+  }, []);
+
+  const handleClick = (buyHistory: TBuyHistory, product: TProduct) => () => {
     const { _id: orderId } = buyHistory;
-    const { _id: productId, name, image } = product;
+    const { _id: productId, name, image, extra } = product;
+
     setReview({
       order_id: orderId,
       product_id: productId,
+      brand: extra.brand,
       name: name,
       image: image,
     });
-    router.push(`/review`);
+
+    router.push("/review");
   };
 
   return (
@@ -36,7 +136,7 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
           const { createdAt, products } = buyHistory;
 
           return products.map((product, index) => {
-            const { name, price } = product;
+            const { _id, name, price } = product;
 
             return (
               <tr
@@ -47,19 +147,23 @@ const BuyHistoryTable = ({ buyHistoryData }) => {
                 <td className="w-[30%] text-left">{name}</td>
                 <td className="w-[10%]">{price.toLocaleString("ko-KR")} 원</td>
                 <td className="w-[10%]">
-                  <button
-                    type="button"
-                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                    onClick={handleClick(buyHistory, product)}
-                  >
-                    작성
-                  </button>
-                  <button
-                    type="button"
-                    className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                  >
-                    수정
-                  </button>
+                  {reviewdProducts.includes(_id) ? (
+                    <button
+                      type="button"
+                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                      disabled
+                    >
+                      완료
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
+                      onClick={handleClick(buyHistory, product)}
+                    >
+                      작성
+                    </button>
+                  )}
                 </td>
               </tr>
             );

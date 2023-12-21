@@ -1,11 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTokenStore } from "@/stores/_index";
+import { useProductStore } from "@/stores/useProductStore";
 
-export default function Sell() {
-  const [product, setProduct] = useState({
-    name: "",
+export default function Sell(props: any) {
+  const searchParams = useSearchParams();
+  const { product } = useProductStore();
+  const [item, setItem] = useState({
+    name: product.name,
     price: "",
     content: "",
     mainImages: [],
@@ -14,32 +19,38 @@ export default function Sell() {
     active: true,
     quantity: 200,
     buyQuantity: 198,
-    extra: { depth: 2, parent: "", restamount: "", date: "" },
+    extra: {
+      depth: 2,
+      restamount: "",
+      date: "",
+      brand: product.brand,
+      parent: parseInt(props.params._id),
+      amount: parseInt(searchParams.get("amount")),
+    },
   });
+
   const [previewImages, setPreviewImages] = useState([]);
   const token = useTokenStore((state) => state.token);
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    // 가격, 배송비, 남은용량, 구매일시 숫자로 변환하여 상태 업데이트
-    if (
-      name === "price" ||
-      name === "shippingFees" ||
-      name === "restamount" ||
-      name === "date"
-    ) {
-      const intValue = value ? parseInt(value, 10) : 0;
-      setProduct({
-        ...product,
-        [name]: intValue,
+
+    // 'extra' 필드 내부의 값을 업데이트할 필요가 있는 경우
+    if (["restamount", "date", "amount"].includes(name)) {
+      setItem((prevItem) => ({
+        ...prevItem,
         extra: {
-          ...product.extra,
-          [name]: intValue,
+          ...prevItem.extra,
+          [name]: value,
         },
-      });
+      }));
     } else {
-      setProduct({ ...product, [name]: value });
+      // 그 외의 경우, 직접 item 상태에 값을 업데이트
+      setItem((prevItem) => ({
+        ...prevItem,
+        [name]: value,
+      }));
     }
   };
 
@@ -78,12 +89,12 @@ export default function Sell() {
       // 파일 업로드 함수 호출
       const uploadedPaths = await uploadFiles(files);
       // mainImages 상태 업데이트
-      setProduct({
-        ...product,
+      setItem({
+        ...item,
         mainImages: uploadedPaths.map((path) => ({
-          url: path,
-          fileName: files.name,
-          orgName: files.name,
+          path: path,
+          name: files.name,
+          originalname: files.name,
         })),
       });
       // 각 파일에 대한 미리보기 URL 생성
@@ -93,25 +104,16 @@ export default function Sell() {
     }
   };
 
-  // mainImages 상태 업데잍 를 콘솔에 출력 (디버깅)
-  useEffect(() => {
-    console.log(product.mainImages);
-  }, [product.mainImages]);
-
   // 상품 등록 제출 요청
   const sendPostRequest = async () => {
     try {
       // 유효성 검사
-      if (product.name.length < 2) {
-        alert("상품명은 2글자 이상 입력해야 합니다.");
-        return;
-      }
-      if (product.content.length < 10) {
+      if (item.content.length < 10) {
         alert("상품 설명은 10글자 이상 입력해야 합니다.");
         return;
       }
 
-      console.log("서버에서의 대답", product); // 서버로 보내기 전에 콘솔 확인 (디버깅)
+      console.log("서버에서의 대답", item); // 서버로 보내기 전에 콘솔 확인 (디버깅)
 
       // useTokenStore에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
       const accessToken = token.accessToken;
@@ -119,7 +121,7 @@ export default function Sell() {
       // 서버에 상품 정보를 POST 요청
       const response = await axios.post(
         "https://localhost/api/seller/products/",
-        product,
+        item,
         {
           headers: {
             "Content-Type": "application/json",
@@ -149,18 +151,21 @@ export default function Sell() {
         </div>
 
         <form onSubmit={handleSubmit} className="w-[1200px]">
-          <div className="h-[138px] border-b-[1px] border-tertiary">
+          <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary">
+            <label htmlFor="name" className="mr-[100px] text-18 font-bold">
+              브랜드
+            </label>
+            <span className="inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
+              {item.extra.brand}
+            </span>
+          </div>
+          <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary pb-[50px]">
             <label htmlFor="name" className="mr-[100px] text-18 font-bold">
               상품명
             </label>
-            <input
-              type="text"
-              name="name"
-              placeholder="제품명"
-              value={product.name}
-              onChange={handleChange}
-              className="w-[745px] border-b-[5px] border-primary"
-            />
+            <span className="inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
+              {item.name}
+            </span>
           </div>
           <div className="h-[280px] border-b-[1px] border-tertiary pt-[50px]">
             <label htmlFor="file" className="mr-[100px] text-18 font-bold">
@@ -177,7 +182,7 @@ export default function Sell() {
               {previewImages.map((image, index) => (
                 <img
                   key={index}
-                  src={image}
+                  src={`${process.env.NEXT_PUBLIC_IMG}${image}`}
                   alt={`Preview ${index + 1}`}
                   style={{
                     width: "120px",
@@ -188,36 +193,42 @@ export default function Sell() {
               ))}
             </div>
           </div>
-          <div className="h-[195px] border-b-[1px] border-tertiary pt-[50px]">
-            <label
-              htmlFor="restamount"
-              className="mr-[100px] text-18 font-bold"
-            >
-              남은 용량
-            </label>
-            <input
-              type="text"
-              name="restamount"
-              placeholder="ml"
-              value={product.extra.restamount}
-              onChange={handleChange}
-              className="w-[250px] border-b-[2px] border-primary"
-            />
-            <label
-              htmlFor="price"
-              className="ml-[120px] mr-[100px] text-18 font-bold"
-            >
-              가격
-            </label>
-            <input
-              type="number"
-              name="price"
-              placeholder="원"
-              value={product.price}
-              onChange={handleChange}
-              className="mr-[270px] w-[250px] border-b-[2px] border-primary"
-            />
-            <div className="mt-[40px]">
+          <div className="flex h-[195px] gap-[50px] border-b-[1px] border-tertiary pt-[50px]">
+            <p>
+              <label htmlFor="restamount" className="text-18 font-bold">
+                용량
+              </label>
+              <span className="mt-[20px] inline-block w-[250px] border-b-[2px] border-primary font-bold">
+                {item.extra.amount} ml
+              </span>
+            </p>
+            <p>
+              <label htmlFor="restamount" className="text-18 font-bold">
+                남은 용량
+              </label>
+              <input
+                type="number"
+                name="restamount"
+                placeholder="ml"
+                value={item.extra.restamount}
+                onChange={handleChange}
+                className="mt-[20px] w-[250px] border-b-[2px] border-primary"
+              />
+            </p>
+            <p>
+              <label htmlFor="price" className="text-18 font-bold">
+                가격
+              </label>
+              <input
+                type="number"
+                name="price"
+                placeholder="원"
+                value={item.price}
+                onChange={handleChange}
+                className="mt-[20px] w-[250px] border-b-[2px] border-primary"
+              />
+            </p>
+            <p>
               <label htmlFor="date" className="mr-[100px] text-18 font-bold">
                 구매 일시
               </label>
@@ -225,11 +236,11 @@ export default function Sell() {
                 type="text"
                 name="date"
                 placeholder="예) 20220707"
-                value={product.extra.date}
+                value={item.extra.date}
                 onChange={handleChange}
-                className="w-[250px] border-b-[2px] border-primary"
+                className="mt-[20px] w-[250px] border-b-[2px] border-primary"
               />
-            </div>
+            </p>
           </div>
           <div className="relative h-[320px] border-b-[1px] border-tertiary pt-[50px]">
             <label
@@ -244,7 +255,7 @@ export default function Sell() {
               cols={100}
               rows={8}
               placeholder="제품의 상태 (사용감, 하자 유무) 등을 입력해 주세요."
-              value={product.content}
+              value={item.content}
               onChange={handleChange}
               className="absolute left-[100px] border-[1px] border-tertiary pl-[16px] pt-[16px]"
             ></textarea>

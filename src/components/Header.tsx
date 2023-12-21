@@ -6,6 +6,7 @@ import { useTokens } from "@/hooks/_index";
 import { useState, useEffect } from "react";
 import { useTokenStore, useUserStore } from "@/stores/_index";
 import naviList from "@/constants/naviList";
+import SearchBar from "./SearchBar";
 
 export default function Header() {
   /* User 토큰을 위한 상태 관리 */
@@ -31,6 +32,13 @@ export default function Header() {
   const router = useRouter();
 
   const { getNewAccessToken } = useTokens();
+
+  /* 검색바 노출 */
+  const [showSearchBar, setShowSearchBar] = useState(false);
+
+  const handleCloseSearchBar = () => {
+    setShowSearchBar(false);
+  };
 
   useEffect(() => {
     if (token) {
@@ -63,7 +71,7 @@ export default function Header() {
   return (
     <header
       role="banner"
-      className="sticky top-0 z-[99px] h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
+      className="sticky top-0 z-[99] h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
     >
       <nav
         aria-label="메인 네비게이션"
@@ -99,7 +107,9 @@ export default function Header() {
         <div className="ml-[100px] flex h-[80px] w-[180px] justify-between">
           <button
             aria-label="검색창 열기"
-            onClick={() => {}}
+            onClick={() => {
+              setShowSearchBar(!showSearchBar);
+            }}
             className="bg-center bg-no-repeat"
           >
             <Image
@@ -111,7 +121,11 @@ export default function Header() {
           </button>
           <button
             aria-label="마이페이지로 이동하기"
-            onClick={() => router.push("/mypage")}
+            onClick={
+              isLoggedIn
+                ? () => router.push("/mypage/history")
+                : () => router.push("/signin")
+            }
             className="bg-center bg-no-repeat"
           >
             <Image
@@ -147,6 +161,7 @@ export default function Header() {
           </button>
         </div>
       </nav>
+      {showSearchBar && <SearchBar onClose={handleCloseSearchBar} />}
     </header>
   );
 }

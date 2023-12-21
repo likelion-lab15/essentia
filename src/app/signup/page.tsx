@@ -1,9 +1,11 @@
 "use client";
 import axios from "axios";
 import React, { useState } from "react";
-import { AddressModal, Header, InputField, Button } from "@/components/_index";
+import { useRouter } from "next/navigation";
+import { AddressModal, InputField, Button } from "@/components/_index";
 
 export default function SignUp() {
+  const router = useRouter();
   type TAddressData = {
     address: string;
   };
@@ -16,6 +18,7 @@ export default function SignUp() {
   const [phone, setPhone] = useState("");
   const [birth, setBirth] = useState("");
   const [address, setAddress] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
 
   // 유효성 상태 관리
   const [isEmailValid, setEmailValid] = useState(true);
@@ -37,23 +40,8 @@ export default function SignUp() {
   // 주소 API 관련 상태 관리
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
 
-  // 회원가입 제출 통신
-  const sendPostRequest = async () => {
-    const type = "seller";
-    try {
-      const response = await axios.post("https://localhost/api/users/", {
-        email,
-        password,
-        name,
-        type,
-        phone,
-        address,
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.error("회원가입 제출 통신 에러 발생", error);
-    }
-  };
+  // 이메일 중복확인 상태 관리
+  const [hasCheckedDuplication, setHasCheckedDuplication] = useState(false);
 
   // 이메일 중복확인 통신
   const checkEmailDuplication = async () => {
@@ -180,6 +168,34 @@ export default function SignUp() {
     setAddressModalOpen(false);
   };
 
+  // 회원가입 제출 통신
+  const sendPostRequest = async () => {
+    const type = "seller";
+    try {
+      const response = await axios.post("https://localhost/api/users/", {
+        email,
+        password,
+        name,
+        address,
+        type,
+        phone,
+        extra: {
+          birthday: birth,
+          membershipClass: "MC01",
+          addressBook: {
+            value: address,
+            detail: addressDetail,
+          },
+        },
+      });
+      console.log(response.data);
+      alert("회원가입이 성공적으로 완료되었습니다.");
+      router.push("/signin");
+    } catch (error) {
+      console.error("회원가입 제출 통신 에러 발생", error);
+    }
+  };
+
   // 회원가입 폼 제출 함수
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -194,19 +210,26 @@ export default function SignUp() {
     const isAddressEmpty = !address.trim();
 
     // 유효성 상태와 오류 메시지 상태 업데이트
-    setEmailValid(!isEmailEmpty);
-    setPasswordValid(!isPasswordEmpty);
-    setNameValid(!isNameEmpty);
-    setPhoneValid(!isPhoneEmpty);
-    setBirthValid(!isBirthEmpty);
+    setEmailValid(!isEmailEmpty && validateEmail(email));
+    setPasswordValid(!isPasswordEmpty && validatePassword(password));
+    setNameValid(!isNameEmpty && validateName(name));
+    setPhoneValid(!isPhoneEmpty && validatePhone(phone));
+    setBirthValid(!isBirthEmpty && validateBirth(birth));
 
     // 오류 메시지 표시
-    setShowEmailError(isEmailEmpty);
-    setShowPasswordError(isPasswordEmpty);
-    setShowNameError(isNameEmpty);
-    setShowPhoneError(isPhoneEmpty);
-    setShowBirthError(isBirthEmpty);
-    setShowPasswordCheckError(isPasswordCheckEmpty);
+    setShowEmailError(isEmailEmpty || !isEmailValid);
+    setShowPasswordError(isPasswordEmpty || !isPasswordValid);
+    setShowNameError(isNameEmpty || !isNameValid);
+    setShowPhoneError(isPhoneEmpty || !isPhoneValid);
+    setShowBirthError(isBirthEmpty || !isBirthValid);
+    setShowPasswordCheckError(
+      isPasswordCheckEmpty || password !== passwordCheck
+    );
+
+    if (!hasCheckedDuplication) {
+      alert("이메일 중복 확인을 해주세요.");
+      return;
+    }
 
     // 모든 인풋이 유효한 경우에만 요청 보내기
     if (
@@ -216,7 +239,8 @@ export default function SignUp() {
       !isNameEmpty &&
       !isPhoneEmpty &&
       !isBirthEmpty &&
-      !isAddressEmpty
+      !isAddressEmpty &&
+      hasCheckedDuplication
     ) {
       sendPostRequest();
     }
@@ -224,17 +248,15 @@ export default function SignUp() {
 
   return (
     <div>
-      <Header />
       <main className="flex h-[1500px] flex-col items-center pt-[120px]">
         <h2 className="mb-[66px] text-36 font-bold">회원가입</h2>
-
         <form onSubmit={handleSubmit} className="flex w-[400px] flex-col">
           {/* 이메일 주소 */}
           <InputField
             label="로그인에 사용할 이메일 주소를 입력해주세요"
             id="email"
             type="email"
-            placeholder="example@essentia.co.kr"
+            placeholder="example@onyx.co.kr"
             showError={showEmailError}
             errorMessage={
               isEmailUnique
@@ -307,19 +329,20 @@ export default function SignUp() {
             onChange={handleBirthChange}
           />
           {/* 주소 */}
-          <label htmlFor="address">주소를 입력해주세요</label>
-          <input
+          <InputField
+            label="주소를 입력해주세요"
             id="address"
             type="text"
-            aria-errormessage="addressError"
-            placeholder="도로명 주소를 입력해주세요"
-            value={address}
-            readOnly
+            placeholder="도로명 주소 검색하기를 통해 입력해주세요"
+            showError={showBirthError}
+            errorMessage="도로명 주소 검색하기를 통해 입력해주세요"
+            invalid={!isBirthValid}
             onChange={(e) => setAddress(e.target.value)}
+            value={address}
           />
           {/* 주소 검색 버튼 */}
           <Button
-            className="mt-[50px] h-[38px]"
+            className="mb-[30px] h-[38px]"
             label="도로명 주소 검색하기"
             type="button"
             onClick={() => setAddressModalOpen(true)}
@@ -330,18 +353,21 @@ export default function SignUp() {
             onSelectAddress={handleAddressChange}
           />
           <label htmlFor="addressDetail"></label>
-          <input
+          <InputField
+            label="상세 주소를 입력해주세요"
             id="addressDetail"
             type="text"
-            aria-errormessage="addressError"
             placeholder="상세 주소를 입력해주세요"
+            showError={false}
+            errorMessage="상세 주소가 입력되지 않았습니다"
+            invalid={false}
+            onChange={(e) => setAddressDetail(e.target.value)}
           />
           {/* 회원가입 완료 버튼 */}
           <Button
             className="mt-[50px]"
             label="회원가입 완료"
             type="submit"
-            onClick={checkEmailDuplication}
           ></Button>
         </form>
       </main>

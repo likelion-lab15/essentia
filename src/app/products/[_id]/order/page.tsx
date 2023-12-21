@@ -1,80 +1,71 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTokenStore } from "@/stores/_index";
-import axios from "axios";
 import Button from "@/components/Button";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { axiosPrivate } from "@/api/axios";
+import { useProductStore, useUserStore } from "@/stores/_index";
 
 export default function Order() {
-  // 향수 정보 상태 관리
-  const [order, setOrder] = useState({
-    products: [],
-    address: {
-      name: "",
-      value: "",
-    },
-    user_id: "",
-    cost: {
-      products: 0,
-      shippingFees: 0,
-      total: 0,
-    },
-  });
-  const token = useTokenStore((state) => state.token);
+  const { user } = useUserStore();
+  const { product } = useProductStore((state) => state);
+  const router = useRouter();
+  const userName = user.name;
+  const userAddress =
+    user.extra.addressBook.value + user.extra.addressBook.detail;
+  const userPhone = user.phone;
+  const brand = product.brand;
+  const image = product.image;
+  const name = product.name;
+  const searchParams = useSearchParams();
+  const getId = Number(searchParams.get("perchaseItem")); // 자식 상품 id
+  const price = searchParams.get("price"); // 자식 상품 가격
+  const amount = searchParams.get("amount"); // 자식 상품 용량
 
-  // 향수 정보 가져오기
-  useEffect(() => {
-    const getProductOrder = async () => {
-      // useTokenStore에서 인증 토큰(accessToken)을 가져와서 요청 헤더에 포함
-      const accessToken = token.accessToken;
-
-      try {
-        const response = await axios.get("https://localhost/api/orders/", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+  // 주문정보 제출 함수
+  const requestOrder = async () => {
+    try {
+      const response = await axiosPrivate.post("/orders", {
+        products: [
+          {
+            _id: getId,
+            quantity: 1,
           },
-        });
-        const result = response.data.item;
-        console.log(result);
-
-        // 데이터가 존재하는 경우 상태 업데이트
-        if (result && result.length > 0) {
-          setOrder(result[0]); // 첫 번째 주문 정보를 상태로 설정
-        }
-      } catch (error) {
-        console.error("Error 🥲", error);
-      }
-    };
-
-    getProductOrder();
-  }, []);
+        ],
+        address: {
+          name: userName,
+          value: userAddress,
+        },
+      });
+      console.log("POST 통신 성공", response.data);
+      alert("주문이 성공적으로 완료되었습니다.");
+      router.push("/products");
+    } catch (error) {
+      console.error("주문하기 통신 에러 발생", error);
+    }
+  };
 
   return (
     <section className="flex flex-col items-center">
       <h2 className="py-[60px] text-36 font-bold">주문 정보 등록</h2>
 
       {/* 구매할 향수 정보 */}
-      {order.products && order.products.length > 0 && (
-        <div className="flex h-[150px] w-[600px] flex-row items-center border-b-[2px] border-primary">
-          <img
-            src={order.products[0].image}
-            alt={order.products[0].name}
-            className="mr-[50px] h-[120px] w-[120px]"
-          />
+      <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
+        <img
+          src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
+          alt="구매할 상품 이미지"
+          className=" h-[150px] w-[150px] border-2 border-primary bg-product"
+        />
+        <div className="ml-[40px] flex h-[150px] w-[500px] flex-col justify-between">
           <div>
-            <p className="text-18 font-regular">
-              {order.products[0].extra.brand}
-            </p>
-            <p className="my-[12px] text-24 font-medium">
-              {order.products[0].name}
-            </p>
-            <p className="text-16 font-regular">
-              {order.products[0].extra.amount[0]}ml
-            </p>
+            <p className="text-24 font-bold">{brand}</p>
+            <p className="my-[12px] text-28 font-medium">{name}</p>
           </div>
+
+          <p className="text-22 font-medium">{amount}ml</p>
         </div>
-      )}
+      </div>
       {/* 체크박스 */}
       <div className="my-[30px] h-[205px] w-[600px]">
         <h3 className="mb-[12px] text-18 font-bold">
@@ -137,48 +128,45 @@ export default function Order() {
         </ul>
       </div>
       {/* 배송 정보 */}
-      {order.products && order.products.length > 0 && (
-        <div>
-          <h3 className="flex h-[38px] w-[600px] items-center bg-primary pl-[30px] text-18 font-bold text-white">
-            배송 정보
-          </h3>
-          <div className="my-[15px]">
-            <div className="flex">
-              <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
-                받는 분
-              </p>
-              <p className="flex items-center text-12 font-medium">현지수</p>
-            </div>
-            <div className="flex">
-              <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
-                연락처
-              </p>
-              <p className="flex items-center text-12 font-medium">
-                01027395166
-              </p>
-            </div>
-            <div className="flex">
-              <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
-                주소지
-              </p>
-              <p className="flex items-center text-12 font-medium">
-                {order.address.value}
-              </p>
-            </div>
+      <div>
+        <h3 className="flex h-[38px] w-[600px] items-center bg-primary pl-[30px] text-18 font-bold text-white">
+          배송 정보
+        </h3>
+        <div className="my-[15px]">
+          <div className="flex">
+            <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
+              받는 분
+            </p>
+            <p className="flex items-center text-12 font-medium">{userName}</p>
           </div>
-          <div className="mt-[100px] flex h-[43px] justify-between border-b-[5px] border-primary px-[32px]">
-            <p className="text-24 font-bold">최종 결제 금액</p>
-            <p className="text-28 font-bold">
-              {order.products[0].price.toLocaleString()}원
+          <div className="flex">
+            <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
+              연락처
+            </p>
+            <p className="flex items-center text-12 font-medium">{userPhone}</p>
+          </div>
+          <div className="flex">
+            <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
+              주소지
+            </p>
+            <p className="flex items-center text-12 font-medium">
+              {userAddress}
             </p>
           </div>
         </div>
-      )}
+        <div className="mt-[100px] flex h-[43px] justify-between border-b-[5px] border-primary px-[32px]">
+          <p className="text-24 font-bold">최종 결제 금액</p>
+          <p className="text-28 font-bold">
+            {Number(price).toLocaleString()}원
+          </p>
+        </div>
+      </div>
       {/* 구매하기 버튼 */}
       <Button
         label="구매 결정하기"
         type="button"
         className="mt-[100px] w-[600px] font-bold"
+        onClick={() => requestOrder()}
       />
     </section>
   );
