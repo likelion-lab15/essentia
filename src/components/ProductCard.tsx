@@ -39,7 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <img
         src={`${process.env.NEXT_PUBLIC_IMG}${mainImages[0].path}`}
         alt={name}
-        className="mb-[42px] h-[230px] w-[234px]"
+        className="bg-product mb-[42px] h-[230px] w-[234px]"
       />
       <div>
         <h3 className="ml-[17px] text-14 font-bold">{brand}</h3>

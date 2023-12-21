@@ -1,70 +1,50 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
 import Button from "@/components/Button";
 import { useSearchParams } from "next/navigation";
-import axios from "@/api/axios";
-import { useTokenStore } from "@/stores/_index";
-import { useProductStore } from "@/stores/useProductStore";
+import { useRouter } from "next/navigation";
+import { axiosPrivate } from "@/api/axios";
+import { useProductStore, useUserStore } from "@/stores/_index";
 
 export default function Order() {
+  const { user } = useUserStore();
   const { product } = useProductStore((state) => state);
+  const router = useRouter();
+  const userName = user.name;
+  const userAddress =
+    user.extra.addressBook.value + user.extra.addressBook.detail;
+  const userPhone = user.phone;
   const brand = product.brand;
   const image = product.image;
   const name = product.name;
   const searchParams = useSearchParams();
-  const getId = searchParams.get("perchaseItem"); // 자식 상품 id
+  const getId = Number(searchParams.get("perchaseItem")); // 자식 상품 id
   const price = searchParams.get("price"); // 자식 상품 가격
   const amount = searchParams.get("amount"); // 자식 상품 용량
-
-  const token = useTokenStore((state) => state.token);
-  const accessToken = token.accessToken;
 
   // 주문정보 제출 함수
   const requestOrder = async () => {
     try {
-      const response = await axios.post(
-        "/orders",
-        {
-          products: [
-            {
-              _id: 2,
-              quantity: 2,
-            },
-          ],
-          address: {
-            name: "학교",
-            value: "서울시 강남구 역삼동 234",
+      const response = await axiosPrivate.post("/orders", {
+        products: [
+          {
+            _id: getId,
+            quantity: 1,
           },
+        ],
+        address: {
+          name: userName,
+          value: userAddress,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log(response.data);
+      });
+      console.log("POST 통신 성공", response.data);
+      alert("주문이 성공적으로 완료되었습니다.");
+      router.push("/products");
     } catch (error) {
-      console.error("주문하기 에러 발생", error);
+      console.error("주문하기 통신 에러 발생", error);
     }
   };
-
-  // 향수 정보 상태 관리
-  // const [order, setOrder] = useState({
-  //   products: [],
-  //   address: {
-  //     name: "",
-  //     value: "",
-  //   },
-  //   user_id: "",
-  //   cost: {
-  //     products: 0,
-  //     shippingFees: 0,
-  //     total: 0,
-  //   },
-  // });
 
   return (
     <section className="flex flex-col items-center">
@@ -74,8 +54,8 @@ export default function Order() {
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
           src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
-          alt="dd"
-          className=" h-[150px] w-[150px] border-2 border-primary bg-[#F4F4F4]"
+          alt="구매할 상품 이미지"
+          className=" h-[150px] w-[150px] border-2 border-primary bg-product"
         />
         <div className="ml-[40px] flex h-[150px] w-[500px] flex-col justify-between">
           <div>
@@ -157,20 +137,20 @@ export default function Order() {
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               받는 분
             </p>
-            <p className="flex items-center text-12 font-medium">현지수</p>
+            <p className="flex items-center text-12 font-medium">{userName}</p>
           </div>
           <div className="flex">
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               연락처
             </p>
-            <p className="flex items-center text-12 font-medium">01027395166</p>
+            <p className="flex items-center text-12 font-medium">{userPhone}</p>
           </div>
           <div className="flex">
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               주소지
             </p>
             <p className="flex items-center text-12 font-medium">
-              모래내로1길 4
+              {userAddress}
             </p>
           </div>
         </div>

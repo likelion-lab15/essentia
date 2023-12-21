@@ -71,7 +71,7 @@ export default function Header() {
   return (
     <header
       role="banner"
-      className="sticky top-0 z-[99px] h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
+      className="sticky top-0 z-[99] h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
     >
       <nav
         aria-label="메인 네비게이션"
@@ -121,7 +121,11 @@ export default function Header() {
           </button>
           <button
             aria-label="마이페이지로 이동하기"
-            onClick={() => router.push("/mypage")}
+            onClick={
+              isLoggedIn
+                ? () => router.push("/mypage/history")
+                : () => router.push("/signin")
+            }
             className="bg-center bg-no-repeat"
           >
             <Image
