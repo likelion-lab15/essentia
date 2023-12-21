@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { axiosPrivate, axiosForm } from "@/api/axios";
@@ -180,7 +181,7 @@ export default function Sell(props: any) {
               {previewImages.map((image, index) => (
                 <img
                   key={index}
-                  src={image}
+                  src={`${process.env.NEXT_PUBLIC_IMG}${image}`}
                   alt={`Preview ${index + 1}`}
                   style={{
                     width: "120px",

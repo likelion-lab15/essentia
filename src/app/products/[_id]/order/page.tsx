@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Button from "@/components/Button";
@@ -5,15 +6,26 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { axiosPrivate } from "@/api/axios";
 import { useProductStore, useUserStore } from "@/stores/_index";
+import { useEffect } from "react";
 
 export default function Order() {
   const { user } = useUserStore();
   const { product } = useProductStore((state) => state);
   const router = useRouter();
-  const userName = user.name;
+
+  // 사용자 로그인 상태 확인
+  useEffect(() => {
+    if (!user) {
+      console.log("로그인이 필요합니다.");
+      router.push("/signin");
+    }
+  }, [user, router]);
+
+  const userName = user?.name;
   const userAddress =
-    user.extra.addressBook.value + user.extra.addressBook.detail;
-  const userPhone = user.phone;
+    (user?.extra?.addressBook?.value || "") +
+    (user?.extra?.addressBook?.detail || "");
+  const userPhone = user?.phone;
   const brand = product.brand;
   const image = product.image;
   const name = product.name;
@@ -52,7 +64,7 @@ export default function Order() {
       {/* 구매할 향수 정보 */}
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
-          src={`https://localhost/api/${image}`}
+          src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
           alt="구매할 상품 이미지"
           className=" h-[150px] w-[150px] border-2 border-primary bg-product"
         />

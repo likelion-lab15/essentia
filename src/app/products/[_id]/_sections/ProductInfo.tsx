@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button } from "@/components/_index";
@@ -7,7 +8,7 @@ import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
 import { useProductStore } from "@/stores/useProductStore";
 
-export default function ProductInfo({ id }) {
+export default function ProductInfo({ id }: { id: string }) {
   // 향수 정보 전역으로 상태 관리
   const { product, setProduct } = useProductStore();
 
@@ -71,13 +72,9 @@ export default function ProductInfo({ id }) {
     if (selectedSize === "사이즈를 선택해주세요") {
       alert("사이즈를 선택해주세요.");
     } else {
-      router.push(
-        `/products/${id}/sell/?&brand=${product.brand}&name=${product.name}&amount=${selectedSize}`
-      );
+      router.push(`/products/${id}/sell/?&amount=${selectedSize}`);
     }
   };
-
-  console.log(product.image);
 
   return (
     <section className="flex h-[660px] w-[1280px] items-center justify-center ">
@@ -86,12 +83,11 @@ export default function ProductInfo({ id }) {
         {/* 향수 이미지 */}
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
           <img
-            alt="blanche"
-            // src="/blanche.webp"
-            src={`https://localhost/api/${product.image}`}
+            alt="향수 이미지"
+            src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
             width={450}
             height={450}
-            className="bg-[#F4F4F4]"
+            className="bg-product"
           ></img>
         </div>
         {/* 사용자 상호작용 */}
