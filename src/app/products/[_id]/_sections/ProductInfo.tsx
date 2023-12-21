@@ -5,12 +5,16 @@ import { Button } from "@/components/_index";
 import { useOutsideClick } from "@/hooks/_index";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import axios from "@/api/axios";
+import axios, { axiosPrivate } from "@/api/axios";
 import { useProductStore } from "@/stores/useProductStore";
+import { useUserStore } from "@/stores/useUserStore";
 
 export default function ProductInfo({ id }: { id: string }) {
   // 향수 정보 전역으로 상태 관리
   const { product, setProduct } = useProductStore();
+  const { user } = useUserStore();
+  const productId = Number(id);
+  const userId = user?._id;
 
   // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
@@ -73,6 +77,20 @@ export default function ProductInfo({ id }: { id: string }) {
       alert("사이즈를 선택해주세요.");
     } else {
       router.push(`/products/${id}/sell/?&amount=${selectedSize}`);
+    }
+  };
+
+  const addWishList = async () => {
+    try {
+      const response = await axiosPrivate.post("/bookmarks", {
+        product_id: productId,
+        user_id: userId,
+        memo: "test",
+      });
+      console.log("위시리스트 POST 통신 성공", response.data);
+      alert("상품이 위시리스트에 추가되었습니다.");
+    } catch (error) {
+      console.error("위시리스트 POST 통신 에러 발생", error);
     }
   };
 
@@ -161,6 +179,7 @@ export default function ProductInfo({ id }: { id: string }) {
             className="h-[46px] w-[560px] border border-primary bg-white text-primary"
             label="위시 리스트에 추가하기"
             type="button"
+            onClick={() => addWishList()}
           ></Button>
         </div>
       </div>
