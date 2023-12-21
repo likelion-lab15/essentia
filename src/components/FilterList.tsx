@@ -10,7 +10,7 @@ type TFilterList = {
       href: string;
     }[];
   };
-  onClick?: () => void;
+  onClick?: (title: string) => void;
 };
 
 export default function FilterList({ list, onClick }: TFilterList) {

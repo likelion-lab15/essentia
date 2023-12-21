@@ -6,9 +6,11 @@ import brandList from "@/constants/brandList";
 import { useState } from "react";
 import ScrollTopButton from "@/components/ScrollTopButton";
 
+type Tbrand = string;
+
 export default function AllProducts() {
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const handleBrandSelect = (brand) => {
+  const [selectedBrand, setSelectedBrand] = useState<Tbrand>("");
+  const handleBrandSelect = (brand: Tbrand) => {
     setSelectedBrand(brand);
   };
 

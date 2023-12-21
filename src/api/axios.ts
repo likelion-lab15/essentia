@@ -23,6 +23,13 @@ export const axiosPrivate = axios.create({
   baseURL: BASE_URL,
 });
 
+export const axiosForm = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
+
 // axios 인터셉터로 axiosPrivate으로 통신이 수행될 경우 token 사용
 axiosPrivate.interceptors.request.use(
   (config) => {
