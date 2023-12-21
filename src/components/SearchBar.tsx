@@ -1,14 +1,23 @@
 "use client";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-export default function SearchBar({ onClose }) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+type TSearchBar = {
+  _id: string;
+  name: string;
+};
 
-  const handleSearch = async (e) => {
+type TSearchBarProps = {
+  onClose: () => void;
+};
+
+export default function SearchBar({ onClose }: TSearchBarProps) {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<TSearchBar[]>([]);
+
+  const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const response = await axios.get(
@@ -26,7 +35,7 @@ export default function SearchBar({ onClose }) {
   const router = useRouter();
 
   /* prudcts/[id]로 이동시킨 후 검색창 닫는 함수 */
-  const handleItemClick = (itemId) => {
+  const handleItemClick = (itemId: string) => {
     router.push(`/products/${itemId}`);
     onClose(); // 검색창 닫기
   };
