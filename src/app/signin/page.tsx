@@ -1,7 +1,7 @@
 "use client";
 
 // 노드 모듈 / 외부 라이브러리 임포트
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { postUserSignin } from "./_functions/_index";
@@ -24,11 +24,12 @@ export default function SignIn() {
   const router = useRouter();
 
   /* 이벤트 핸들러 */
-  const handleInputValue = (setter) => (e) => {
-    setter(e.target.value);
-  };
+  const handleInputValue =
+    (setter: any) => (e: ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+    };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const data = await postUserSignin({ email, password });

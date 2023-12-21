@@ -49,7 +49,7 @@ export default function Header() {
       // 토큰 만료됐을 경우
       if (currentTime >= expirationTime) {
         (async () => {
-          const newAccessToken = await getNewAccessToken();
+          await getNewAccessToken();
         })();
       } else {
         console.log("토큰이 아직 멀쩡합니다!");

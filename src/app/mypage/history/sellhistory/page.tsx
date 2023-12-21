@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import { SellHistoryTable } from "../_components/_index";
 import { getHistoryData2 } from "../_functions/getHistoryData";
 import { useUserStore } from "@/stores/_index";
 
-export default function SellHistory({ params }) {
+export default function SellHistory() {
   const [sellHistoryData, setSellHistoryData] = useState([]);
   const user = useUserStore((state) => state.user);
 

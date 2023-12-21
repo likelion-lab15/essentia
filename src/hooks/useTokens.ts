@@ -9,13 +9,13 @@ export default function useTokens() {
 
   // accessToken 가져오기
   const getAccessToken = () => {
-    const accessToken = token.accessToken;
+    const accessToken = token?.accessToken;
     return accessToken;
   };
 
   // refreshToken 가져오기
   const getRefreshToken = () => {
-    const refreshToken = token.refreshToken;
+    const refreshToken = token?.refreshToken;
     return refreshToken;
   };
 
@@ -32,7 +32,7 @@ export default function useTokens() {
 
       const newAccessToken = res.data.accessToken;
       const newToken = token;
-      newToken.accessToken = newAccessToken;
+      newToken!.accessToken = newAccessToken;
       setToken(newToken);
       console.log("토큰 업데이트 성공!");
     } catch (err) {

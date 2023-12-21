@@ -7,10 +7,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_SERVER;
 // 세션스토리지에서 토큰 불러오기
 const getToken = () => {
   if (typeof window !== "undefined") {
-    const tokenData = JSON.parse(sessionStorage.getItem("token")) || {
-      state: { token: null },
-    };
-    return tokenData.state.token ? tokenData.state.token.accessToken : "";
+    const tokenString = sessionStorage.getItem("token");
+    if (tokenString) {
+      const tokenData = JSON.parse(tokenString);
+      return tokenData.state.token ? tokenData.state.token.accessToken : "";
+    }
   }
   return "";
 };
