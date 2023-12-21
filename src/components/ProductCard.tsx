@@ -1,18 +1,19 @@
 import { useRouter } from "next/navigation";
 
-interface ProductCardProps {
+// 상품 타입 정의
+type TProductCardProps = {
   product: {
     _id: string;
-    mainImages: string[];
+    mainImages: { path: string }[];
     name: string;
     price: number;
     extra: {
       brand: string;
     };
   };
-}
+};
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product }: TProductCardProps) {
   const {
     _id,
     mainImages,
@@ -38,7 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <img
         src={`https://localhost/api/${mainImages[0].path}`}
         alt={name}
-        className="bg-product mb-[42px] h-[230px] w-[234px]"
+        className="mb-[42px] h-[230px] w-[234px] bg-product"
       />
       <div>
         <h3 className="ml-[17px] text-14 font-bold">{brand}</h3>
