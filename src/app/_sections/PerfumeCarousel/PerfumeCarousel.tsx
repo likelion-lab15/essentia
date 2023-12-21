@@ -1,8 +1,13 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import PerfumeCarouselSwiper from "./_components/PerfumeCarouselSwiper";
 
 export default function PerfumeCarousel() {
+  const router = useRouter();
+
   return (
-    <section className="mb-[80px] flex h-[800px] w-[1280px] flex-col items-center justify-center border-2">
+    <section className="mb-[80px] mt-[80px] flex h-[800px] w-full flex-col items-center justify-center">
       {/* 1. 섹션 제목 */}
       <div>
         <p className="mb-[24px] cursor-default text-[60px] font-medium">
@@ -14,6 +19,7 @@ export default function PerfumeCarousel() {
         <button
           type="button"
           className="mb-[80px] w-[150px] border-2 border-primary px-[24px] py-[12px] hover:bg-secondary"
+          onClick={() => router.push("/products")}
         >
           View All
         </button>
