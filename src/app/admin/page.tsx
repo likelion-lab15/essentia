@@ -3,8 +3,25 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useTokenStore } from "@/stores/_index";
 
+// 상품 정보 타입 정의
+type TProduct = {
+  name: string;
+  price: number | string;
+  content: string;
+  mainImages: { path: string; name: string; originalname: string }[];
+  shippingFees: number;
+  show: boolean;
+  active: boolean;
+  quantity: number;
+  buyQuantity: number;
+  extra: { depth: number; amount: string; brand: string };
+};
+
+// 미리보기 이미지의 URL 타입 정의
+type TPreviewImage = string | null;
+
 export default function Admin() {
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<TProduct>({
     name: "",
     price: "",
     content: "",
@@ -16,12 +33,14 @@ export default function Admin() {
     buyQuantity: 198,
     extra: { depth: 1, amount: "", brand: "" },
   });
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState<TPreviewImage>(null);
   const token = useTokenStore((state) => state.token);
 
   // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     // 가격 및 배송비는 숫자로 변환하여 상태 업데이트
