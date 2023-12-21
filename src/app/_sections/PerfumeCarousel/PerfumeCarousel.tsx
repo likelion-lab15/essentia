@@ -1,8 +1,8 @@
-import React from "react";
+import PerfumeCarouselSwiper from "./_components/PerfumeCarouselSwiper";
 
 export default function PerfumeCarousel() {
   return (
-    <section className="flex h-[800px] w-[1280px] items-center justify-center border-2">
+    <section className="mb-[80px] flex h-[800px] w-[1280px] flex-col items-center justify-center border-2">
       {/* 1. 섹션 제목 */}
       <div>
         <p className="mb-[24px] cursor-default text-[60px] font-medium">
@@ -13,11 +13,13 @@ export default function PerfumeCarousel() {
         </p>
         <button
           type="button"
-          className="w-[150px] border-2 border-primary px-[24px] py-[12px] hover:bg-secondary"
+          className="mb-[80px] w-[150px] border-2 border-primary px-[24px] py-[12px] hover:bg-secondary"
         >
           View All
         </button>
       </div>
+      {/* 2. 스와이퍼 */}
+      <PerfumeCarouselSwiper />
     </section>
   );
 }

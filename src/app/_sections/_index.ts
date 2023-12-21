@@ -1,1 +1,1 @@
-export { default as PerfumeCarousel } from "./PerfumeCarousel";
+export { default as PerfumeCarousel } from "./PerfumeCarousel/PerfumeCarousel";
