@@ -30,7 +30,9 @@ export default function FilterList({ list, onClick }: TFilterList) {
               className="flex h-[36px] cursor-pointer items-center px-[25px] font-medium text-tertiary hover:bg-secondary hover:text-primary"
               onClick={() => onClick && onClick(title)}
             >
-              <Link href={href}>{title}</Link>
+              <Link href={href} className="flex h-full flex-1 items-center">
+                {title}
+              </Link>
             </li>
           );
         })}
