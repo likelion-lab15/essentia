@@ -5,15 +5,26 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { axiosPrivate } from "@/api/axios";
 import { useProductStore, useUserStore } from "@/stores/_index";
+import { useEffect } from "react";
 
 export default function Order() {
   const { user } = useUserStore();
   const { product } = useProductStore((state) => state);
   const router = useRouter();
-  const userName = user.name;
+
+  // 사용자 로그인 상태 확인
+  useEffect(() => {
+    if (!user) {
+      console.log("로그인이 필요합니다.");
+      router.push("/signin");
+    }
+  }, [user, router]);
+
+  const userName = user?.name;
   const userAddress =
-    user.extra.addressBook.value + user.extra.addressBook.detail;
-  const userPhone = user.phone;
+    (user?.extra?.addressBook?.value || "") +
+    (user?.extra?.addressBook?.detail || "");
+  const userPhone = user?.phone;
   const brand = product.brand;
   const image = product.image;
   const name = product.name;
