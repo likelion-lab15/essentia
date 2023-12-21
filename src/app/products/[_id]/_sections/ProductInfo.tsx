@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button } from "@/components/_index";
@@ -83,7 +84,7 @@ export default function ProductInfo({ id }: { id: string }) {
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
           <img
             alt="향수 이미지"
-            src={`https://localhost/api/${product.image}`}
+            src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
             width={450}
             height={450}
             className="bg-product"

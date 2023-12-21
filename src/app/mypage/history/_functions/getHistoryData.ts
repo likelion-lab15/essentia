@@ -11,12 +11,17 @@ export default async function getHistoryData(url: string) {
   }
 }
 
-export async function getHistoryData2(url: string) {
+export async function getHistoryData2(url: string, userId: number) {
   try {
     const customParam = JSON.stringify({ "extra.depth": 2 });
     const fullUrl = `${url}?custom=${encodeURIComponent(customParam)}`;
     const response = await axios.get(fullUrl);
-    return response.data.item;
+
+    const mySellData = response.data.item.filter(
+      (item: any) => item.seller_id === userId
+    );
+
+    return mySellData;
   } catch (err) {
     if (err instanceof Error) {
       console.log(err.message);
