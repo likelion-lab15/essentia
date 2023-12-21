@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { SellHistoryTable } from "../_components/_index";
-import getHistoryData from "../_functions/getHistoryData";
+import { getHistoryData2 } from "../_functions/getHistoryData";
+import { useUserStore } from "@/stores/_index";
 
-export default function SellHistory() {
+export default function SellHistory({ params }) {
   const [sellHistoryData, setSellHistoryData] = useState([]);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     (async () => {
-      const data = await getHistoryData("seller/products");
+      const data = await getHistoryData2("/products", user!._id);
       setSellHistoryData(data);
     })();
   }, []);
