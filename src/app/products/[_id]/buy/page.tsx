@@ -1,16 +1,31 @@
 "use client";
-import Image from "next/image";
+
 import { Button } from "@/components/_index";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useProductStore } from "@/stores/useProductStore";
 import axios from "@/api/axios";
 
-export default function Buy(props: any) {
-  const [items, setItems] = useState([]);
-  const { product } = useProductStore(); // Zustand store에서 제품 정보 가져오기
-  const router = useRouter();
+type TProductProps = {
+  params: {
+    _id: string;
+  };
+};
 
+type TItem = {
+  _id: number;
+  price: number;
+  extra: {
+    amount: number;
+    restamount: number;
+    date: string;
+  };
+};
+
+export default function Buy(props: TProductProps) {
+  const [items, setItems] = useState<TItem[]>([]);
+  const { product } = useProductStore();
+  const router = useRouter();
   const getId = props.params._id;
   const getBrand = product.brand;
   const getName = product.name;
@@ -25,32 +40,29 @@ export default function Buy(props: any) {
   } else {
     targetAmount = 100;
   }
+  const renderItems = items.filter(
+    (item) => item.extra?.amount == targetAmount
+  );
 
-  const renderItems = items.filter((item) => item.extra.amount == targetAmount);
-
-  console.log("getImage", getImage);
-
-  console.log("여기는 buy페이지", renderItems);
-
-  // API 호출 및 데이터 가져오기
-  async function buyInfo() {
-    try {
-      console.log("buyInfo Id: ", getId);
-      const response = await axios.get(`/products/${getId}`);
-      const result = response.data.item.options.item;
-      console.log(`result`, result);
-      setItems(result);
-      return result;
-    } catch (error) {
-      console.error("axios Error 🥲", error);
-      return [];
-    }
-  }
-
-  // 컴포넌트 마운트 시 API 호출
   useEffect(() => {
+    // API 호출 및 데이터 가져오기
+    async function buyInfo() {
+      try {
+        console.log("buyInfo Id: ", getId);
+        const response = await axios.get(`/products/${getId}`);
+        const result = response.data.item.options.item;
+        console.log(`result`, result);
+        setItems(result);
+        return result;
+      } catch (error) {
+        console.error("axios Error 🥲", error);
+        return [];
+      }
+    }
+
     buyInfo();
-  }, []);
+  }, [getId]);
+
   return (
     <div className="flex flex-col items-center justify-center">
       {/* 페이지 제목 */}
