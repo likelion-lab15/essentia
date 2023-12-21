@@ -38,7 +38,7 @@ export default function ProductCard({ product }: TProductCardProps) {
       onClick={handleClick}
     >
       <img
-        src={`${process.env.NEXT_PUBLIC_IMG}${mainImages[0].path}`}
+        src={`${process.env.NEXT_PUBLIC_API_SERVER}${mainImages[0].path}`}
         alt={name}
         className="mb-[12px] h-[230px] w-[234px] bg-product"
       />
