@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/_index";
+import { Header, Footer } from "@/components/_index";
 
 export const metadata: Metadata = {
   title: "Essentia",
@@ -14,6 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
