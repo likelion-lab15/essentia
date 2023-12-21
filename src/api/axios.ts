@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-const BASE_URL = "https://localhost/api/";
+const BASE_URL = "https://onyx-onyx.koyeb.app/api/";
 
 // 세션스토리지에서 토큰 불러오기
 const getToken = () => {
