@@ -81,7 +81,7 @@ export default function EditSell({ params }: { params: TParams }) {
       <div className="flex p-[25px]">
         <div className="mr-[20px] h-[100px] w-[100px]">
           <img
-            src={`https://localhost/api${mainImage.path}`}
+            src={`${process.env.NEXT_PUBLIC_IMG}${mainImage.path}`}
             alt={mainImage.orginalname}
             width="100%"
             height="100%"

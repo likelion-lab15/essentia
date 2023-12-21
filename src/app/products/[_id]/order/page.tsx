@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
@@ -72,8 +73,8 @@ export default function Order() {
       {/* 구매할 향수 정보 */}
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
-          src={`https://localhost/api/${product.image}`}
-          alt=""
+          src={`${process.env.NEXT_PUBLIC_IMG}${product.image}`}
+          alt="dd"
           className=" h-[150px] w-[150px] border-2 border-primary bg-[#F4F4F4]"
         />
         <div className="ml-[40px] flex h-[150px] w-[500px] flex-col justify-between">

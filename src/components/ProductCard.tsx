@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
@@ -36,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       onClick={handleClick}
     >
       <img
-        src={`https://localhost/api/${mainImages[0].path}`}
+        src={`${process.env.NEXT_PUBLIC_IMG}${mainImages[0].path}`}
         alt={name}
         className="mb-[42px] h-[230px] w-[234px]"
       />
