@@ -40,14 +40,12 @@ export default function ProductCard({ product }: TProductCardProps) {
       <img
         src={`${process.env.NEXT_PUBLIC_IMG}${mainImages[0].path}`}
         alt={name}
-        className="mb-[42px] h-[230px] w-[234px] bg-product"
+        className="mb-[12px] h-[230px] w-[234px] bg-product"
       />
       <div>
-        <h3 className="ml-[17px] text-14 font-bold">{brand}</h3>
-        <p className="ml-[17px] text-16 font-medium">{name}</p>
-        <p className="ml-[17px] text-14 font-semibold">
-          {price.toLocaleString()}원
-        </p>
+        <h3 className="text-14 font-bold">{brand}</h3>
+        <p className="text-16 font-medium">{name}</p>
+        <p className="text-14 font-semibold">{price.toLocaleString()}원</p>
       </div>
     </li>
   );
