@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
-import cn from "@/utils/cn";
 
 type TInputField = {
   label: string;
@@ -9,8 +9,9 @@ type TInputField = {
   showError?: boolean;
   errorMessage?: string;
   invalid?: boolean;
-  value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  srOnly?: boolean;
 };
 
 export default function InputField({
