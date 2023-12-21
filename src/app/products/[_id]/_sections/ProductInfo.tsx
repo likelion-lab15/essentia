@@ -112,9 +112,9 @@ export default function ProductInfo({ id }) {
             {product.content}
           </p>
           <div className="mb-[15px] flex w-[560px] flex-row items-baseline justify-end">
-            <p className="mr-[14px] text-16 font-medium">발매가</p>
+            <p className="mr-[8px] text-18 font-semibold text-accent">발매가</p>
             <p className="text-28 font-bold">
-              {product.price.toLocaleString()} 원
+              {product.price.toLocaleString()}원
             </p>
           </div>
 
