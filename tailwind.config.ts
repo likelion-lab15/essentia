@@ -9,6 +9,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      animation: {
+        infiniteAnimation1: "infiniteAnimation1 10s linear infinite",
+        infiniteAnimation2: "infiniteAnimation2 10s linear infinite",
+        infiniteAnimation3: "infiniteAnimation3 10s linear infinite",
+        infiniteAnimation4: "infiniteAnimation4 10s linear infinite",
+      },
       fontSize: {
         "68": "4.25rem",
         "48": "3rem",

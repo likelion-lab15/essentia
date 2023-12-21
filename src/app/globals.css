@@ -48,3 +48,76 @@ input {
   white-space: nowrap;
   border-width: 0;
 }
+
+/* global.css 또는 해당되는 CSS 파일 */
+@keyframes infiniteAnimation1 {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(-100%);
+  }
+  50.0001% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes infiniteAnimation2 {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-200%);
+  }
+}
+
+@keyframes infiniteAnimation3 {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(100%);
+  }
+  50.0001% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes infiniteAnimation4 {
+  0% {
+    transform: translateY(-200%);
+  }
+  100% {
+    transform: translateY(-00%);
+  }
+}
+
+.animate-infiniteAnimation1 {
+  animation-name: infiniteAnimation1;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+}
+
+.animate-infiniteAnimation2 {
+  animation-name: infiniteAnimation2;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+}
+
+.animate-infiniteAnimation3 {
+  animation-name: infiniteAnimation3;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+}
+
+.animate-infiniteAnimation4 {
+  animation-name: infiniteAnimation4;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+}
