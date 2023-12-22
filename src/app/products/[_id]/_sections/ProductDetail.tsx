@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import axios from "@/api/axios";
+import PerfumeCarouselSwiper from "../../../_sections/PerfumeCarousel/_components/PerfumeCarouselSwiper";
 
 type TReview = {
   _id: string;
@@ -249,7 +250,7 @@ export default function ProductDetail({ id }: { id: string }) {
       </section>
       {/* 구분선 */}
       <div className="mb-[100px] h-0 w-full border-b-2 border-primary"></div>
-      <div className="flex h-[1450px] w-[1280px] flex-col items-center ">
+      <div className="flex h-[1150px] w-[1280px] flex-col items-center ">
         {/* 리뷰 섹션 */}
         <section ref={reviewRef} className="mb-[100px] w-full overflow-y-auto ">
           <h3 className="border-b-2 border-primary pb-[40px] text-48 font-bold">
@@ -306,11 +307,10 @@ export default function ProductDetail({ id }: { id: string }) {
           </div>
         </section>
         {/* 추천 상품 */}
-        <section
-          ref={recommendedProductsRef}
-          className="h-[600px] w-full border border-pink-700"
-        >
-          <h3 className="text-48 font-bold">추천 상품</h3>
+        <section ref={recommendedProductsRef} className="h-[600px] w-full">
+          <h3 className="pb-[60px] text-48 font-bold">추천 상품</h3>
+
+          <PerfumeCarouselSwiper />
         </section>
       </div>
     </>
