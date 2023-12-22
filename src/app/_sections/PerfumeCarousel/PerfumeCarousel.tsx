@@ -7,10 +7,10 @@ export default function PerfumeCarousel() {
   const router = useRouter();
 
   return (
-    <section className="mb-[80px] mt-[80px] flex h-[800px] w-full flex-col items-center justify-center">
+    <section className="mb-[80px] mt-[80px] flex h-[800px] w-full flex-col">
       {/* 1. 섹션 제목 */}
-      <div>
-        <p className="mb-[24px] cursor-default text-[60px] font-medium">
+      <div className="ml-[200px]">
+        <p className="mb-[24px] cursor-default text-[60px] font-bold">
           가을에 어울리는 향수 기획전
         </p>
         <p className="mb-[40px] cursor-default text-[18px] font-medium">
