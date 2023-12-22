@@ -65,7 +65,7 @@ export default function Buy(props: TProductProps) {
   }, [getId]);
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="mb-[300px] flex flex-col items-center justify-center">
       {/* 페이지 제목 */}
       <h2 className="flex h-[100px] w-[1280px] items-center justify-center pt-[50px] text-36 font-bold text-primary">
         구매하기
