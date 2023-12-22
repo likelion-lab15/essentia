@@ -52,6 +52,9 @@ const config: Config = {
         accent: "#ff4800",
         product: "#F5F5F5",
       },
+      fontFamily: {
+        gmarket: ["GmarketSansMedium"],
+      },
     },
   },
   plugins: [],
