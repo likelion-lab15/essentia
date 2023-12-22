@@ -37,16 +37,18 @@ export default function BrandListSection() {
   };
 
   return (
-    <div className="flex flex-wrap gap-[10px]">
-      {brands.map((brand) => (
-        <button
-          key={brand}
-          onClick={() => handleBrand(brand)}
-          className="text-50 font-bold hover:text-secondary hover:underline"
-        >
-          {brand},
-        </button>
-      ))}
-    </div>
+    <section className="flex h-screen w-screen items-center justify-center bg-white">
+      <div className="flex w-[1280px] flex-wrap gap-[10px]">
+        {brands.map((brand) => (
+          <button
+            key={brand}
+            onClick={() => handleBrand(brand)}
+            className="text-50 font-bold hover:text-secondary hover:underline"
+          >
+            {brand},
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
