@@ -6,7 +6,7 @@ import { UserName } from "./_components/_index";
 
 export default function layout({ children }: { children: ReactNode }) {
   return (
-    <main className="mx-auto w-[1280px]">
+    <main className="mx-auto mb-[200px] w-[1280px]">
       {/* <h2>내 페이지</h2> */}
       {/* 상단 콘텐츠 */}
       <div className="relative mb-[62px] h-[300px] items-center border-b-[1px] border-black text-[32px]">

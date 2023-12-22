@@ -58,13 +58,13 @@ export default function Order() {
   };
 
   return (
-    <section className="flex flex-col items-center">
+    <section className="mb-[200px] flex flex-col items-center">
       <h2 className="py-[60px] text-36 font-bold">주문 정보 등록</h2>
 
       {/* 구매할 향수 정보 */}
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
-          src={`${process.env.NEXT_PUBLIC_API_SERVER}${product.image}`}
+          src={`${process.env.NEXT_PUBLIC_API_SERVER}${image}`}
           alt="구매할 상품 이미지"
           className=" h-[150px] w-[150px] border-2 border-primary bg-product"
         />

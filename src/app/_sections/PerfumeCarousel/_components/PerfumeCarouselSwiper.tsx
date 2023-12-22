@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import axios from "@/api/axios";
 
 import "swiper/css";
@@ -43,8 +42,8 @@ export default function PerfumeCarouselSwiper() {
     <>
       {/* 스와이퍼 */}
       <Swiper
-        slidesPerView={5.6}
-        spaceBetween={0}
+        slidesPerView={6}
+        spaceBetween={30}
         centeredSlides={true}
         pagination={{
           clickable: true,
@@ -79,30 +78,7 @@ export default function PerfumeCarouselSwiper() {
             </SwiperSlide>
           );
         })}
-        <PerfumeCarouselSwiperNavigation />
       </Swiper>
     </>
-  );
-}
-
-// 네비게이션
-function PerfumeCarouselSwiperNavigation() {
-  const swiper = useSwiper();
-
-  return (
-    <div className="absolute bottom-0 right-0 z-[1] flex items-center justify-center">
-      <button
-        className="flex h-[48px] w-[48px] items-center justify-center border-2 border-r-[1px] border-[#222]"
-        onClick={() => swiper.slidePrev()}
-      >
-        <Image src="/left-icon.png" alt="왼쪽" width={24} height={24} />
-      </button>
-      <button
-        className="flex h-[48px] w-[48px] items-center justify-center border-2 border-l-[1px] border-[#222]"
-        onClick={() => swiper.slideNext()}
-      >
-        <Image src="/right-icon.png" alt="오른쪽" width={24} height={24} />
-      </button>
-    </div>
   );
 }

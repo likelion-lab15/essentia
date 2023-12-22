@@ -2,12 +2,31 @@
 "use client";
 
 import { axiosPrivate } from "@/api/axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+type TWishList = {
+  _id: number;
+  product_id: number;
+  user_id: number;
+  memo: string;
+  createdAt: string;
+  product: {
+    name: string;
+    price: number;
+    quantity: number;
+    buyQuantity: number;
+    image: {
+      path: string;
+      name: string;
+      originalname: string;
+    };
+  };
+};
+
 export default function WishList() {
-  const [wishList, setWishList] = useState([]);
+  const [wishList, setWishList] = useState<TWishList[]>([]);
   const [updateFlag, setUpdateFlag] = useState(false);
 
   const router = useRouter();
@@ -33,19 +52,20 @@ export default function WishList() {
   };
 
   // 찜 제거하기
-  const deleteWish = (id: number) => async (e) => {
-    e.stopPropagation();
+  const deleteWish =
+    (id: number) => async (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
 
-    try {
-      await axiosPrivate.delete(`bookmarks/${id}`);
-      setUpdateFlag((prev) => !prev);
-      alert(`${id}번 상품을 제거했습니다`);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
+      try {
+        await axiosPrivate.delete(`bookmarks/${id}`);
+        setUpdateFlag((prev) => !prev);
+        alert(`${id}번 상품을 제거했습니다`);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
       }
-    }
-  };
+    };
 
   return (
     <section className="w-[1000px]">
