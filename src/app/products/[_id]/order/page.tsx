@@ -58,7 +58,7 @@ export default function Order() {
   };
 
   return (
-    <section className="flex flex-col items-center">
+    <section className="mb-[200px] flex flex-col items-center">
       <h2 className="py-[60px] text-36 font-bold">주문 정보 등록</h2>
 
       {/* 구매할 향수 정보 */}

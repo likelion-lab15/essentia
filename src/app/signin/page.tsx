@@ -47,7 +47,7 @@ export default function SignIn() {
   };
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center">
+    <main className="mb-[100px] flex h-screen flex-col items-center justify-center">
       {/* 1.제목 */}
       <h2 className="mb-[57px] text-[36px] font-bold">로그인</h2>
 

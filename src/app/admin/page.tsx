@@ -140,7 +140,7 @@ export default function Admin() {
 
   return (
     <>
-      <section className="flex flex-col items-center">
+      <section className="mb-[50px] flex flex-col items-center">
         <div className="flex h-[180px] items-center justify-center">
           <h2 className="w-[900px] text-center text-36 font-bold">
             판매 상품 등록
@@ -244,9 +244,6 @@ export default function Admin() {
             ></textarea>
           </div>
           <div className="mt-[90px] flex h-[195px] flex-row justify-center gap-[16px]">
-            <button className="h-[48px] w-[322px] border-[1px] border-primary">
-              임시저장
-            </button>
             <button className="h-[48px] w-[322px] bg-primary text-white">
               등록하기
             </button>
