@@ -6,21 +6,27 @@ export default function HeroSection() {
     <section className="flex h-screen w-screen overflow-hidden">
       {/* 왼쪽 타이포 */}
       <div className="flex flex-grow-[3] items-center justify-center border-r border-tertiary bg-[#e1e1e1]">
-        <div className="relative">
-          <h2 className="relative left-[100px] top-[400px] z-10  text-left text-[180px] font-extrabold">
-            2023 BEST AWARDS
-          </h2>
-          <img
-            src="/heroSectionImage/b.png"
-            alt=""
-            className="relative left-[100px] top-[-200px] z-0 max-w-[800px]"
-          ></img>
+        <div className="relative w-full">
+          <div className="absolute  top-1/2 z-10 w-screen -translate-y-1/2 leading-none text-primary">
+            <p className=" text-left text-[180px] font-extrabold">2023</p>
+            <p className=" w-2/3 text-right text-[180px] font-extrabold">
+              BEST
+            </p>
+            <p className=" text-left text-[180px] font-extrabold">AWARDS</p>
+          </div>
+          <div className="flex items-center justify-center">
+            <img
+              src="/heroSectionImage/b.png"
+              alt=""
+              className="z-0 w-[800px] "
+            ></img>
+          </div>
         </div>
         {/* <div className="h-[500px] w-[800px] border border-primary"></div> */}
       </div>
-      <div className="z-20 flex max-w-[600px] flex-grow flex-row">
+      <div className="z-20 flex max-w-[500px] flex-grow flex-row">
         {/* 왼쪽 이미지 */}
-        <div className="relative w-1/2 max-w-[300px]">
+        <div className="relative w-1/2 max-w-[250px]">
           <div className="relative flex flex-col flex-nowrap items-center">
             {/* 원본 슬라이드 */}
             <div className="animate-infiniteAnimation1 flex flex-nowrap items-center">
@@ -41,7 +47,7 @@ export default function HeroSection() {
           </div>
         </div>
         {/* 오른쪽 이미지 */}
-        <div className="relative w-1/2 max-w-[300px]">
+        <div className="relative w-1/2 max-w-[250px]">
           <div className="relative flex flex-col flex-nowrap items-center">
             {/* 원본 슬라이드 */}
             <div className="animate-infiniteAnimation3 flex flex-nowrap items-center">
