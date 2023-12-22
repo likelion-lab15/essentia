@@ -71,11 +71,11 @@ export default function Header() {
   return (
     <header
       role="banner"
-      className="sticky top-0 z-[99] h-[80px] border-b border-primary bg-white pl-[60px] pr-[60px]"
+      className="sticky top-0 z-[99] h-[80px] border-b border-primary bg-white"
     >
       <nav
         aria-label="메인 네비게이션"
-        className="flex items-center justify-between"
+        className="flex items-center justify-between  pl-[60px] pr-[60px]"
       >
         <Link
           href="/"

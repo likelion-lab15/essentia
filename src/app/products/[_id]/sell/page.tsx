@@ -3,7 +3,7 @@
 
 import { axiosPrivate, axiosForm } from "@/api/axios";
 import React, { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useProductStore } from "@/stores/useProductStore";
 
 type TItem = {
@@ -27,6 +27,7 @@ type TItem = {
 };
 
 export default function Sell(props: any) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { product } = useProductStore();
   const [item, setItem] = useState<TItem>({
@@ -124,11 +125,14 @@ export default function Sell(props: any) {
         return;
       }
 
-      console.log("서버에서의 대답", item); // 서버로 보내기 전에 콘솔 확인 (디버깅)
+      console.log("서버에서의 대답", item);
+      // 서버로 보내기 전에 콘솔 확인 (디버깅)
 
       // 서버에 상품 정보를 POST 요청
       const response = await axiosPrivate.post("/seller/products/", item);
       console.log(response); // 서버 응답 로그 출력 (디버깅)
+      alert("판매 등록이 성공적으로 완료되었습니다.");
+      router.push("/products");
     } catch (error) {
       console.error("Error 🥲", error);
     }
