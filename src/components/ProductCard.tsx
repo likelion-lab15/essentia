@@ -34,7 +34,7 @@ export default function ProductCard({ product }: TProductCardProps) {
   return (
     <li
       key={_id}
-      className="mb-[100px] mr-[16px] h-[354px] w-[234px] cursor-pointer"
+      className="mb-[50px] mr-[16px] h-[354px] w-[234px] cursor-pointer"
       onClick={handleClick}
     >
       <img
