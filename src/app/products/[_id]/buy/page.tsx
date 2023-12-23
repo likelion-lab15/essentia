@@ -111,19 +111,19 @@ export default function Buy(props: TProductProps) {
               key={index}
               className="flex w-[800px] flex-row justify-between"
             >
-              <div className="flex h-[60px] w-[600px] border-b-2 border-t-2 border-primary bg-white text-primary hover:bg-secondary">
+              <div className="mb-[15px] flex h-[60px] w-[600px] border-b-2 border-t-2 border-primary bg-white text-primary hover:bg-secondary">
                 <p className="flex h-[60px] flex-1 items-center justify-center">
                   남은용량 : {item.extra.restamount}ml
                 </p>
                 <p className="flex h-[60px] flex-1 items-center justify-center">
-                  판매금액 : {item.price.toLocaleString()}원
+                  판매금액 : {Number(item.price).toLocaleString()}원
                 </p>
                 <p className="flex h-[60px] flex-1 items-center justify-center">
                   구매일자 : {item.extra.date}
                 </p>
               </div>
               <Button
-                className="h-[60px] w-[120px] border-2 border-primary bg-secondary text-primary hover:bg-primary hover:text-secondary"
+                className="mb-[15px] h-[60px] w-[120px] border-2 border-primary bg-secondary text-primary hover:bg-primary hover:text-secondary"
                 label="구매하기"
                 type="button"
                 onClick={() =>
