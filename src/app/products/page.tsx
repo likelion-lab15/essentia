@@ -17,7 +17,7 @@ export default function AllProducts() {
   return (
     <>
       <ScrollTopButton />
-      <main className="flex flex-col items-center">
+      <main className="mb-[150px] flex flex-col items-center">
         <div className="flex h-[400px] items-center justify-center">
           <h1 className=" w-[900px] border-b-[5px] border-black text-center text-50 font-bold">
             {selectedBrand || "ALL"}

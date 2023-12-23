@@ -35,7 +35,7 @@ const getProducts = async (
 
 export default function Products({ selectedBrand }: TProductsProps) {
   const PAGES_PER_GROUP = 5; // 한 페이지 그룹에 표시할 페이지 수
-  const ITEMS_PER_PAGE = 3; // 페이지 상품 수 (임시로 상품 3개)
+  const ITEMS_PER_PAGE = 12; // 페이지 상품 수
   const TOTAL_PAGES = 10; // 총 페이지 수 (고정 값)
 
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
