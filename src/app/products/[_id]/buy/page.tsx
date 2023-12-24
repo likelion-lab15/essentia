@@ -23,8 +23,11 @@ type TItem = {
   };
 };
 
+type TlowestPrice = number | null;
+
 export default function Buy(props: TProductProps) {
   const [items, setItems] = useState<TItem[]>([]);
+  const [lowestPrice, setLowestPrice] = useState<TlowestPrice>(null);
   const { product } = useProductStore();
   const router = useRouter();
   const getId = props.params._id;
@@ -36,17 +39,16 @@ export default function Buy(props: TProductProps) {
   const searchParams = useSearchParams();
   const getAmount = searchParams.get("amount");
   let targetAmount = 0;
-  if (getAmount == "50ml") {
+  if (getAmount === "50ml") {
     targetAmount = 50;
   } else {
     targetAmount = 100;
   }
   const renderItems = items.filter(
-    (item) => item.extra?.amount == targetAmount
+    (item) => item.extra?.amount === targetAmount
   );
 
   useEffect(() => {
-    // API 호출 및 데이터 가져오기
     async function buyInfo() {
       try {
         console.log("buyInfo Id: ", getId);
@@ -62,7 +64,15 @@ export default function Buy(props: TProductProps) {
     }
 
     buyInfo();
-  }, [getId]);
+
+    const lowest = items
+      .filter((item) => item.extra?.amount === targetAmount)
+      .reduce((min, item) => {
+        return item.price < min ? item.price : min;
+      }, Number.POSITIVE_INFINITY);
+
+    setLowestPrice(lowest === Number.POSITIVE_INFINITY ? null : lowest);
+  }, [getId, items, targetAmount]);
 
   return (
     <div className="mb-[300px] flex flex-col items-center justify-center">
@@ -79,61 +89,70 @@ export default function Buy(props: TProductProps) {
             width={200}
             height={200}
             alt="상품 이미지"
-            className="border-2 border-primary bg-[#F4F4F4]"
-          ></img>
+            className="border-2 border-primary bg-product"
+          />
           {/* 상품 정보 */}
           <div className="ml-[40px] flex h-[200px] w-[500px] flex-col justify-between">
             <div>
               <p className="border-b-2 border-primary text-22 font-bold">
                 {getBrand}
               </p>
-              <p className=" text-30 font-medium">{getName}</p>
+              <p className="text-30 font-medium">{getName}</p>
             </div>
             <p className="flex flex-row text-22 font-medium">{getAmount}</p>
             <div className="flex flex-row justify-between">
               <div className="flex w-[200px] flex-row items-baseline justify-start text-tertiary">
-                <p className="mr-[10px] text-16 font-medium">발매가</p>
+                <p className="mr-[10px] text-16 font-semibold">발매가</p>
                 <p className="text-28 font-bold">
                   {getPrice.toLocaleString()}원
                 </p>
               </div>
               <div className="flex w-[200px] flex-row items-baseline justify-end">
-                <p className="mr-[10px] text-16 font-medium">최저가</p>
-                <p className="text-28 font-bold">120,000원</p>
+                <p className="mr-[10px] text-16 font-semibold text-accent">
+                  최저가
+                </p>
+                <p className="text-28 font-bold">
+                  {lowestPrice ? `${lowestPrice.toLocaleString()}원` : "- 원"}
+                </p>
               </div>
             </div>
           </div>
         </div>
-        {/* 판매등록된 상품 리스트 */}
-        <div className="mb-[25px] flex w-[800px] flex-row flex-wrap pl-[25px] pr-[25px] text-18">
-          {renderItems.map((item, index) => (
-            <div
-              key={index}
-              className="flex w-[800px] flex-row justify-between"
-            >
-              <div className="flex h-[60px] w-[600px] border-b-2 border-t-2 border-primary bg-white text-primary hover:bg-secondary">
-                <p className="flex h-[60px] flex-1 items-center justify-center">
-                  남은용량 : {item.extra.restamount}ml
-                </p>
-                <p className="flex h-[60px] flex-1 items-center justify-center">
-                  판매금액 : {item.price.toLocaleString()}원
-                </p>
-                <p className="flex h-[60px] flex-1 items-center justify-center">
-                  구매일자 : {item.extra.date}
-                </p>
+        <div className="mb-[25px] flex w-[800px] flex-row flex-wrap justify-center pl-[25px] pr-[25px] text-18">
+          {renderItems.length === 0 ? (
+            <p className="text-18 font-semibold">
+              현재 등록된 판매상품이 없습니다. 🥲
+            </p>
+          ) : (
+            renderItems.map((item, index) => (
+              <div
+                key={index}
+                className="flex w-[800px] flex-row justify-between"
+              >
+                <div className="mb-[15px] flex h-[60px] w-[600px] border-b-2 border-t-2 border-primary bg-white text-primary hover:bg-secondary">
+                  <p className="flex h-[60px] flex-1 items-center justify-center">
+                    남은용량 : {item.extra.restamount}ml
+                  </p>
+                  <p className="flex h-[60px] flex-1 items-center justify-center">
+                    판매금액 : {Number(item.price).toLocaleString()}원
+                  </p>
+                  <p className="flex h-[60px] flex-1 items-center justify-center">
+                    구매일자 : {item.extra.date}
+                  </p>
+                </div>
+                <Button
+                  className="mb-[15px] h-[60px] w-[120px] border-2 border-primary bg-secondary text-primary hover:bg-primary hover:text-secondary"
+                  label="구매하기"
+                  type="button"
+                  onClick={() =>
+                    router.push(
+                      `/products/${getId}/order?&perchaseItem=${item._id}&amount=${item.extra.restamount}&price=${item.price}`
+                    )
+                  }
+                />
               </div>
-              <Button
-                className="h-[60px] w-[120px] border-2 border-primary bg-secondary text-primary hover:bg-primary hover:text-secondary"
-                label="구매하기"
-                type="button"
-                onClick={() =>
-                  router.push(
-                    `/products/${getId}/order?&perchaseItem=${item._id}&amount=${item.extra.restamount}&price=${item.price}`
-                  )
-                }
-              />
-            </div>
-          ))}
+            ))
+          )}
         </div>
         {/* 뒤로가기 버튼 */}
         <div className="flex h-[100px] w-[800px] items-center justify-center">
