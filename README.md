@@ -1,11 +1,13 @@
 # 💎 Onyx 향수 거래 플랫폼
+<div align ="center">
+  
+  ![macbook](https://github.com/likelion-lab15/essentia/assets/96248861/ef709214-fb93-4082-84d3-8b4774ba03e2)
 
-![macbook](https://github.com/likelion-lab15/essentia/assets/96248861/ef709214-fb93-4082-84d3-8b4774ba03e2)
+**Onyx [🔗 지금 이용해보러가기](https://main--ttp-onyx.netlify.app/)**
+</div>
 
-**🔗 Onyx 지금 이용해보러가기 : [Onyx](https://main--ttp-onyx.netlify.app/)**
-- ID :
-- PASSWORD :
-
+- TEST ID : s1@market.com
+- TEST PASSWORD : 11111111
 
 ## 프로젝트 소개
 - **Onyx**는 구매자와 판매자가 향수를 안전하게 거래할 수 있도록 중계를 해주는 플랫폼입니다.
@@ -15,19 +17,24 @@
 - 거래가 체결된 상품은 **Onyx** 검수센터에서 전문 검수팀이 철저한 검수한 후 발송됩니다.
 
 ## 개발 기간
-- 디자인 : 2023.12.~
-- UI 구현 : 2023.12.~
-- 기능 구현 : 2023.12.~
+- 기획 & 디자인 : 2023.11.20 ~ 2023.11.30 (11days)
+- UI 구현 : 2023.12.01 ~ 2023.12.03 (3days)
+- 기능 구현 : 2023.12.~ ing
 
 ## 작업 방식
-- 오전 오후 스크럼.. 머..주절주절...
+- 오전/오후 스크럼 2회 (10:30 ~ 11:00)
+- 예상치 못한 버그 발생은 깃 이슈 작성
 - 소통..주절주절...
 
 ## 함께한 팀원
-|김진우|김도현|현지수|
-|:---:|:---:|:---:|
-|프로필 이미지|프로필 이미지|프로필 이미지|
-|개인 URL|개인 URL|개인 URL|
+<div align= "center">
+  
+  |김진우|김도현|현지수|
+  |:---:|:---:|:---:|
+  |<img width="160" alt="image" src="https://github.com/likelion-lab15/essentia/assets/96248861/fb756391-c25f-4161-b192-db9c833f346c">|<img width="160" alt="image" src="https://github.com/likelion-lab15/essentia/assets/96248861/074ed18f-8ee4-4822-b6f7-cdd08484b455">|<img width="160" alt="image" src="https://github.com/likelion-lab15/essentia/assets/96248861/c8ffd8df-153b-4773-9480-27ba3e7880f1">|
+  |[@rlawlsdn263](https://github.com/rlawlsdn263/)|[@kimzeze](https://github.com/kimzeze/)|[@hyunzsu](https://github.com/hyuzsu/)|
+
+</div>
 
 ## 프로젝트 목표
 - 새로운 기술스택 경험해보기
@@ -35,19 +42,41 @@
 - 완결보다 완성하기
 
 ## 기술스택
-
-<span>
+<div align= "center">
+  <span>
   <img src="https://img.shields.io/badge/-React-%2361DAFB?style=for-the-badge&logo=React&logoColor=white">
   <img src="https://img.shields.io/badge/NextJS-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=3178C6&logoColor=white">
   <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
   <img src="https://img.shields.io/badge/zustand-E00033?style=for-the-badge&logo=zustand&logoColor=white">
-</span>
+  <img src="https://img.shields.io/badge/figma-F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
+  </span>
+</div>
 
-### 각 기술스택을 선정한 이유
-### A. 우리가 NextJS를 선택한 이유
-### A. 우리가 tailwindCSS를 선택한 이유
-### A. 우리가 Zustand를 선택한 이유
+<br>
+<br>
+<details>
+  <summary><b>❓ 우리가 NextJS를 선택한 이유</b></summary>
+<div markdown="1">
+  내용
+</div>
+</details>
+
+
+<details>
+  <summary><b>❓ 우리가 tailwindCSS를 선택한 이유</b></summary>
+<div markdown="1">
+  내용
+</div>
+</details>
+
+
+<details>
+  <summary><b>❓ 우리가 Zustand를 선택한 이유</b></summary>
+<div markdown="1">
+  내용
+</div>
+</details>
 
 ## 브랜치 전략
 
@@ -75,8 +104,14 @@
  ┗ 📂utils
 ```
 
+
+## 목차
+- [1. 메인페이지](#main-page)
+- [2. 회원가입 페이지](#signup-page)
+- [3. 로그인 페이지](#signin-page)
+
 ## 📃 페이지 구성
-## 1. 메인페이지
+## <a id="main-page"></a>1. 메인페이지
 ![main](https://github.com/likelion-lab15/essentia/assets/96248861/7acc66cf-a66e-4233-884a-58b3f2e51fbb)
 
 - 서비스를 접속하면 가장 처음 나타나는 화면입니다.
@@ -94,7 +129,7 @@
 - [매거진] 매거진을 클릭하면 해당 매거진 상세페이지로 이동해야합니다.
 - [브랜드 리스트] 브랜드 명을 클릭하면 해당 브랜드 필터가 적용된 상품 리스트 페이지로 이동해야합니다.
 
-## 2. 회원가입 페이지
+## <a id="signup-page"></a>2. 회원가입 페이지
 ![회원가입 ](https://github.com/likelion-lab15/essentia/assets/96248861/03a37ee8-1774-43de-9592-71db3d78e654)
 
 - 회원 정보를 입력하여 회원가입을 할 수 있습니다.
@@ -111,7 +146,7 @@
 - 도로명 주소 검색 후 선택하지 않고 닫을 경우 오류가 발생합니다.
 - 상세 주소는 최대 입력가능한 글자를 제한해야합니다.
 
-## 3. 로그인 페이지
+## <a id="signin-page"></a>3. 로그인 페이지
 ![로그인](https://github.com/likelion-lab15/essentia/assets/96248861/fde542b0-e447-4264-974c-79946450b7c5)
 
 - 가입한 이메일 주소와 패스워드를 입력하면 로그인을 할 수 있습니다.
@@ -173,7 +208,7 @@
 - [전체보기] 구매 금액에 따라 Membership과 마일리지가 수정되어야 합니다.
 - [구매내역 또는 리뷰] 작성 완료한 리뷰를 수정할 수 있어야합니다.
 - [회원정보 수정] 각 입력에 대해 유효성 검사가 필요합니다.
-- [회원정보 수정] 현재 비밀번호를 입력하여 일치하지 않으면 수정되지 않아야합니다.
+- [회원정보 수정] 현재 비밀번호를 입력하여 일치하지 않으면 수정되지 않아야 합니다.
 
 ## 4. 상품 리스트 페이지
 
@@ -186,55 +221,114 @@
 
 
 ## 5. 상세 페이지
+### 5-1. 상세페이지 정보
+![상세 Info](https://github.com/likelion-lab15/essentia/assets/96248861/18da4078-41ef-4c1f-a1e4-7f8cab748339)
 
-- 
+- 상품 리스트에서 클릭한 상품의 상세정보를 보여줍니다. (브랜드, 상품명, 판매중인 용량, 발매가)
+- 원하는 사이즈를 선택하고 구매페이지로 이동하거나 판매페이지로 이동할 수 있습니다. (사이즈 미선택시 이동 불가)
+- 위시 리스트에 상품을 추가할 수 있습니다.
+
+
+### 5-2. 상세페이지 상세
+![상세 페이지 상세](https://github.com/likelion-lab15/essentia/assets/96248861/e46f047d-5459-404f-b5f2-4771cc6172c6)
+
+
+- 상단 네비게이션을 클릭하여 원하는 섹션으로 스크롤 이동할 수 있습니다.
+- 해당 제품의 리뷰를 5개씩 보여줍니다. (작성일자, 작성자, 제목, 내용)
+- 관련된 제품 추천 캐러셀을 통해 다른 상품으로 접근할 수 있습니다.
   
 ### 상세 페이지에서 사용한 기능
-- 
+- 사용자가 상품리스트에서 클릭한 상품의 데이터를 불러오는 기능
+- 사이즈를 선택하여 구매하기 또는 판매하기로 원하는 데이터를 전달하는 기능
+- 해당 상품을 위시리스트에 추가할 수 있는 기능
+- 네비게이션을 통해 원하는 섹션에 이동하는 기능
+- 리뷰를 5개씩 보여주는 페이지네이션 기능
 
 ### 앞으로 개발할 기능
-- 
+- [정보] 위시리스트에 이미 추가된 상품인지 확인할 수 있어야 합니다.
+- [정보] 이미 위시리시트에 추가된 상품이라면 제거할 수 있어야 합니다.
+- [상세] 대표 상품 하위에 있는 리뷰들을 대표 상품에서 조회해야합니다.
+- [상새] 유사한 상품들을 이미지 캐러셀로 불러와 이동할 수 있어야 합니다.
 
 ## 6. 구매하기 페이지
+![image](https://github.com/likelion-lab15/essentia/assets/96248861/82cbe9fe-a561-4f8a-b174-2b163555e5fa)
+![image](https://github.com/likelion-lab15/essentia/assets/96248861/a078eba3-8ec7-47c1-bdf4-24f00403c98d)
 
-- 
+
+- 클릭하여 들어온 상품의 정보를 보여줍니다. (브랜드, 이름, 사진, 원하는 사이즈)
+- 판매 등록되어 있는 향수들의 리스트를 보여줍니다. (등록된 상품이 없을 경우 사용자에게 알려줍니다)
+- 등록된 상품 중 최저가를 표시해줍니다.
+- 구매하기를 누르면 해당 상품을 주문할 수 있는 페이지로 이동합니다.
   
 ### 구매하기 페이지에서 사용한 기능
-- 
+- 상품 상세페이지에서 클릭한 향수의 정보를 불러오는 기능
+- 판매 등록된 상품의 가격 중 가장 저렴한 가격을 보여주는 기능
+- 구매하기를 누르면
 
 ### 앞으로 개발할 기능
-- 
+- 남은용량, 판매금액, 구매일자 기준으로 정렬할 수 있어야 합니다.
+- 등록된 상품 개수가 5개 이상일 때 더보기 버튼이 활성화 되어야 합니다.
 
 ## 7. 주문 페이지
+![image](https://github.com/likelion-lab15/essentia/assets/96248861/f0d62e27-92df-4a04-83fa-10de2598c888)
 
-- 
+- 구매하기 페이지에서 선택한 제품의 정보를 볼 수 있습니다.
+- 체크박스를 통해 구매 의사를 다시 한번 더 확인합니다.
+- 배송 정보를 확인하고 수정할 수 있습니다.
+- 최종 결제 금액을 확인할 수 있습니다.
   
 ### 주문 페이지에서 사용한 기능
-- 
+- 구매하기 페이지에서 사용자가 선택한 제품의 정보를 가져오는 기능
+- 로그인된 사용자의 정보를 가져오는 기능
+- 해당 제품을 구매하는 기능
 
 ### 앞으로 개발할 기능
-- 
+- 체크박스를 모두 클릭하지 않을 경우 구매 결정하기를 누를 수 없어야 합니다.
+- 사용자가 직접 배송정보를 수정할 수 있어야 합니다.
+- 배송비 또는 쿠폰, 멤버쉽에 따라 결제금액이 달라져야 합니다.
 
 ## 8. 판매 등록 페이지
+![판매 등록 페이지](https://github.com/likelion-lab15/essentia/assets/96248861/bd330bfe-5793-472c-957b-7aba13dfc625)
 
-- 
+- 사용자가 원하는 제품을 판매할 수 있습니다. (남은용량, 구매일자, 가격 입력)
+- 자신이 판매하는 상품의 이미지를 업로드할 수 있습니다.
   
 ### 판매 페이지에서 사용한 기능
-- 
+- 상세 페이지에서 선택한 제품의 정보를 불러오는 기능
+- 이미지 여러장 업로드 기능
+- 제품 판매 등록 기능
+- 상세 설명 길이 유효성 검사
+
 
 ### 앞으로 개발할 기능
-- 
+- 선택한 옵션보다 더 많은 용량은 판매할 수 없어야합니다. (50ml선택 -> 50ml 이하만 입력가능)
 
 
 ## 9. Header
+### 9-1. Header 네비게이션
+![헤더- 네비게이션](https://github.com/likelion-lab15/essentia/assets/96248861/eacb6c8e-86a0-4e2c-8909-ca808f56aec0)
 
-- 
+- 로고를 누르면 홈으로 이동합니다.
+- SHOP 버튼을 누르면 상품 리스트페이지로 이동합니다.
+- 로그인했을 경우 마이페이지로 이동, 위시리스트로 이동, 로그아웃 기능이 있습니다.
+- 비회원일 경우 로그인 페이지로 이동합니다.
+
+### 9-2. Header 검색
+
+![헤더 - 검색기능](https://github.com/likelion-lab15/essentia/assets/96248861/7db7aad0-e600-4e0e-89e9-41118bb657e9)
+
+- Header를 접근할 수 있는 모든 페이지에서 검색 기능을 사용할 수 있습니다.
+- 검색
   
 ### Header에서 사용한 기능
-- 
-
+- Link를 사용한 페이지 이동 기능
+- 로그인하지 않았을 때는 마이페이지 아이콘 클릭시 로그인 페이지로 이동, 로그인 아이콘 렌더링, 클릭시 로그인 페이지
+- 로그인 했을 때는 마이페이지 아이콘 클릭시 마이페이지로 이동, 로그아웃 아이콘 렌더링, 클릭시 로그아웃
+- 키워드 검색으로 나타나는 제품을 클릭시 해당 제품 상세페이지로 이동하는 기능
+  
 ### 앞으로 개발할 기능
-- 
+- 키워드 검색시 검색 목록이 일정개수 이상이면 스크롤 바 또는 더보기가 생기도록 해야합니다.
+- MEN, WOMEN 같은 네비게이션을 누르면 필터된 상품 리스트 페이지로 이동해야합니다.
 
 ## 트러블 슈팅
 
