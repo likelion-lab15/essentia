@@ -36,8 +36,8 @@ export default function ScrollTopButton() {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed right-[210px]
-            top-[900px] h-[48px] w-[48px] rounded-full bg-primary"
+          className="fixed right-[50px]
+            top-[700px] h-[48px] w-[48px] rounded-full bg-primary"
         >
           <Image
             src="/scroll-top.svg"
