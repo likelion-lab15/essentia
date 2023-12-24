@@ -4,7 +4,7 @@ import "./globals.css";
 import { Header, Footer } from "@/components/_index";
 
 export const metadata: Metadata = {
-  title: "Essentia",
+  title: "ONYX",
   description: "향수 중고거래 플랫폼",
 };
 
