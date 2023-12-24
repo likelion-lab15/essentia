@@ -28,7 +28,8 @@ export default function PerfumeCarouselSwiper() {
     const getPerfumeList = async () => {
       try {
         const res = await axios.get("products");
-        setPerfumeList(res.data.item);
+        const slicedData = res.data.item.slice(0, 10);
+        setPerfumeList(slicedData);
       } catch (error) {
         if (error instanceof Error) {
           console.log(error.message);
