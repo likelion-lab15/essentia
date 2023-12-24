@@ -111,10 +111,21 @@ export default function Products({ selectedBrand }: TProductsProps) {
     <div className="w-[984px]">
       <div className="h-[1300px]">
         <div className="flex justify-between">
-          {/* 상품 개수 */}
-          <p className="mb-[110px]">{products.length}개의 상품이 있습니다.</p>
+          {/* 브랜드명 */}
+          {selectedBrand && (
+            <div className="mb-[20px] flex flex-row items-center gap-[5px]">
+              <span className="text-16 font-medium text-tertiary">SHOP</span>
+              <Image
+                src="/products-right-icon.svg"
+                alt="오른쪽 아이콘"
+                width={24}
+                height={24}
+              />
+              <span className="font-bold">{selectedBrand}</span>
+            </div>
+          )}
           {/* 드롭다운 메뉴 */}
-          <div className="mb-[110px]">
+          <div className="mb-[30px]">
             <button
               onClick={() => {
                 setDropdownOpen(!dropdownOpen);
