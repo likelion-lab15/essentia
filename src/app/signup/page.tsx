@@ -176,7 +176,7 @@ export default function SignUp() {
   const sendPostRequest = async () => {
     const type = "seller";
     try {
-      const response = await axios.post("https://localhost/api/users/", {
+      const response = await axios.post("users/", {
         email,
         password,
         name,
