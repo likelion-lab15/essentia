@@ -3,36 +3,37 @@
 import React from "react";
 import Button from "@/components/Button";
 import { useReducer } from "react";
+import InputField from "@/components/InputField";
 
 type TFormState = {
   email: string;
   password: string;
-  valids: {
-    email: boolean;
-    password: boolean;
-  };
-  errorMessages: {
-    email: string | null;
-    password: string | null;
-  };
+  name: string;
+  valids: Record<"email" | "password" | "name", boolean>;
+  errorMessages: Record<"email" | "password" | "name", string | null>;
 };
 
 type TFormAction =
   | { type: "UPDATE_EMAIL"; payload: string }
   | { type: "UPDATE_PASSWORD"; payload: string }
+  | { type: "UPDATE_NAME"; payload: string }
   | { type: "VALIDATE_EMAIL" }
-  | { type: "VALIDATE_PASSWORD" };
+  | { type: "VALIDATE_PASSWORD" }
+  | { type: "VALIDATE_NAME" };
 
 const initialFormState: TFormState = {
   email: "",
   password: "",
+  name: "",
   valids: {
     email: true,
     password: true,
+    name: true,
   },
   errorMessages: {
     email: null,
     password: null,
+    name: null,
   },
 };
 
@@ -88,6 +89,31 @@ function formReducer(state: TFormState, action: TFormAction) {
         },
       };
     }
+    /* 이름 상태 업데이트 */
+    case "UPDATE_NAME":
+      return {
+        ...state,
+        name: action.payload,
+      };
+    /* 이름 유효성 검사 */
+    case "VALIDATE_NAME": {
+      const name = state.name.trim();
+      const isValidLength = name.length <= 8;
+      const isValidComplexity = /^[가-힣]+$/.test(name);
+      const isValid = name === "" || (isValidLength && isValidComplexity);
+      return {
+        ...state,
+        valids: {
+          ...state.valids,
+          name: isValid,
+        },
+        errorMessages: {
+          ...state.errorMessages,
+          name: isValid ? null : "8글자 이하의 한글을 입력해주세요.",
+        },
+      };
+    }
+
     default:
       return state;
   }
@@ -97,7 +123,6 @@ export default function SignUpForm() {
   const [state, dispatch] = useReducer(formReducer, initialFormState);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(state.errorMessages.email);
     dispatch({ type: "UPDATE_EMAIL", payload: e.target.value });
     dispatch({ type: "VALIDATE_EMAIL" });
   };
@@ -105,6 +130,11 @@ export default function SignUpForm() {
   const handlePassWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "UPDATE_PASSWORD", payload: e.target.value });
     dispatch({ type: "VALIDATE_PASSWORD" });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "UPDATE_NAME", payload: e.target.value });
+    dispatch({ type: "VALIDATE_NAME" });
   };
 
   // const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,57 +149,38 @@ export default function SignUpForm() {
   return (
     <form onSubmit={() => {}} className="flex w-[400px] flex-col">
       {/* 이메일 주소 */}
-      <div className="flex h-[106px] w-[400px] flex-col text-14">
-        <label
-          className="flex h-[38px] w-full items-center font-semibold"
-          htmlFor="email"
-        >
-          로그인에 사용할 이메일 주소를 입력해주세요
-        </label>
-        <input
-          className="h-[38px] w-full border-b border-primary"
-          id="email"
-          type="email"
-          placeholder="example@onyx.co.kr"
-          value={state.email}
-          onChange={handleEmailChange}
-        />
-        {state.errorMessages.email && (
-          <div
-            id={"email" + "Error"}
-            aria-live="polite"
-            className="flex h-[30px] w-full items-center text-warning"
-          >
-            {state.errorMessages.email}
-          </div>
-        )}
-      </div>
+      <InputField
+        label="로그인에 사용할 이메일 주소를 입력해주세요"
+        id="email"
+        type="email"
+        placeholder="example@onyx.co.kr"
+        errorMessage={state.errorMessages.email} // 오류 메시지 텍스트
+        invalid={!state.valids.email} // 이메일 유효성 검사 결과에 따른 값
+        onChange={handleEmailChange}
+        value={state.email}
+      />
       {/* 비밀번호 */}
-      <div className="flex h-[106px] w-[400px] flex-col text-14">
-        <label
-          className="flex h-[38px] w-full items-center font-semibold"
-          htmlFor="password"
-        >
-          사용할 비밀번호를 입력해주세요
-        </label>
-        <input
-          className="h-[38px] w-full border-b border-primary"
-          id="password"
-          type="password"
-          placeholder="8~16 글자의 영문, 숫자, 특수문자 조합"
-          value={state.password}
-          onChange={handlePassWordChange}
-        />
-        {state.errorMessages && (
-          <div
-            id={"password" + "Error"}
-            aria-live="polite"
-            className="flex h-[30px] w-full items-center text-warning"
-          >
-            {state.errorMessages.password}
-          </div>
-        )}
-      </div>
+      <InputField
+        label="사용할 비밀번호를 입력해주세요"
+        id="password"
+        type="password"
+        placeholder="8~16 글자의 영문, 숫자, 특수문자 조합"
+        errorMessage={state.errorMessages.password} // 오류 메시지 텍스트
+        invalid={!state.valids.password} // 비밀번호 유효성 검사 결과에 따른 값
+        onChange={handlePassWordChange}
+        value={state.password}
+      />
+      {/* 이름 */}
+      <InputField
+        label="이름을 입력해주세요"
+        id="name"
+        type="text"
+        placeholder="예) 현지수"
+        errorMessage={state.errorMessages.name} // 오류 메시지 텍스트
+        invalid={!state.valids.name} // 비밀번호 유효성 검사 결과에 따른 값
+        onChange={handleNameChange}
+        value={state.name}
+      />
       {/* 회원가입 완료 버튼 */}
       <Button
         className="mt-[50px]"
