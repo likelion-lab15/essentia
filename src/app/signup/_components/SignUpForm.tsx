@@ -6,9 +6,11 @@ import { useReducer } from "react";
 
 type TFormState = {
   email: string;
-  isEmailValid: boolean;
   password: string;
-  isPassWordValid: boolean;
+  valids: {
+    email: boolean;
+    password: boolean;
+  };
   errorMessages: {
     email: string | null;
     password: string | null;
@@ -23,8 +25,8 @@ type TFormAction =
 
 const initialFormState = {
   email: "",
-  isEmailValid: true,
   password: "",
+  isEmailValid: true,
   isPassWordValid: true,
   errorMessages: {
     email: null,
@@ -50,6 +52,9 @@ function formReducer(state: TFormState, action: TFormAction) {
         );
       return {
         ...state,
+        valids: {
+          email: isValid,
+        },
         errorMessages: {
           ...state.errorMessages,
           email: isValid ? null : "이메일 형식을 확인해주세요",
@@ -70,6 +75,9 @@ function formReducer(state: TFormState, action: TFormAction) {
       const isValid = password === "" || (isValidLength && isValidComplexity);
       return {
         ...state,
+        valids: {
+          password: isValid,
+        },
         errorMessages: {
           ...state.errorMessages,
           password: isValid ? null : "비밀번호 양식을 확인해주세요",
