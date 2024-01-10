@@ -23,11 +23,13 @@ type TFormAction =
   | { type: "VALIDATE_EMAIL" }
   | { type: "VALIDATE_PASSWORD" };
 
-const initialFormState = {
+const initialFormState: TFormState = {
   email: "",
   password: "",
-  isEmailValid: true,
-  isPassWordValid: true,
+  valids: {
+    email: true,
+    password: true,
+  },
   errorMessages: {
     email: null,
     password: null,
@@ -53,6 +55,7 @@ function formReducer(state: TFormState, action: TFormAction) {
       return {
         ...state,
         valids: {
+          ...state.valids,
           email: isValid,
         },
         errorMessages: {
@@ -76,6 +79,7 @@ function formReducer(state: TFormState, action: TFormAction) {
       return {
         ...state,
         valids: {
+          ...state.valids,
           password: isValid,
         },
         errorMessages: {
