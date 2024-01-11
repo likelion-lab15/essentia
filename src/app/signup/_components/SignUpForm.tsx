@@ -28,7 +28,8 @@ type TFormAction =
   | { type: "VALIDATE_PASSWORD" }
   | { type: "VALIDATE_NAME" }
   | { type: "VALIDATE_PHONE" }
-  | { type: "VALIDATE_BIRTH" };
+  | { type: "VALIDATE_BIRTH" }
+  | { type: "EMAIL_DUPLICATION"; payload: string | null };
 
 const initialFormState: TFormState = {
   email: "",
@@ -80,6 +81,15 @@ function formReducer(state: TFormState, action: TFormAction) {
         },
       };
     }
+    /* 이메일 중복 확인 */
+    case "EMAIL_DUPLICATION":
+      return {
+        ...state,
+        errorMessages: {
+          ...state.errorMessages,
+          email: action.payload,
+        },
+      };
     /* 비밀번호 상태 업데이트 */
     case "UPDATE_PASSWORD":
       return {
@@ -100,7 +110,9 @@ function formReducer(state: TFormState, action: TFormAction) {
         },
         errorMessages: {
           ...state.errorMessages,
-          password: isValid ? null : "비밀번호 양식을 확인해주세요",
+          password: isValid
+            ? null
+            : "8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.",
         },
       };
     }
@@ -213,6 +225,43 @@ export default function SignUpForm() {
     dispatch({ type: "VALIDATE_BIRTH" });
   };
 
+  /* 이메일 중복 확인 요청 (fetch) */
+  const checkEmailDuplication = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/users/email?email=${state.email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        if (response.status === 409) {
+          dispatch({
+            type: "EMAIL_DUPLICATION",
+            payload: "중복된 이메일입니다.",
+          });
+        } else {
+          throw new Error("이메일 중복확인 요청 중 에러");
+        }
+      }
+    } catch (error) {
+      console.error("알 수 없는 오류 발생");
+    }
+  };
+
+  const checkEmailDuplicationOnBlur = async () => {
+    // 이메일 유효성 검사
+    dispatch({ type: "VALIDATE_EMAIL" });
+
+    // 유효성 검사에 통과한 경우에만 중복 확인 요청
+    if (state.valids.email && state.email.trim()) {
+      await checkEmailDuplication();
+    }
+  };
+
   // const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   e.preventDefault();
   //   dispatch({ type: "VALIDATE_EMAIL" });
@@ -233,6 +282,7 @@ export default function SignUpForm() {
         errorMessage={state.errorMessages.email}
         invalid={!state.valids.email}
         onChange={handleEmailChange}
+        onBlur={checkEmailDuplicationOnBlur}
         value={state.email}
       />
       {/* 비밀번호 */}
@@ -240,7 +290,7 @@ export default function SignUpForm() {
         label="사용할 비밀번호를 입력해주세요"
         id="password"
         type="password"
-        placeholder="8~16 글자의 영문, 숫자, 특수문자 조합"
+        placeholder="8~16자의 영문 대/소문자, 숫자, 특수문자"
         errorMessage={state.errorMessages.password}
         invalid={!state.valids.password}
         onChange={handlePassWordChange}
