@@ -3,23 +3,27 @@
 import React from "react";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
+import signUp from "../_lib/signup";
+import checkEmailDuplication from "../_lib/checkEmailDuplication";
 import { useReducer } from "react";
+
+type TFormInput =
+  | "email"
+  | "password"
+  | "confirmPassword"
+  | "name"
+  | "phone"
+  | "birth";
 
 type TFormState = {
   email: string;
   password: string;
+  confirmPassword: string;
   name: string;
   phone: string;
   birth: string;
-  confirmPassword: string;
-  valids: Record<
-    "email" | "password" | "confirmPassword" | "name" | "phone" | "birth",
-    boolean
-  >;
-  errorMessages: Record<
-    "email" | "password" | "confirmPassword" | "name" | "phone" | "birth",
-    string | null
-  >;
+  valids: Record<TFormInput, boolean>;
+  errorMessages: Record<TFormInput, string | null>;
 };
 
 type TFormAction =
@@ -267,40 +271,20 @@ export default function SignUpForm() {
     dispatch({ type: "VALIDATE_BIRTH" });
   };
 
-  /* 이메일 중복 확인 요청 (fetch) */
-  const checkEmailDuplication = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/users/email?email=${state.email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
-        if (response.status === 409) {
-          dispatch({
-            type: "EMAIL_DUPLICATION",
-            payload: "중복된 이메일입니다.",
-          });
-        } else {
-          throw new Error("이메일 중복확인 요청 중 에러");
-        }
-      }
-    } catch (error) {
-      console.error("알 수 없는 오류 발생");
-    }
-  };
-
+  /* 이메일 포커스 잃었을 때 함수 */
   const checkEmailDuplicationOnBlur = async () => {
-    // 이메일 유효성 검사
+    // 1. 이메일 유효성 검사
     dispatch({ type: "VALIDATE_EMAIL" });
-
-    // 유효성 검사에 통과한 경우에만 중복 확인 요청
+    // 2. 유효성 검사에 통과한 경우에만 이메일 중복 확인 요청
     if (state.valids.email && state.email.trim()) {
-      await checkEmailDuplication();
+      const isDuplicated = await checkEmailDuplication(state.email);
+      console.log(isDuplicated);
+      if (!isDuplicated) {
+        dispatch({
+          type: "EMAIL_DUPLICATION",
+          payload: "중복된 이메일입니다.",
+        });
+      }
     }
   };
 
