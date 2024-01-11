@@ -9,31 +9,37 @@ type TFormState = {
   email: string;
   password: string;
   name: string;
-  valids: Record<"email" | "password" | "name", boolean>;
-  errorMessages: Record<"email" | "password" | "name", string | null>;
+  birth: string;
+  valids: Record<"email" | "password" | "name" | "birth", boolean>;
+  errorMessages: Record<"email" | "password" | "name" | "birth", string | null>;
 };
 
 type TFormAction =
   | { type: "UPDATE_EMAIL"; payload: string }
   | { type: "UPDATE_PASSWORD"; payload: string }
   | { type: "UPDATE_NAME"; payload: string }
+  | { type: "UPDATE_BIRTH"; payload: string }
   | { type: "VALIDATE_EMAIL" }
   | { type: "VALIDATE_PASSWORD" }
-  | { type: "VALIDATE_NAME" };
+  | { type: "VALIDATE_NAME" }
+  | { type: "VALIDATE_BIRTH" };
 
 const initialFormState: TFormState = {
   email: "",
   password: "",
   name: "",
+  birth: "",
   valids: {
     email: true,
     password: true,
     name: true,
+    birth: true,
   },
   errorMessages: {
     email: null,
     password: null,
     name: null,
+    birth: null,
   },
 };
 
@@ -113,6 +119,34 @@ function formReducer(state: TFormState, action: TFormAction) {
         },
       };
     }
+    /* 생년월일 상태 업데이트 */
+    case "UPDATE_BIRTH":
+      return {
+        ...state,
+        birth: action.payload,
+      };
+
+    /* 생년월일 유효성 검사 */
+    case "VALIDATE_BIRTH": {
+      const birth = state.birth.trim();
+      const isValidLength = birth.length <= 8;
+      const isValidComplexity =
+        /^\d{4}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/.test(birth) &&
+        parseInt(birth.substring(0, 4)) >= 1900 &&
+        parseInt(birth.substring(0, 4)) <= 2024;
+      const isValid = birth === "" || (isValidLength && isValidComplexity);
+      return {
+        ...state,
+        valids: {
+          ...state.valids,
+          birth: isValid,
+        },
+        errorMessages: {
+          ...state.errorMessages,
+          birth: isValid ? null : "올바른 생년월일을 입력해주세요",
+        },
+      };
+    }
 
     default:
       return state;
@@ -137,6 +171,11 @@ export default function SignUpForm() {
     dispatch({ type: "VALIDATE_NAME" });
   };
 
+  const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "UPDATE_BIRTH", payload: e.target.value });
+    dispatch({ type: "VALIDATE_BIRTH" });
+  };
+
   // const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   e.preventDefault();
   //   dispatch({ type: "VALIDATE_EMAIL" });
@@ -154,8 +193,8 @@ export default function SignUpForm() {
         id="email"
         type="email"
         placeholder="example@onyx.co.kr"
-        errorMessage={state.errorMessages.email} // 오류 메시지 텍스트
-        invalid={!state.valids.email} // 이메일 유효성 검사 결과에 따른 값
+        errorMessage={state.errorMessages.email}
+        invalid={!state.valids.email}
         onChange={handleEmailChange}
         value={state.email}
       />
@@ -165,8 +204,8 @@ export default function SignUpForm() {
         id="password"
         type="password"
         placeholder="8~16 글자의 영문, 숫자, 특수문자 조합"
-        errorMessage={state.errorMessages.password} // 오류 메시지 텍스트
-        invalid={!state.valids.password} // 비밀번호 유효성 검사 결과에 따른 값
+        errorMessage={state.errorMessages.password}
+        invalid={!state.valids.password}
         onChange={handlePassWordChange}
         value={state.password}
       />
@@ -176,10 +215,21 @@ export default function SignUpForm() {
         id="name"
         type="text"
         placeholder="예) 현지수"
-        errorMessage={state.errorMessages.name} // 오류 메시지 텍스트
-        invalid={!state.valids.name} // 비밀번호 유효성 검사 결과에 따른 값
+        errorMessage={state.errorMessages.name}
+        invalid={!state.valids.name}
         onChange={handleNameChange}
         value={state.name}
+      />
+      {/* 생년월일 */}
+      <InputField
+        label="생년월일을 입력해주세요"
+        id="birth"
+        type="text"
+        placeholder="예) 19990707"
+        errorMessage={state.errorMessages.birth}
+        invalid={!state.valids.birth}
+        onChange={handleBirthChange}
+        value={state.birth}
       />
       {/* 회원가입 완료 버튼 */}
       <Button
