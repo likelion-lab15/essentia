@@ -9,36 +9,45 @@ type TFormState = {
   email: string;
   password: string;
   name: string;
+  phone: string;
   birth: string;
-  valids: Record<"email" | "password" | "name" | "birth", boolean>;
-  errorMessages: Record<"email" | "password" | "name" | "birth", string | null>;
+  valids: Record<"email" | "password" | "name" | "phone" | "birth", boolean>;
+  errorMessages: Record<
+    "email" | "password" | "name" | "phone" | "birth",
+    string | null
+  >;
 };
 
 type TFormAction =
   | { type: "UPDATE_EMAIL"; payload: string }
   | { type: "UPDATE_PASSWORD"; payload: string }
   | { type: "UPDATE_NAME"; payload: string }
+  | { type: "UPDATE_PHONE"; payload: string }
   | { type: "UPDATE_BIRTH"; payload: string }
   | { type: "VALIDATE_EMAIL" }
   | { type: "VALIDATE_PASSWORD" }
   | { type: "VALIDATE_NAME" }
+  | { type: "VALIDATE_PHONE" }
   | { type: "VALIDATE_BIRTH" };
 
 const initialFormState: TFormState = {
   email: "",
   password: "",
   name: "",
+  phone: "",
   birth: "",
   valids: {
     email: true,
     password: true,
     name: true,
+    phone: true,
     birth: true,
   },
   errorMessages: {
     email: null,
     password: null,
     name: null,
+    phone: null,
     birth: null,
   },
 };
@@ -119,6 +128,29 @@ function formReducer(state: TFormState, action: TFormAction) {
         },
       };
     }
+    /* 휴대폰 번호 상태 업데이트 */
+    case "UPDATE_PHONE":
+      return {
+        ...state,
+        phone: action.payload,
+      };
+
+    /* 휴대폰 번호 유효성 검사 */
+    case "VALIDATE_PHONE": {
+      const phone = state.phone.trim();
+      const isValid = phone === "" || /^010\d{8}$/.test(phone);
+      return {
+        ...state,
+        valids: {
+          ...state.valids,
+          phone: isValid,
+        },
+        errorMessages: {
+          ...state.errorMessages,
+          phone: isValid ? null : "올바른 휴대폰 번호를 입력해주세요",
+        },
+      };
+    }
     /* 생년월일 상태 업데이트 */
     case "UPDATE_BIRTH":
       return {
@@ -171,6 +203,11 @@ export default function SignUpForm() {
     dispatch({ type: "VALIDATE_NAME" });
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "UPDATE_PHONE", payload: e.target.value });
+    dispatch({ type: "VALIDATE_PHONE" });
+  };
+
   const handleBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "UPDATE_BIRTH", payload: e.target.value });
     dispatch({ type: "VALIDATE_BIRTH" });
@@ -219,6 +256,17 @@ export default function SignUpForm() {
         invalid={!state.valids.name}
         onChange={handleNameChange}
         value={state.name}
+      />
+      {/* 휴대폰 번호 */}
+      <InputField
+        label="휴대폰 번호를 입력해주세요"
+        id="phone"
+        type="tel"
+        placeholder="휴대폰 번호('-' 제외)"
+        errorMessage={state.errorMessages.phone}
+        invalid={!state.valids.phone}
+        onChange={handlePhoneChange}
+        value={state.phone}
       />
       {/* 생년월일 */}
       <InputField
