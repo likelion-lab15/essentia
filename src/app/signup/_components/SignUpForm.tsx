@@ -2,8 +2,8 @@
 
 import React from "react";
 import Button from "@/components/Button";
-import { useReducer } from "react";
 import InputField from "@/components/InputField";
+import { useReducer } from "react";
 
 type TFormState = {
   email: string;
@@ -11,9 +11,13 @@ type TFormState = {
   name: string;
   phone: string;
   birth: string;
-  valids: Record<"email" | "password" | "name" | "phone" | "birth", boolean>;
+  confirmPassword: string;
+  valids: Record<
+    "email" | "password" | "confirmPassword" | "name" | "phone" | "birth",
+    boolean
+  >;
   errorMessages: Record<
-    "email" | "password" | "name" | "phone" | "birth",
+    "email" | "password" | "confirmPassword" | "name" | "phone" | "birth",
     string | null
   >;
 };
@@ -21,11 +25,13 @@ type TFormState = {
 type TFormAction =
   | { type: "UPDATE_EMAIL"; payload: string }
   | { type: "UPDATE_PASSWORD"; payload: string }
+  | { type: "UPDATE_CONFIRM_PASSWORD"; payload: string }
   | { type: "UPDATE_NAME"; payload: string }
   | { type: "UPDATE_PHONE"; payload: string }
   | { type: "UPDATE_BIRTH"; payload: string }
   | { type: "VALIDATE_EMAIL" }
   | { type: "VALIDATE_PASSWORD" }
+  | { type: "VALIDATE_CONFIRM_PASSWORD" }
   | { type: "VALIDATE_NAME" }
   | { type: "VALIDATE_PHONE" }
   | { type: "VALIDATE_BIRTH" }
@@ -34,12 +40,14 @@ type TFormAction =
 const initialFormState: TFormState = {
   email: "",
   password: "",
+  confirmPassword: "",
   name: "",
   phone: "",
   birth: "",
   valids: {
     email: true,
     password: true,
+    confirmPassword: true,
     name: true,
     phone: true,
     birth: true,
@@ -47,6 +55,7 @@ const initialFormState: TFormState = {
   errorMessages: {
     email: null,
     password: null,
+    confirmPassword: null,
     name: null,
     phone: null,
     birth: null,
@@ -113,6 +122,31 @@ function formReducer(state: TFormState, action: TFormAction) {
           password: isValid
             ? null
             : "8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.",
+        },
+      };
+    }
+    /* 비밀번호 확인 상태 업데이트 */
+    case "UPDATE_CONFIRM_PASSWORD":
+      return {
+        ...state,
+        confirmPassword: action.payload,
+      };
+    /* 비밀번호 확인 유효성 검사 */
+    case "VALIDATE_CONFIRM_PASSWORD": {
+      const isFieldEmpty = state.confirmPassword.trim() === "";
+      const isPasswordMatch = state.confirmPassword === state.password;
+      const isValid = isFieldEmpty || isPasswordMatch;
+
+      return {
+        ...state,
+        valids: {
+          ...state.valids,
+          confirmPassword: isValid,
+        },
+        errorMessages: {
+          ...state.errorMessages,
+          confirmPassword:
+            isValid || isFieldEmpty ? null : "비밀번호가 일치하지 않습니다.",
         },
       };
     }
@@ -208,6 +242,14 @@ export default function SignUpForm() {
   const handlePassWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "UPDATE_PASSWORD", payload: e.target.value });
     dispatch({ type: "VALIDATE_PASSWORD" });
+    dispatch({ type: "VALIDATE_CONFIRM_PASSWORD" });
+  };
+
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch({ type: "UPDATE_CONFIRM_PASSWORD", payload: e.target.value });
+    dispatch({ type: "VALIDATE_CONFIRM_PASSWORD" });
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -296,6 +338,17 @@ export default function SignUpForm() {
         onChange={handlePassWordChange}
         value={state.password}
       />
+      {/* 비밀번호 확인 */}
+      <InputField
+        label="비밀번호 확인"
+        id="confirmPassword"
+        type="password"
+        placeholder="비밀번호 재입력"
+        errorMessage={state.errorMessages.confirmPassword}
+        invalid={!state.valids.confirmPassword}
+        onChange={handleConfirmPasswordChange}
+        value={state.confirmPassword}
+      />
       {/* 이름 */}
       <InputField
         label="이름을 입력해주세요"
@@ -328,6 +381,26 @@ export default function SignUpForm() {
         invalid={!state.valids.birth}
         onChange={handleBirthChange}
         value={state.birth}
+      />
+      {/* 도로명 주소 */}
+      <InputField
+        label="주소를 입력해주세요"
+        id="address"
+        type="text"
+        placeholder="도로명 주소 검색하기를 통해 입력해주세요"
+      />
+      <Button
+        className="mb-[30px] h-[38px]"
+        label="도로명 주소 검색하기"
+        type="button"
+        onClick={() => console.log("도로명 주소 검색하기")}
+      ></Button>
+      {/* 상세 주소 */}
+      <InputField
+        label="상세 주소를 입력해주세요"
+        id="detailAddress"
+        type="text"
+        placeholder="상세 주소를 입력해주세요"
       />
       {/* 회원가입 완료 버튼 */}
       <Button
