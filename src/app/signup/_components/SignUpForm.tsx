@@ -3,7 +3,7 @@
 import React from "react";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
-import signUp from "../_lib/signup";
+// import signUp from "../_lib/signup";
 import checkEmailDuplication from "../_lib/checkEmailDuplication";
 import { useReducer } from "react";
 
@@ -13,7 +13,9 @@ type TFormInput =
   | "confirmPassword"
   | "name"
   | "phone"
-  | "birth";
+  | "birth"
+  | "address"
+  | "addressDetail";
 
 type TFormState = {
   email: string;
@@ -22,6 +24,8 @@ type TFormState = {
   name: string;
   phone: string;
   birth: string;
+  address?: string;
+  addressDetail?: string;
   valids: Record<TFormInput, boolean>;
   errorMessages: Record<TFormInput, string | null>;
 };
@@ -33,6 +37,8 @@ type TFormAction =
   | { type: "UPDATE_NAME"; payload: string }
   | { type: "UPDATE_PHONE"; payload: string }
   | { type: "UPDATE_BIRTH"; payload: string }
+  | { type: "UPDATE_ADDRESS"; payload: string }
+  | { type: "UPDATE_ADDRESS_DETAIL"; payload: string }
   | { type: "VALIDATE_EMAIL" }
   | { type: "VALIDATE_PASSWORD" }
   | { type: "VALIDATE_CONFIRM_PASSWORD" }
@@ -48,6 +54,8 @@ const initialFormState: TFormState = {
   name: "",
   phone: "",
   birth: "",
+  address: "",
+  addressDetail: "",
   valids: {
     email: true,
     password: true,
@@ -55,6 +63,8 @@ const initialFormState: TFormState = {
     name: true,
     phone: true,
     birth: true,
+    address: true,
+    addressDetail: true,
   },
   errorMessages: {
     email: null,
@@ -63,6 +73,8 @@ const initialFormState: TFormState = {
     name: null,
     phone: null,
     birth: null,
+    address: null,
+    addressDetail: null,
   },
 };
 
@@ -230,6 +242,20 @@ function formReducer(state: TFormState, action: TFormAction) {
       };
     }
 
+    /* 도로명 주소 상태 업데이트 */
+    case "UPDATE_ADDRESS":
+      return {
+        ...state,
+        address: action.payload,
+      };
+
+    /* 상세 주소 상태 업데이트 */
+    case "UPDATE_ADDRESS_DETAIL":
+      return {
+        ...state,
+        addressDetail: action.payload,
+      };
+
     default:
       return state;
   }
@@ -271,6 +297,16 @@ export default function SignUpForm() {
     dispatch({ type: "VALIDATE_BIRTH" });
   };
 
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "UPDATE_ADDRESS", payload: e.target.value });
+  };
+
+  const handleAddressDetailChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch({ type: "UPDATE_ADDRESS_DETAIL", payload: e.target.value });
+  };
+
   /* 이메일 포커스 잃었을 때 함수 */
   const checkEmailDuplicationOnBlur = async () => {
     // 1. 이메일 유효성 검사
@@ -288,17 +324,63 @@ export default function SignUpForm() {
     }
   };
 
-  // const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   e.preventDefault();
-  //   dispatch({ type: "VALIDATE_EMAIL" });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  //   if (state.isValid) {
-  //     console.log("Email is valid:", state.email);
-  //   }
-  // };
+    const { email, password, name, phone, birth, address, addressDetail } =
+      state;
+
+    const type = "seller";
+    const data = {
+      email,
+      password,
+      name,
+      address,
+      type,
+      phone,
+      extra: {
+        birthday: birth,
+        membershipClass: "MC01",
+        addressBook: {
+          value: address,
+          detail: addressDetail,
+        },
+      },
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}users`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        alert("회원가입이 정상적으로 처리되었습니다");
+        console.log("회원가입이 정상적으로 처리되었습니다.", responseData);
+      } else if (response.status === 409) {
+        alert("이미 가입된 이메일입니다.");
+        dispatch({
+          type: "EMAIL_DUPLICATION",
+          payload: "중복된 이메일입니다.",
+        });
+      } else {
+        alert("회원가입에 실패하였습니다.");
+      }
+    } catch (error) {
+      console.error("이메일 중복 확인 요청 중 오류가 발생했습니다.:", error);
+      throw error;
+    }
+  };
 
   return (
-    <form onSubmit={() => {}} className="flex w-[400px] flex-col">
+    <form onSubmit={handleSubmit} className="flex w-[400px] flex-col">
       {/* 이메일 주소 */}
       <InputField
         label="로그인에 사용할 이메일 주소를 입력해주세요"
@@ -372,6 +454,10 @@ export default function SignUpForm() {
         id="address"
         type="text"
         placeholder="도로명 주소 검색하기를 통해 입력해주세요"
+        errorMessage={state.errorMessages.address}
+        invalid={!state.valids.address}
+        onChange={handleAddressChange}
+        value={state.address}
       />
       <Button
         className="mb-[30px] h-[38px]"
@@ -382,9 +468,13 @@ export default function SignUpForm() {
       {/* 상세 주소 */}
       <InputField
         label="상세 주소를 입력해주세요"
-        id="detailAddress"
+        id="addressDetail"
         type="text"
         placeholder="상세 주소를 입력해주세요"
+        errorMessage={state.errorMessages.addressDetail}
+        invalid={!state.valids.addressDetail}
+        onChange={handleAddressDetailChange}
+        value={state.addressDetail}
       />
       {/* 회원가입 완료 버튼 */}
       <Button
