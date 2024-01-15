@@ -330,6 +330,58 @@ export default function SignUpForm() {
     const { email, password, name, phone, birth, address, addressDetail } =
       state;
 
+    const {
+      valids: {
+        email: validEmail,
+        password: validPassword,
+        confirmPassword: validConfirmPassword,
+        name: validName,
+        phone: validPhone,
+        birth: validBirth,
+        address: validAddress,
+        addressDetail: validAddressDetail,
+      },
+    } = state;
+
+    /* 공백일 때 포커스 */
+    const firstInvalidInput = Object.keys(state.valids).find((key) => {
+      const value = state[key as TFormInput];
+      return value === null || value === undefined || value === "";
+    });
+
+    if (firstInvalidInput) {
+      const inputRef = document.getElementById(firstInvalidInput);
+      if (inputRef) {
+        inputRef.focus();
+      }
+      return;
+    }
+
+    /* 유효성 검사에 통과하지 못했을 때 포커스 */
+    const isValidForm =
+      validEmail &&
+      validPassword &&
+      validConfirmPassword &&
+      validName &&
+      validPhone &&
+      validBirth &&
+      validAddress &&
+      validAddressDetail;
+
+    if (!isValidForm) {
+      // 첫 번째 유효하지 않은 Input 필드를 찾아 포커스
+      const firstInvalidInput = Object.keys(state.valids).find(
+        (key) => !state.valids[key as TFormInput]
+      );
+      if (firstInvalidInput) {
+        const inputRef = document.getElementById(firstInvalidInput);
+        if (inputRef) {
+          inputRef.focus();
+        }
+      }
+      return;
+    }
+
     const type = "seller";
     const data = {
       email,
