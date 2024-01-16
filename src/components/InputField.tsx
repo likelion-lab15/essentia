@@ -6,10 +6,10 @@ type TInputField = {
   id: string;
   type: string;
   placeholder?: string;
-  showError?: boolean;
-  errorMessage?: string;
+  errorMessage?: string | null;
   invalid?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   srOnly?: boolean;
 };
@@ -19,10 +19,10 @@ export default function InputField({
   id,
   type,
   placeholder,
-  showError,
   errorMessage,
   invalid,
   onChange,
+  onBlur,
   value,
   srOnly,
 }: TInputField) {
@@ -35,16 +35,19 @@ export default function InputField({
         {label}
       </label>
       <input
-        className="h-[38px] w-full border-b border-primary"
+        className={`h-[38px] w-full border-b border-primary ${
+          invalid ? "border-warning" : ""
+        }`}
         id={id}
         type={type}
         placeholder={placeholder}
         aria-errormessage={id + "Error"}
-        aria-invalid={invalid}
+        aria-invalid={invalid ? "true" : "false"}
         onChange={onChange}
+        onBlur={onBlur}
         value={value}
       />
-      {showError && (
+      {errorMessage !== null && (
         <div
           id={id + "Error"}
           aria-live="polite"
