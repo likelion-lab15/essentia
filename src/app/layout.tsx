@@ -14,6 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <Header />
         {children}
+        <div id="portal"></div>
         <Footer />
       </body>
     </html>
