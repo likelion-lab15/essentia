@@ -71,7 +71,7 @@ export default function Header() {
   return (
     <header
       role="banner"
-      className="sticky top-0 z-[99] h-[80px] border-b border-primary bg-white"
+      className="sticky top-0 z-[30] h-[80px] border-b border-primary bg-white"
     >
       <nav
         aria-label="메인 네비게이션"
