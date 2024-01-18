@@ -9,9 +9,10 @@ type TInputField = {
   errorMessage?: string | null;
   invalid?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onAddressChange?: (selectedAddress: string) => void;
   onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
-  srOnly?: boolean;
+  readOnly?: boolean;
 };
 
 export default function InputField({
@@ -24,7 +25,7 @@ export default function InputField({
   onChange,
   onBlur,
   value,
-  srOnly,
+  readOnly,
 }: TInputField) {
   return (
     <div className="flex h-[106px] w-[400px] flex-col text-14">
@@ -46,6 +47,7 @@ export default function InputField({
         onChange={onChange}
         onBlur={onBlur}
         value={value}
+        readOnly={readOnly}
       />
       {errorMessage !== null && (
         <div
