@@ -1,10 +1,21 @@
-/* eslint-disable no-unused-vars */
 "use client";
 
 import DaumPostcode from "react-daum-postcode";
 
-export default function AddressModal({ selectedAddress }) {
-  const handleComplete = (data) => {
+type TAddressModal = {
+  // eslint-disable-next-line no-unused-vars
+  selectedAddress: (address: string) => void;
+};
+
+type TAddressData = {
+  address: string;
+  addressType: string;
+  bname: string;
+  buildingName: string;
+};
+
+export default function AddressModal({ selectedAddress }: TAddressModal) {
+  const handleComplete = (data: TAddressData) => {
     let fullAddress = data.address;
     let extraAddress = "";
 
@@ -18,7 +29,7 @@ export default function AddressModal({ selectedAddress }) {
       }
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
-    selectedAddress(fullAddress);
+    selectedAddress(fullAddress); // fullAddress => 서울시 양천구 오목로 10길 7-9
   };
   const customStyle = {
     width: "500px",
