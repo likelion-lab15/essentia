@@ -3,37 +3,26 @@
 
 import DaumPostcode from "react-daum-postcode";
 
-interface AddressModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelectAddress: (data: any) => void;
-}
+export default function AddressModal({ selectedAddress }) {
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
 
-export default function AddressModal({
-  isOpen,
-  onClose,
-  onSelectAddress,
-}: AddressModalProps) {
-  return (
-    <div
-      className={`fixed inset-0 z-50 ${
-        isOpen ? "flex" : "hidden"
-      } items-center justify-center bg-black bg-opacity-50`}
-    >
-      <div className="w-full max-w-lg rounded-lg bg-white p-4 shadow-lg">
-        <button
-          onClick={onClose}
-          className="absolute right-2 top-2 rounded bg-transparent p-2 text-black hover:bg-gray-200"
-        >
-          Close
-        </button>
-        <DaumPostcode
-          onComplete={(data) => {
-            onSelectAddress(data);
-            onClose();
-          }}
-        />
-      </div>
-    </div>
-  );
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+    selectedAddress(fullAddress);
+  };
+  const customStyle = {
+    width: "500px",
+    height: "600px",
+  };
+  return <DaumPostcode onComplete={handleComplete} style={customStyle} />;
 }

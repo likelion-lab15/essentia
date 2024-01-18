@@ -6,7 +6,9 @@ import InputField from "@/components/InputField";
 import checkEmailDuplication from "../_lib/checkEmailDuplication";
 import formReducer from "@/hooks/useFormRuducer";
 import { useReducer } from "react";
-import { TFormState, TFormInput } from "../../../../types/formType";
+import { TFormState, TFormInput } from "@/../types/formType";
+import { AddressModal } from "@/components/_index";
+import useModal from "@/hooks/useModal";
 
 const initialFormState: TFormState = {
   email: "",
@@ -40,6 +42,7 @@ const initialFormState: TFormState = {
 };
 
 export default function SignUpForm() {
+  const { openModal, closeModal, ModalPortal } = useModal();
   const [state, dispatch] = useReducer(formReducer, initialFormState);
 
   /* 각 Input 함수 */
@@ -76,8 +79,9 @@ export default function SignUpForm() {
     dispatch({ type: "VALIDATE_BIRTH" });
   };
 
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "UPDATE_ADDRESS", payload: e.target.value });
+  const handleAddressChange = (selectedAddress: string) => {
+    dispatch({ type: "UPDATE_ADDRESS", payload: selectedAddress });
+    closeModal();
   };
 
   const handleAddressDetailChange = (
@@ -212,108 +216,114 @@ export default function SignUpForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-[400px] flex-col">
-      {/* 이메일 주소 */}
-      <InputField
-        label="로그인에 사용할 이메일 주소를 입력해주세요"
-        id="email"
-        type="email"
-        placeholder="example@onyx.co.kr"
-        errorMessage={state.errorMessages.email}
-        invalid={!state.valids.email}
-        onChange={handleEmailChange}
-        onBlur={checkEmailDuplicationOnBlur}
-        value={state.email}
-      />
-      {/* 비밀번호 */}
-      <InputField
-        label="사용할 비밀번호를 입력해주세요"
-        id="password"
-        type="password"
-        placeholder="8~16자의 영문 대/소문자, 숫자, 특수문자"
-        errorMessage={state.errorMessages.password}
-        invalid={!state.valids.password}
-        onChange={handlePassWordChange}
-        value={state.password}
-      />
-      {/* 비밀번호 확인 */}
-      <InputField
-        label="비밀번호 확인"
-        id="confirmPassword"
-        type="password"
-        placeholder="비밀번호 재입력"
-        errorMessage={state.errorMessages.confirmPassword}
-        invalid={!state.valids.confirmPassword}
-        onChange={handleConfirmPasswordChange}
-        value={state.confirmPassword}
-      />
-      {/* 이름 */}
-      <InputField
-        label="이름을 입력해주세요"
-        id="name"
-        type="text"
-        placeholder="예) 현지수"
-        errorMessage={state.errorMessages.name}
-        invalid={!state.valids.name}
-        onChange={handleNameChange}
-        value={state.name}
-      />
-      {/* 휴대폰 번호 */}
-      <InputField
-        label="휴대폰 번호를 입력해주세요"
-        id="phone"
-        type="tel"
-        placeholder="휴대폰 번호('-' 제외)"
-        errorMessage={state.errorMessages.phone}
-        invalid={!state.valids.phone}
-        onChange={handlePhoneChange}
-        value={state.phone}
-      />
-      {/* 생년월일 */}
-      <InputField
-        label="생년월일을 입력해주세요"
-        id="birth"
-        type="text"
-        placeholder="예) 19990707"
-        errorMessage={state.errorMessages.birth}
-        invalid={!state.valids.birth}
-        onChange={handleBirthChange}
-        value={state.birth}
-      />
-      {/* 도로명 주소 */}
-      <InputField
-        label="주소를 입력해주세요"
-        id="address"
-        type="text"
-        placeholder="도로명 주소 검색하기를 통해 입력해주세요"
-        errorMessage={state.errorMessages.address}
-        invalid={!state.valids.address}
-        onChange={handleAddressChange}
-        value={state.address}
-      />
-      <Button
-        className="mb-[30px] h-[38px]"
-        label="도로명 주소 검색하기"
-        type="button"
-        onClick={() => console.log("도로명 주소 검색하기")}
-      ></Button>
-      {/* 상세 주소 */}
-      <InputField
-        label="상세 주소를 입력해주세요"
-        id="addressDetail"
-        type="text"
-        placeholder="상세 주소를 입력해주세요"
-        errorMessage={state.errorMessages.addressDetail}
-        invalid={!state.valids.addressDetail}
-        onChange={handleAddressDetailChange}
-        value={state.addressDetail}
-      />
-      {/* 회원가입 완료 버튼 */}
-      <Button
-        className="mt-[50px]"
-        label="회원가입 완료"
-        type="submit"
-      ></Button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit} className="flex w-[400px] flex-col">
+        {/* 이메일 주소 */}
+        <InputField
+          label="로그인에 사용할 이메일 주소를 입력해주세요"
+          id="email"
+          type="email"
+          placeholder="example@onyx.co.kr"
+          errorMessage={state.errorMessages.email}
+          invalid={!state.valids.email}
+          onChange={handleEmailChange}
+          onBlur={checkEmailDuplicationOnBlur}
+          value={state.email}
+        />
+        {/* 비밀번호 */}
+        <InputField
+          label="사용할 비밀번호를 입력해주세요"
+          id="password"
+          type="password"
+          placeholder="8~16자의 영문 대/소문자, 숫자, 특수문자"
+          errorMessage={state.errorMessages.password}
+          invalid={!state.valids.password}
+          onChange={handlePassWordChange}
+          value={state.password}
+        />
+        {/* 비밀번호 확인 */}
+        <InputField
+          label="비밀번호 확인"
+          id="confirmPassword"
+          type="password"
+          placeholder="비밀번호 재입력"
+          errorMessage={state.errorMessages.confirmPassword}
+          invalid={!state.valids.confirmPassword}
+          onChange={handleConfirmPasswordChange}
+          value={state.confirmPassword}
+        />
+        {/* 이름 */}
+        <InputField
+          label="이름을 입력해주세요"
+          id="name"
+          type="text"
+          placeholder="예) 현지수"
+          errorMessage={state.errorMessages.name}
+          invalid={!state.valids.name}
+          onChange={handleNameChange}
+          value={state.name}
+        />
+        {/* 휴대폰 번호 */}
+        <InputField
+          label="휴대폰 번호를 입력해주세요"
+          id="phone"
+          type="tel"
+          placeholder="휴대폰 번호('-' 제외)"
+          errorMessage={state.errorMessages.phone}
+          invalid={!state.valids.phone}
+          onChange={handlePhoneChange}
+          value={state.phone}
+        />
+        {/* 생년월일 */}
+        <InputField
+          label="생년월일을 입력해주세요"
+          id="birth"
+          type="text"
+          placeholder="예) 19990707"
+          errorMessage={state.errorMessages.birth}
+          invalid={!state.valids.birth}
+          onChange={handleBirthChange}
+          value={state.birth}
+        />
+        {/* 도로명 주소 */}
+        <InputField
+          label="주소를 입력해주세요"
+          id="address"
+          type="text"
+          placeholder="도로명 주소 검색하기를 통해 입력해주세요"
+          errorMessage={state.errorMessages.address}
+          invalid={!state.valids.address}
+          onAddressChange={handleAddressChange}
+          value={state.address}
+          readOnly
+        />
+        <Button
+          className="mb-[30px] h-[38px]"
+          label="도로명 주소 검색하기"
+          type="button"
+          onClick={openModal}
+        ></Button>
+        {/* 상세 주소 */}
+        <InputField
+          label="상세 주소를 입력해주세요"
+          id="addressDetail"
+          type="text"
+          placeholder="상세 주소를 입력해주세요"
+          errorMessage={state.errorMessages.addressDetail}
+          invalid={!state.valids.addressDetail}
+          onChange={handleAddressDetailChange}
+          value={state.addressDetail}
+        />
+        {/* 회원가입 완료 버튼 */}
+        <Button
+          className="mt-[50px]"
+          label="회원가입 완료"
+          type="submit"
+        ></Button>
+      </form>
+      <ModalPortal>
+        <AddressModal selectedAddress={handleAddressChange} />
+      </ModalPortal>
+    </>
   );
 }
