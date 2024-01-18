@@ -1,14 +1,13 @@
 "use client";
 
 import React from "react";
-import Button from "@/components/Button";
-import InputField from "@/components/InputField";
-import checkEmailDuplication from "../_lib/checkEmailDuplication";
-import formReducer from "@/hooks/useFormRuducer";
 import { useReducer } from "react";
 import { TFormState, TFormInput } from "@/../types/formType";
 import { AddressModal } from "@/components/_index";
-import useModal from "@/hooks/useModal";
+import { useModal, useFormReducer } from "@/hooks/_index";
+import Button from "@/components/Button";
+import InputField from "@/components/InputField";
+import checkEmailDuplication from "../_lib/checkEmailDuplication";
 
 const initialFormState: TFormState = {
   email: "",
@@ -43,7 +42,7 @@ const initialFormState: TFormState = {
 
 export default function SignUpForm() {
   const { openModal, closeModal, ModalPortal } = useModal();
-  const [state, dispatch] = useReducer(formReducer, initialFormState);
+  const [state, dispatch] = useReducer(useFormReducer, initialFormState);
 
   /* 각 Input 함수 */
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
