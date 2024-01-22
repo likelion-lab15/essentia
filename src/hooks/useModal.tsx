@@ -10,7 +10,7 @@ type TModalPortal = {
 
 export default function useModal() {
   /* 모달창 상태관리 */
-  let [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(false);
 
   // 모달창 여는 함수
   const openModal = () => {
