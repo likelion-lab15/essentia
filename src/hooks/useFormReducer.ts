@@ -1,6 +1,6 @@
 import { TFormState, TFormAction } from "../../types/formType";
 
-export default function formReducer(state: TFormState, action: TFormAction) {
+export default function useFormReducer(state: TFormState, action: TFormAction) {
   switch (action.type) {
     /* 이메일 상태 업데이트 */
     case "UPDATE_EMAIL":
