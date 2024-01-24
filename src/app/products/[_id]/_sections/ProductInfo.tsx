@@ -1,7 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-// import { useProductStore } from "@/stores/useProductStore";
-// import { useUserStore } from "@/stores/useUserStore";
-// import ButtonBox from "./_components/ButtonBox";
 
 /* 데이터 fetching */
 async function getData(id: string) {
@@ -28,10 +25,6 @@ export default async function ProductInfo({ id }: { id: string }) {
     image: result.item.mainImages[0].path,
   };
 
-  console.log(productData);
-
-  // setProduct(productData); // Zustand 스토어에 상품 정보 저장
-
   return (
     <section className="flex h-[660px] w-[1280px] items-center justify-center ">
       {/* 상품 구매 + 판매 SECTION */}
@@ -54,7 +47,7 @@ export default async function ProductInfo({ id }: { id: string }) {
           <p className="text-30 font-medium">{productData.name}</p>
           <div className="flex-rowtext-16 mb-[34px] flex font-medium text-tertiary">
             {productData.amount &&
-              productData.amount.map((amount, index) => (
+              productData.amount.map((amount: string, index: number) => (
                 <p className=" pr-[10px]" key={index}>
                   {amount}ml
                 </p>
