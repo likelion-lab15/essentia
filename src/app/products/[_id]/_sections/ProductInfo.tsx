@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+import ButtonBox from "./_components/ButtonBox";
+
 /* 데이터 fetching */
 async function getData(id: string) {
   const res = await fetch(
@@ -14,8 +16,6 @@ async function getData(id: string) {
 
 export default async function ProductInfo({ id }: { id: string }) {
   const result = await getData(id);
-  console.log(result.item);
-
   const productData = {
     name: result.item.name,
     price: result.item.price,
@@ -62,6 +62,7 @@ export default async function ProductInfo({ id }: { id: string }) {
               {productData.price.toLocaleString()}원
             </p>
           </div>
+          <ButtonBox id={id} amount={productData.amount} />
         </div>
       </div>
     </section>
