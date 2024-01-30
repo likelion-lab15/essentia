@@ -5,18 +5,41 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-const userId = 12;
+// 세션스토리지에서 엑세스 토큰 불러오기
+const getToken = () => {
+  const tokenString = sessionStorage.getItem("token");
+  if (tokenString) {
+    const tokenData = JSON.parse(tokenString);
+    return tokenData.state.token
+      ? tokenData.state.token.accessToken
+      : "access Token을 찾을 찾을 수 없습니다";
+  }
+};
 
-const addWishList = async ({ id, userId }) => {
+// 세션스토리지에서 유저 토큰 불러오기
+const getUserToken = () => {
+  const userTokenString = sessionStorage.getItem("user");
+  if (userTokenString) {
+    const userTokenData = JSON.parse(userTokenString);
+    return userTokenData.state.user
+      ? userTokenData.state.user._id
+      : "userToken을 찾을 수 없습니다";
+  }
+};
+
+const addWishList = async (id: string) => {
+  const token = getToken();
+  const userId = getUserToken();
   try {
-    const res = await fetch(`bookmarks`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}bookmarks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        product_id: 10,
-        user_id: 12,
+        product_id: parseInt(id),
+        user_id: userId,
         memo: "test",
       }),
     });
@@ -120,7 +143,7 @@ export default function ButtonBox({
         className="h-[46px] w-[560px] border border-primary bg-white text-primary"
         label="위시 리스트에 추가하기"
         type="button"
-        onClick={() => addWishList(id, userId)}
+        onClick={() => addWishList(id)}
       ></Button>
     </>
   );
