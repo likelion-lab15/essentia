@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Card from "./Card";
 
@@ -26,18 +27,40 @@ export default function CardCarousel({ cardlist }) {
   return (
     <div className="relative flex">
       {/* 좌우버튼 */}
-      <div className="absolute bottom-[-100px] right-0">
+      <div className="absolute bottom-[-100px] right-0 flex">
         <button
           onClick={showPrevCard}
-          className="h-[48px] w-[48px] border-2 border-r border-black"
+          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-r border-black"
         >
-          좌
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 10.9996H7.83L13.42 5.40963L12 3.99963L4 11.9996L12 19.9996L13.41 18.5896L7.83 12.9996H20V10.9996Z"
+              fill="#222222"
+            />
+          </svg>
         </button>
         <button
           onClick={showNextCard}
-          className="h-[48px] w-[48px] border-2 border-l border-black"
+          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-l border-black"
         >
-          우
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 3.99963L10.59 5.40963L16.17 10.9996H4V12.9996H16.17L10.59 18.5896L12 19.9996L20 11.9996L12 3.99963Z"
+              fill="#222222"
+            />
+          </svg>
         </button>
       </div>
       {/* 캐러셀 */}
