@@ -1,45 +1,23 @@
 "use client";
 
 import Button from "@/components/Button";
+import userTokens from "@/app/tokens/userToken";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-// 세션스토리지에서 엑세스 토큰 불러오기
-const getToken = () => {
-  const tokenString = sessionStorage.getItem("token");
-  if (tokenString) {
-    const tokenData = JSON.parse(tokenString);
-    return tokenData.state.token
-      ? tokenData.state.token.accessToken
-      : "access Token을 찾을 찾을 수 없습니다";
-  }
-};
-
-// 세션스토리지에서 유저 토큰 불러오기
-const getUserToken = () => {
-  const userTokenString = sessionStorage.getItem("user");
-  if (userTokenString) {
-    const userTokenData = JSON.parse(userTokenString);
-    return userTokenData.state.user
-      ? userTokenData.state.user._id
-      : "userToken을 찾을 수 없습니다";
-  }
-};
-
 const addWishList = async (id: string) => {
-  const token = getToken();
-  const userId = getUserToken();
+  const { accessToken, userToken } = userTokens();
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}bookmarks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         product_id: parseInt(id),
-        user_id: userId,
+        user_id: userToken,
         memo: "test",
       }),
     });
@@ -48,6 +26,29 @@ const addWishList = async (id: string) => {
     }
   } catch (error) {
     console.error("위시리스트 추가 중 오류:", error);
+    throw error;
+  }
+};
+
+const checkWishList = async (id: string) => {
+  const { accessToken } = userTokens();
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/products/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log(res);
+    if (!res.ok) {
+      throw new Error("위시리스트 확인 통신 실패");
+    }
+  } catch (error) {
+    console.error("위시리스트 확인 중 오류:", error);
     throw error;
   }
 };
@@ -144,6 +145,12 @@ export default function ButtonBox({
         label="위시 리스트에 추가하기"
         type="button"
         onClick={() => addWishList(id)}
+      ></Button>
+      <Button
+        className="h-[46px] w-[560px] border border-primary bg-white text-primary"
+        label="위시 리스트 조회하기"
+        type="button"
+        onClick={() => checkWishList(id)}
       ></Button>
     </>
   );
