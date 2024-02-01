@@ -38,15 +38,15 @@ export default function CardCarousel({ cardlist }) {
       <div className="absolute bottom-[-100px] right-0 flex">
         <button
           onClick={showPrevCard}
-          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-r border-black"
+          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-r border-black hover:bg-secondary"
         >
-          <LeftArrowIcon></LeftArrowIcon>
+          <LeftArrowIcon />
         </button>
         <button
           onClick={showNextCard}
-          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-l border-black"
+          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-l border-black hover:bg-secondary"
         >
-          <RightArrowIcon></RightArrowIcon>
+          <RightArrowIcon />
         </button>
       </div>
       {/* 2. 카드 캐러셀 */}
