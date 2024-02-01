@@ -46,23 +46,25 @@ export default function CardCarousel({ cardlist }: { cardlist: TCardList }) {
       <div className="absolute bottom-[-100px] right-0 flex">
         <button
           onClick={showPrevCard}
-          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-r border-black hover:bg-secondary"
+          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-r border-black transition ease-in-out hover:bg-secondary"
         >
           <LeftArrowIcon />
         </button>
         <button
           onClick={showNextCard}
-          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-l border-black hover:bg-secondary"
+          className="flex h-[48px] w-[48px] items-center justify-center border-2 border-l border-black transition ease-in-out hover:bg-secondary"
         >
           <RightArrowIcon />
         </button>
       </div>
+
       {/* 2. 카드 캐러셀 */}
       <div className="relative flex overflow-hidden">
         {cardlist.map((card) => (
           <Card key={card._id} card={card} cardIndex={cardIndex} />
         ))}
       </div>
+
       {/* 3. 불릿 */}
       <div className="absolute bottom-[-100px] left-0 flex h-[48px] items-center justify-center gap-[8px] border-2 border-black px-[8px]">
         {cardlist.map(
