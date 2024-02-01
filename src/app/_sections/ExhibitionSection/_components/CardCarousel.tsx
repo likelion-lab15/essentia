@@ -6,29 +6,22 @@ import RightArrowIcon from "@/../public/right-arrow-icon.svg";
 import LeftArrowIcon from "@/../public/left-arrow-icon.svg";
 
 export default function CardCarousel({ cardlist }) {
-  // 인덱스로 이미지에 접근하기 위해서 imageIndex state 생성
   const [imageIndex, setImageIndex] = useState(0);
 
-  /* M - 이전 카드 다섯 장 보여주기 */
+  /* M - 이전 카드 여섯 장 보여주기 */
   const showPrevCard = () => {
     setImageIndex((index) => {
-      // index가 0이면, -1이 되지 않도록 배열의 마지막 요소를 반환하게 함
-      // console.log(cardlist.length - 5, "카드 길이"); // 9
-      // if (index < 0) return cardlist.length - 5;
-      // return index - 5;
-      if (index <= 0) return 0;
-      return index - 1;
+      if (index <= 0) return cardlist.length - 5;
+      return index - 5;
     });
   };
 
-  /* M - 다음 카드 다섯 장 보여주기 */
+  /* M - 다음 카드 여섯 장 보여주기 */
   const showNextCard = () => {
     setImageIndex((index) => {
-      // index가 배열보다 길어지면, 초과되지 않도록 배열의 첫요소를 반환하게 함
-      // if (index >= cardlist.length - 5) return 0;
-      // console.log(index + 5);
-      // return index + 5;
-      return index + 1;
+      if (index >= cardlist.length - 5) return 0;
+      console.log(index);
+      return index + 5;
     });
   };
 
@@ -50,7 +43,7 @@ export default function CardCarousel({ cardlist }) {
         </button>
       </div>
       {/* 2. 카드 캐러셀 */}
-      <div className="relative flex">
+      <div className="relative flex overflow-hidden">
         {cardlist.map((card) => (
           <Card key={card._id} card={card} imageIndex={imageIndex} />
         ))}
