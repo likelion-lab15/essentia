@@ -5,7 +5,23 @@ import Card from "./Card";
 import RightArrowIcon from "@/../public/right-arrow-icon.svg";
 import LeftArrowIcon from "@/../public/left-arrow-icon.svg";
 
-export default function CardCarousel({ cardlist }) {
+type TCardList = {
+  _id: number;
+  price: number;
+  extra: {
+    amount: number[];
+    brand: string;
+  };
+  mainImages: {
+    name: string;
+    path: string;
+    originalname: string;
+  }[];
+  name: string;
+}[];
+
+export default function CardCarousel({ cardlist }: { cardlist: TCardList }) {
+  console.log(cardlist);
   const [cardIndex, setCardIndex] = useState(0);
 
   /* M - 이전 카드 여섯 장 보여주기 */
