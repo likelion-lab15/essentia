@@ -60,7 +60,7 @@ export default function CardCarousel({ cardlist }: { cardlist: TCardList }) {
       {/* 2. 카드 캐러셀 */}
       <div className="relative flex overflow-hidden">
         {cardlist.map((card) => (
-          <Card key={card._id} card={card} imageIndex={cardIndex} />
+          <Card key={card._id} card={card} cardIndex={cardIndex} />
         ))}
       </div>
       {/* 3. 불릿 */}

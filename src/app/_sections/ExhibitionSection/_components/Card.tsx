@@ -3,7 +3,11 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export default function Card({ card, imageIndex }) {
+export default function Card({
+  card,
+  cardIndex,
+}: {
+}) {
   const { _id, price, name, mainImages, extra } = card;
   const router = useRouter();
 
@@ -13,7 +17,7 @@ export default function Card({ card, imageIndex }) {
       className="w-[230px] flex-shrink-0 flex-grow-0 cursor-pointer border-2 border-r-0 border-[#222] bg-white last:border-r-2"
       style={{
         transition: "translate 300ms ease-in-out",
-        translate: `${-100 * imageIndex}%`, //최초는0%, 그 다음은 100%, 200%씩 이동하는 것 뿐이다.
+        translate: `${-100 * cardIndex}%`, //최초는0%, 그 다음은 100%, 200%씩 이동하는 것 뿐이다.
       }}
     >
       <div className="mb-[40px] h-[230px] w-full">
