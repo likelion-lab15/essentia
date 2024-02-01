@@ -6,11 +6,11 @@ import RightArrowIcon from "@/../public/right-arrow-icon.svg";
 import LeftArrowIcon from "@/../public/left-arrow-icon.svg";
 
 export default function CardCarousel({ cardlist }) {
-  const [imageIndex, setImageIndex] = useState(0);
+  const [cardIndex, setCardIndex] = useState(0);
 
   /* M - 이전 카드 여섯 장 보여주기 */
   const showPrevCard = () => {
-    setImageIndex((index) => {
+    setCardIndex((index) => {
       if (index <= 0) return Math.floor((cardlist.length - 1) / 6) * 6;
       return index - 6;
     });
@@ -18,7 +18,7 @@ export default function CardCarousel({ cardlist }) {
 
   /* M - 다음 카드 여섯 장 보여주기 */
   const showNextCard = () => {
-    setImageIndex((index) => {
+    setCardIndex((index) => {
       if (index >= Math.floor((cardlist.length - 1) / 6) * 6) return 0;
       return index + 6;
     });
@@ -44,7 +44,7 @@ export default function CardCarousel({ cardlist }) {
       {/* 2. 카드 캐러셀 */}
       <div className="relative flex overflow-hidden">
         {cardlist.map((card) => (
-          <Card key={card._id} card={card} imageIndex={imageIndex} />
+          <Card key={card._id} card={card} imageIndex={cardIndex} />
         ))}
       </div>
       {/* 3. 불릿 */}
@@ -54,12 +54,12 @@ export default function CardCarousel({ cardlist }) {
             index % 6 === 0 && (
               <button
                 onClick={() => {
-                  setImageIndex(index);
+                  setCardIndex(index);
                   console.log(index);
                 }}
                 key={index}
               >
-                {index === imageIndex ? (
+                {index === cardIndex ? (
                   <div className="h-[8px] w-[8px] bg-black"></div>
                 ) : (
                   <div className="h-[8px] w-[8px] bg-blue-500"></div>
