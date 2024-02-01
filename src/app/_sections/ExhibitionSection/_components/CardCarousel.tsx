@@ -11,17 +11,16 @@ export default function CardCarousel({ cardlist }) {
   /* M - 이전 카드 여섯 장 보여주기 */
   const showPrevCard = () => {
     setImageIndex((index) => {
-      if (index <= 0) return cardlist.length - 5;
-      return index - 5;
+      if (index <= 0) return Math.floor((cardlist.length - 1) / 6) * 6;
+      return index - 6;
     });
   };
 
   /* M - 다음 카드 여섯 장 보여주기 */
   const showNextCard = () => {
     setImageIndex((index) => {
-      if (index >= cardlist.length - 5) return 0;
-      console.log(index);
-      return index + 5;
+      if (index >= Math.floor((cardlist.length - 1) / 6) * 6) return 0;
+      return index + 6;
     });
   };
 
@@ -52,7 +51,7 @@ export default function CardCarousel({ cardlist }) {
       <div className="absolute bottom-[-100px] left-0 flex h-[48px] items-center justify-center gap-[8px] border-2 border-black px-[8px]">
         {cardlist.map(
           (_, index) =>
-            index % 5 === 0 && (
+            index % 6 === 0 && (
               <button
                 onClick={() => {
                   setImageIndex(index);
