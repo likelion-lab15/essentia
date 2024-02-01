@@ -27,8 +27,8 @@ export default async function ExhibitionSection() {
         <Button />
       </div>
       {/* 3. 캐러셀 */}
-      <div className="mx-auto w-[1280px]">
-        <CardCarousel cardlist={ExhibitionData.item.slice(1, 10)} />
+      <div className="mx-auto w-[1382px]">
+        <CardCarousel cardlist={ExhibitionData.item.slice(0, 10)} />
       </div>
     </section>
   );
