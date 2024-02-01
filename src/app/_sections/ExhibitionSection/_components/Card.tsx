@@ -10,7 +10,7 @@ export default function Card({ card, imageIndex }) {
   return (
     <div
       onClick={() => router.push(`products/${_id}`)}
-      className="w-[230px] flex-shrink-0 flex-grow-0 border-2 border-r-0 border-[#222] bg-white last:border-r-2"
+      className="w-[230px] flex-shrink-0 flex-grow-0 cursor-pointer border-2 border-r-0 border-[#222] bg-white last:border-r-2"
       style={{
         transition: "translate 300ms ease-in-out",
         translate: `${-100 * imageIndex}%`, //최초는0%, 그 다음은 100%, 200%씩 이동하는 것 뿐이다.
