@@ -21,7 +21,6 @@ type TCardList = {
 }[];
 
 export default function CardCarousel({ cardlist }: { cardlist: TCardList }) {
-  console.log(cardlist);
   const [cardIndex, setCardIndex] = useState(0);
 
   /* M - 이전 카드 여섯 장 보여주기 */
@@ -73,7 +72,6 @@ export default function CardCarousel({ cardlist }: { cardlist: TCardList }) {
               <button
                 onClick={() => {
                   setCardIndex(index);
-                  console.log(index);
                 }}
                 key={index}
               >
