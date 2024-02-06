@@ -41,8 +41,8 @@ export default function useModal() {
       return createPortal(
         // 모달 컨테이너 스타일
         <div className="fixed left-0 top-0 z-[99] flex h-full w-full items-center justify-center bg-black bg-opacity-50">
-          <div>
-            <div className="flex h-[38px] items-end justify-between border-b border-primary bg-white">
+          <div className="border border-primary">
+            <div className="flex h-[38px] justify-between border-b border-primary bg-white">
               <div className="grow"></div>
               <div
                 className="flex w-[48px] cursor-pointer items-center justify-center"
