@@ -7,8 +7,12 @@ import { useState, useEffect } from "react";
 import { useTokenStore, useUserStore } from "@/stores/_index";
 import naviList from "@/constants/naviList";
 import SearchBar from "./SearchBar";
+import { useSession } from "next-auth/react";
 
 export default function Header() {
+  const { data: session } = useSession();
+  console.log(session);
+
   /* User 토큰을 위한 상태 관리 */
   const token = useTokenStore((state) => state.token);
   const user = useUserStore((state) => state.user);
