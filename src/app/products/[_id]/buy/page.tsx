@@ -128,7 +128,11 @@ export default async function Buy({
                       구매일자 : {item.extra.date}
                     </p>
                   </div>
-                  <BuyButton productId={targetId} buyProductId={item._id} />
+                  <BuyButton
+                    productId={targetId}
+                    buyProductId={item._id}
+                    amount={targetAmount}
+                  />
                 </div>
               )
             )

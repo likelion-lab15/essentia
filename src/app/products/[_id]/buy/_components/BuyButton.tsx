@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 export default function BuyButton({
   productId,
   buyProductId,
+  amount,
 }: {
   productId: string;
   buyProductId: number;
+  amount: number;
 }) {
   const router = useRouter();
   return (
@@ -18,7 +20,7 @@ export default function BuyButton({
       type="button"
       onClick={() =>
         router.push(
-          `/products/${productId}/order?&perchaseItem=${buyProductId}`
+          `/products/${productId}/order?&perchaseItem=${buyProductId}&amount=${amount}`
         )
       }
     />
