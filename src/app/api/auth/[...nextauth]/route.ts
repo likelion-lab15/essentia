@@ -35,6 +35,9 @@ export const authOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
   callbacks: {
     async jwt({ token, user }) {
       return { ...token, ...user };
