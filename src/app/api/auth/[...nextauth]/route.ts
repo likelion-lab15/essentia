@@ -13,7 +13,26 @@ export const authOptions = {
           placeholder: "비밀번호",
         },
       },
-      async authorize(credentials) {},
+      async authorize(credentials) {
+        const res = await fetch("https://onyx-onyx.koyeb.app/api/users/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: credentials?.email,
+            password: credentials?.password,
+          }),
+        });
+
+        const user = await res.json();
+
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
+      },
     }),
   ],
 };
