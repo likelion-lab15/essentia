@@ -30,32 +30,6 @@ const addWishList = async (id: string) => {
   }
 };
 
-// const checkWishList = async ({ queryKey }: QueryFunctionContext<string[]>) => {
-//   const id = queryKey[1];
-//   const { accessToken } = userTokens();
-//   try {
-//     const res = await fetch(
-//       `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/products/${id}`,
-//       {
-//         method: "GET",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//         cache: "no-cache",
-//       }
-//     );
-
-//     if (!res.ok) {
-//       throw new Error("위시리스트 확인 통신 실패");
-//     }
-//     return res.json();
-//   } catch (error) {
-//     console.error("위시리스트 확인 중 오류:", error);
-//     throw error;
-//   }
-// };
-
 export default function ButtonBox({
   id,
   amount,
@@ -63,13 +37,6 @@ export default function ButtonBox({
   id: string;
   amount: number[];
 }) {
-  /* React-Query */
-  // const data = useQuery({
-  //   queryKey: ["wishList", id],
-  //   queryFn: checkWishList,
-  // });
-
-  // console.log(data.data);
   // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
   // 사이즈 드롭다운박스 리스트 상태 관리
@@ -92,7 +59,9 @@ export default function ButtonBox({
     if (selectedSize === "사이즈를 선택해주세요") {
       alert("사이즈를 선택해주세요.");
     } else {
-      router.push(`/products/${id}/buy/?&amount=${selectedSize}`);
+      // ml 문자열 제거
+      const sizeWithoutUnit = selectedSize.replace("ml", "").trim();
+      router.push(`/products/${id}/buy/?&amount=${sizeWithoutUnit}`);
     }
   };
 
@@ -102,7 +71,9 @@ export default function ButtonBox({
     if (selectedSize === "사이즈를 선택해주세요") {
       alert("사이즈를 선택해주세요.");
     } else {
-      router.push(`/products/${id}/sell/?&amount=${selectedSize}`);
+      // ml 문자열 제거
+      const sizeWithoutUnit = selectedSize.replace("ml", "").trim();
+      router.push(`/products/${id}/sell/?&amount=${sizeWithoutUnit}`);
     }
   };
 
