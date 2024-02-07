@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header, Footer } from "@/components/_index";
 import RQProvider from "../components/RQProvider";
+import { NextAuthProvider } from "@/contexts/_index";
 
 export const metadata: Metadata = {
   title: "Essentia",
@@ -13,12 +14,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="kor">
       <body>
-        <RQProvider>
-          <Header />
-          {children}
-          <div id="portal"></div>
-          <Footer />
-        </RQProvider>
+        <NextAuthProvider>
+          <RQProvider>
+            <Header />
+            {children}
+            <div id="portal"></div>
+            <Footer />
+          </RQProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
