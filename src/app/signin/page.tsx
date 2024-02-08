@@ -3,9 +3,7 @@
 // 노드 모듈 / 외부 라이브러리 임포트
 import { ChangeEvent, FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { postUserSignin } from "./_functions/_index";
-import { useUserStore, useTokenStore } from "@/stores/_index";
+import { signIn } from "next-auth/react";
 
 // 프로젝트 내부 임포트
 import { cn } from "@/utils/_index";
@@ -16,13 +14,6 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(false);
 
-  /* 전역상태 */
-  const setUser = useUserStore((state) => state.setUser);
-  const setToken = useTokenStore((state) => state.setToken);
-
-  /* 훅 */
-  const router = useRouter();
-
   /* 이벤트 핸들러 */
   const handleInputValue =
     (setter: any) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,18 +23,20 @@ export default function SignIn() {
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const data = await postUserSignin({ email, password });
+    await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: true,
+      callbackUrl: "http://localhost:3000",
+    });
 
-    if (data) {
-      setUser(data.user);
-      setToken(data.token);
-      setMessage(false);
-      alert("로그인에 성공했습니다!");
-      router.push("/");
-    } else {
-      setMessage(true);
-      alert("로그인에 실패했습니다!");
-    }
+    // if (data) {
+    //   setMessage(false);
+    //   alert("로그인에 성공했습니다!");
+    // } else {
+    //   setMessage(true);
+    //   alert("로그인에 실패했습니다!");
+    // }
   };
 
   return (
