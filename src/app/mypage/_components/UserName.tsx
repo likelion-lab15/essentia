@@ -1,22 +1,11 @@
-"use client";
+import { getUserSession } from "@/utils/getServerSession";
 
-import { useState, useEffect } from "react";
-
-export default function UserName() {
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    const user = sessionStorage.getItem("user");
-
-    if (user) {
-      const userName = JSON.parse(user).state.user.name;
-      setUserName(userName);
-    }
-  }, []);
+export default async function UserName() {
+  const user = await getUserSession();
 
   return (
     <>
-      <span className="text-[48px] font-bold">{userName} </span>님 환영합니다
+      <span className="text-[48px] font-bold">{user.name} </span>님 환영합니다
     </>
   );
 }
