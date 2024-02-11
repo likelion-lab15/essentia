@@ -1,3 +1,5 @@
+import { TFromSellState, TFormSellAction } from "../../types/formSellType";
+
 export const INITIAL_STATE = {
   price: "",
   content: "",
@@ -48,7 +50,10 @@ const validateDate = (date: string) => {
   return isValidLength && isValidFormat && isValidYear;
 };
 
-export function useSellFormReducer(state, action) {
+export function useSellFormReducer(
+  state: TFromSellState,
+  action: TFormSellAction
+) {
   switch (action.type) {
     /* 인풋 상태 업데이트 */
     case "CHANGE_INPUT":

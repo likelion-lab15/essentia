@@ -77,11 +77,9 @@ export default function SellForm() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files).slice(0, 10);
-      const uploadedPaths = await uploadFiles(files); // 파일 업로드 함수 호출
-
+      const uploadedPaths = await uploadFiles(files);
       // 각 파일에 대한 미리보기 URL 생성
       const previewUrls = files.map((file) => URL.createObjectURL(file));
-
       dispatch({
         type: "UPLOAD_IMAGE",
         payload: {
@@ -160,7 +158,7 @@ export default function SellForm() {
           onChange={handleFileChange}
         />
         <div className="ml-[160px] mt-[40px] flex flex-row">
-          {state.previewImages.map((image, index) => (
+          {state.previewImages.map((image: string, index: number) => (
             <img
               key={index}
               src={image}
