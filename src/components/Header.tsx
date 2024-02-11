@@ -2,36 +2,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useTokens } from "@/hooks/_index";
-import { useState, useEffect } from "react";
-import { useTokenStore, useUserStore } from "@/stores/_index";
+import { useState } from "react";
 import naviList from "@/constants/naviList";
 import SearchBar from "./SearchBar";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Header() {
-  /* User 토큰을 위한 상태 관리 */
-  const token = useTokenStore((state) => state.token);
-  const user = useUserStore((state) => state.user);
-
-  /* 로그아웃을 위한 토큰 상태 관리 */
-  const setToken = useTokenStore((state) => state.setToken);
-  const setUser = useUserStore((state) => state.setUser);
-
-  /* 로그인 상태를 위한 상태 */
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  /* 로그아웃 처리 함수 */
-  const handleLogout = () => {
-    setUser(null);
-    setToken(null);
-    alert("로그아웃 되었습니다");
-  };
+  const { data: session } = useSession();
 
   /* 로고 효과를 위한 상태 */
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
-
-  const { getNewAccessToken } = useTokens();
 
   /* 검색바 노출 */
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -39,34 +20,6 @@ export default function Header() {
   const handleCloseSearchBar = () => {
     setShowSearchBar(false);
   };
-
-  useEffect(() => {
-    if (token) {
-      const accessToken = token.accessToken;
-      const expirationTime = JSON.parse(atob(accessToken.split(".")[1])).exp;
-      const currentTime = Math.floor(new Date().getTime() / 1000);
-
-      // 토큰 만료됐을 경우
-      if (currentTime >= expirationTime) {
-        (async () => {
-          await getNewAccessToken();
-        })();
-      } else {
-        console.log("토큰이 아직 멀쩡합니다!");
-      }
-    } else {
-      console.log("현재 토큰이 없는 상태입니다");
-    }
-  }, [token, getNewAccessToken]);
-
-  /* 마운트될 때 로그인, 토큰 상태를 확인하고 아이콘 변경 */
-  useEffect(() => {
-    if (token && user) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [token, user]);
 
   return (
     <header
@@ -121,11 +74,7 @@ export default function Header() {
           </button>
           <button
             aria-label="마이페이지로 이동하기"
-            onClick={
-              isLoggedIn
-                ? () => router.push("/mypage/history")
-                : () => router.push("/signin")
-            }
+            onClick={() => router.push("/mypage/history")}
             className="bg-center bg-no-repeat"
           >
             <Image
@@ -137,11 +86,11 @@ export default function Header() {
           </button>
           <button
             aria-label="로그인 또는 로그아웃하기"
-            onClick={isLoggedIn ? handleLogout : () => router.push("/signin")}
+            onClick={session ? () => signOut() : () => signIn()}
             className="bg-center bg-no-repeat"
           >
             <Image
-              src={isLoggedIn ? "/signout-icon.svg" : "/signin-icon.svg"}
+              src={session ? "/signout-icon.svg" : "/signin-icon.svg"}
               alt="로그인 로그아웃 아이콘"
               width={24}
               height={24}

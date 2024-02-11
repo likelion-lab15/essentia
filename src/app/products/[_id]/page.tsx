@@ -1,8 +1,7 @@
-"use client";
 import React from "react";
 import {
   ProductInfo,
-  ProductDetail,
+  // ProductDetail,
 } from "@/app/products/[_id]/_sections/_index";
 
 type TProductProps = {
@@ -16,7 +15,7 @@ export default function Product(props: TProductProps) {
   return (
     <main className="flex flex-col items-center">
       <ProductInfo id={id} />
-      <ProductDetail id={id} />
+      {/* <ProductDetail id={id} /> */}
     </main>
   );
 }

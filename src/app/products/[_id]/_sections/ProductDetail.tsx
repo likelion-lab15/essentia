@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import axios from "@/api/axios";
-import PerfumeCarouselSwiper from "../../../_sections/PerfumeCarousel/_components/PerfumeCarouselSwiper";
+import { CardCarousel } from "@/containers/_index";
 
 type TReview = {
   _id: string;
@@ -309,8 +309,6 @@ export default function ProductDetail({ id }: { id: string }) {
         {/* 추천 상품 */}
         <section ref={recommendedProductsRef} className="h-[600px] w-full">
           <h3 className="pb-[60px] text-48 font-bold">추천 상품</h3>
-
-          <PerfumeCarouselSwiper />
         </section>
       </div>
     </>

@@ -1,78 +1,50 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 
-import { Button } from "@/components/_index";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useProductStore } from "@/stores/useProductStore";
-import axios from "@/api/axios";
+import BuyButton from "./_components/BuyButton";
+import BackButton from "./_components/BackButton";
+import { Key } from "react";
 
-type TProductProps = {
-  params: {
-    _id: string;
-  };
-};
-
-type TItem = {
-  _id: number;
-  price: number;
-  extra: {
-    amount: number;
-    restamount: number;
-    date: string;
-  };
-};
-
-type TlowestPrice = number | null;
-
-export default function Buy(props: TProductProps) {
-  const [items, setItems] = useState<TItem[]>([]);
-  const [lowestPrice, setLowestPrice] = useState<TlowestPrice>(null);
-  const { product } = useProductStore();
-  const router = useRouter();
-  const getId = props.params._id;
-  const getBrand = product.brand;
-  const getName = product.name;
-  const getImage = product.image;
-  const getPriceOrigin = product.price;
-  const getPrice = getPriceOrigin.toLocaleString();
-  const searchParams = useSearchParams();
-  const getAmount = searchParams.get("amount");
-  let targetAmount = 0;
-  if (getAmount === "50ml") {
-    targetAmount = 50;
-  } else {
-    targetAmount = 100;
+/* 데이터 fetching */
+async function getData(id: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
+  );
+  if (!res.ok) {
+    throw new Error("Failed to 상품 데이터 fetch");
   }
-  const renderItems = items.filter(
-    (item) => item.extra?.amount === targetAmount
+
+  return res.json();
+}
+
+export default async function Buy({
+  searchParams,
+  params,
+}: {
+  searchParams: { amount: string };
+  params: { _id: string };
+}) {
+  const targetId = params._id;
+  const targetAmount = Number(searchParams.amount);
+  const product = await getData(targetId);
+  const productData = {
+    name: product.item.name,
+    price: product.item.price,
+    brand: product.item.extra.brand,
+    amount: product.item.extra.amount,
+    content: product.item.content,
+    image: product.item.mainImages[0].path,
+  };
+  const targetProductsList = product.item.options.item;
+  const renderProduct = targetProductsList.filter(
+    (item: { extra: { amount: number } }) => item.extra?.amount === targetAmount
   );
 
-  useEffect(() => {
-    async function buyInfo() {
-      try {
-        console.log("buyInfo Id: ", getId);
-        const response = await axios.get(`/products/${getId}`);
-        const result = response.data.item.options.item;
-        console.log(`result`, result);
-        setItems(result);
-        return result;
-      } catch (error) {
-        console.error("axios Error 🥲", error);
-        return [];
-      }
-    }
-
-    buyInfo();
-
-    const lowest = items
-      .filter((item) => item.extra?.amount === targetAmount)
-      .reduce((min, item) => {
-        return item.price < min ? item.price : min;
-      }, Number.POSITIVE_INFINITY);
-
-    setLowestPrice(lowest === Number.POSITIVE_INFINITY ? null : lowest);
-  }, [getId, items, targetAmount]);
+  const lowestPrice = renderProduct.reduce(
+    (min: number, item: { price: number }) => {
+      return item.price < min ? item.price : min;
+    },
+    Number.POSITIVE_INFINITY
+  );
 
   return (
     <div className="mb-[300px] flex flex-col items-center justify-center">
@@ -85,7 +57,7 @@ export default function Buy(props: TProductProps) {
         <div className="mb-[25px] flex h-[300px] w-[800px] items-center justify-center border-b-2 border-primary">
           {/* 이미지 */}
           <img
-            src={`${process.env.NEXT_PUBLIC_API_SERVER}${getImage}`}
+            src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.image}`}
             width={200}
             height={200}
             alt="상품 이미지"
@@ -95,16 +67,18 @@ export default function Buy(props: TProductProps) {
           <div className="ml-[40px] flex h-[200px] w-[500px] flex-col justify-between">
             <div>
               <p className="border-b-2 border-primary text-22 font-bold">
-                {getBrand}
+                {productData.brand}
               </p>
-              <p className="text-30 font-medium">{getName}</p>
+              <p className="text-30 font-medium">{productData.name}</p>
             </div>
-            <p className="flex flex-row text-22 font-medium">{getAmount}</p>
+            <p className="flex flex-row text-22 font-medium">
+              {targetAmount}ml
+            </p>
             <div className="flex flex-row justify-between">
               <div className="flex w-[200px] flex-row items-baseline justify-start text-tertiary">
                 <p className="mr-[10px] text-16 font-semibold">발매가</p>
                 <p className="text-28 font-bold">
-                  {getPrice.toLocaleString()}원
+                  {productData.price.toLocaleString()}원
                 </p>
               </div>
               <div className="flex w-[200px] flex-row items-baseline justify-end">
@@ -112,55 +86,61 @@ export default function Buy(props: TProductProps) {
                   최저가
                 </p>
                 <p className="text-28 font-bold">
-                  {lowestPrice ? `${lowestPrice.toLocaleString()}원` : "- 원"}
+                  {(
+                    lowestPrice === Number.POSITIVE_INFINITY
+                      ? null
+                      : lowestPrice
+                  )
+                    ? `${lowestPrice.toLocaleString()}원`
+                    : "- 원"}
                 </p>
               </div>
             </div>
           </div>
         </div>
         <div className="mb-[25px] flex w-[800px] flex-row flex-wrap justify-center pl-[25px] pr-[25px] text-18">
-          {renderItems.length === 0 ? (
+          {renderProduct.length === 0 ? (
             <p className="text-18 font-semibold">
               현재 등록된 판매상품이 없습니다. 🥲
             </p>
           ) : (
-            renderItems.map((item, index) => (
-              <div
-                key={index}
-                className="flex w-[800px] flex-row justify-between"
-              >
-                <div className="mb-[15px] flex h-[60px] w-[600px] border-b-2 border-t-2 border-primary bg-white text-primary hover:bg-secondary">
-                  <p className="flex h-[60px] flex-1 items-center justify-center">
-                    남은용량 : {item.extra.restamount}ml
-                  </p>
-                  <p className="flex h-[60px] flex-1 items-center justify-center">
-                    판매금액 : {Number(item.price).toLocaleString()}원
-                  </p>
-                  <p className="flex h-[60px] flex-1 items-center justify-center">
-                    구매일자 : {item.extra.date}
-                  </p>
+            renderProduct.map(
+              (
+                item: {
+                  extra: { restamount: number; date: string };
+                  price: number;
+                  _id: number;
+                },
+                index: Key
+              ) => (
+                <div
+                  key={index}
+                  className="flex w-[800px] flex-row justify-between"
+                >
+                  <div className="mb-[15px] flex h-[60px] w-[600px] border-b-2 border-t-2 border-primary bg-white text-primary hover:bg-secondary">
+                    <p className="flex h-[60px] flex-1 items-center justify-center">
+                      남은용량 : {item.extra.restamount}ml
+                    </p>
+                    <p className="flex h-[60px] flex-1 items-center justify-center">
+                      판매금액 : {Number(item.price).toLocaleString()}원
+                    </p>
+                    <p className="flex h-[60px] flex-1 items-center justify-center">
+                      구매일자 : {item.extra.date}
+                    </p>
+                  </div>
+                  <BuyButton
+                    productId={targetId}
+                    buyProductId={item._id}
+                    amount={targetAmount}
+                  />
                 </div>
-                <Button
-                  className="mb-[15px] h-[60px] w-[120px] border-2 border-primary bg-secondary text-primary hover:bg-primary hover:text-secondary"
-                  label="구매하기"
-                  type="button"
-                  onClick={() =>
-                    router.push(
-                      `/products/${getId}/order?&perchaseItem=${item._id}&amount=${item.extra.restamount}&price=${item.price}`
-                    )
-                  }
-                />
-              </div>
-            ))
+              )
+            )
           )}
         </div>
         {/* 뒤로가기 버튼 */}
         <div className="flex h-[100px] w-[800px] items-center justify-center">
-          <Button
-            label="뒤로가기"
-            type="button"
-            onClick={() => router.back()}
-          />
+          <BackButton />
         </div>
       </div>
     </div>

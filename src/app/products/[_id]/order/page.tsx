@@ -1,60 +1,54 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
+import OrderButton from "./_components/OrderButton";
 
-import Button from "@/components/Button";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { axiosPrivate } from "@/api/axios";
-import { useProductStore, useUserStore } from "@/stores/_index";
-import { useEffect } from "react";
+/* 데이터 fetching */
+async function getData(id: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
+  );
+  if (!res.ok) {
+    throw new Error("Failed to 상품 데이터 fetch");
+  }
 
-export default function Order() {
-  const { user } = useUserStore();
-  const { product } = useProductStore((state) => state);
-  const router = useRouter();
+  return res.json();
+}
 
-  // 사용자 로그인 상태 확인
-  useEffect(() => {
-    if (!user) {
-      console.log("로그인이 필요합니다.");
-      router.push("/signin");
-    }
-  }, [user, router]);
+async function getTargetProduct(targetId: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER}products/${targetId}`
+  );
+  if (!res.ok) {
+    throw new Error("Failed to 상품 데이터 fetch");
+  }
 
-  const userName = user?.name;
-  const userAddress =
-    (user?.extra?.addressBook?.value || "") +
-    (user?.extra?.addressBook?.detail || "");
-  const userPhone = user?.phone;
-  const brand = product.brand;
-  const image = product.image;
-  const name = product.name;
-  const searchParams = useSearchParams();
-  const getId = Number(searchParams.get("perchaseItem")); // 자식 상품 id
-  const price = searchParams.get("price"); // 자식 상품 가격
-  const amount = searchParams.get("amount"); // 자식 상품 용량
+  return res.json();
+}
 
-  // 주문정보 제출 함수
-  const requestOrder = async () => {
-    try {
-      const response = await axiosPrivate.post("/orders", {
-        products: [
-          {
-            _id: getId,
-            quantity: 1,
-          },
-        ],
-        address: {
-          name: userName,
-          value: userAddress,
-        },
-      });
-      console.log("POST 통신 성공", response.data);
-      alert("주문이 성공적으로 완료되었습니다.");
-      router.push("/products");
-    } catch (error) {
-      console.error("주문하기 통신 에러 발생", error);
-    }
+export default async function Order({
+  searchParams,
+  params,
+}: {
+  searchParams: { perchaseItem: string; amount: string };
+  params: { _id: string };
+}) {
+  // 1. 사용자 로그인 상태 확인
+
+  // 2. 부모 데이터 가져오기
+  const targetId = params._id;
+  const orderProductId = searchParams.perchaseItem;
+  const amount = searchParams.amount;
+  const product = await getData(targetId);
+  const productData = {
+    name: product.item.name,
+    brand: product.item.extra.brand,
+    image: product.item.mainImages[0].path,
+  };
+
+  // 3. 자식 데이터 가져오기
+  const targetProduct = await getTargetProduct(orderProductId);
+  console.log(targetProduct);
+  const targetProductData = {
+    price: product.item.price,
   };
 
   return (
@@ -64,16 +58,15 @@ export default function Order() {
       {/* 구매할 향수 정보 */}
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
-          src={`${process.env.NEXT_PUBLIC_API_SERVER}${image}`}
+          src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.image}`}
           alt="구매할 상품 이미지"
           className=" h-[150px] w-[150px] border-2 border-primary bg-product"
         />
         <div className="ml-[40px] flex h-[150px] w-[500px] flex-col justify-between">
           <div>
-            <p className="text-24 font-bold">{brand}</p>
-            <p className="my-[12px] text-28 font-medium">{name}</p>
+            <p className="text-24 font-bold">{productData.brand}</p>
+            <p className="my-[12px] text-28 font-medium">{productData.name}</p>
           </div>
-
           <p className="text-22 font-medium">{amount}ml</p>
         </div>
       </div>
@@ -148,37 +141,32 @@ export default function Order() {
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               받는 분
             </p>
-            <p className="flex items-center text-12 font-medium">{userName}</p>
+            <p className="flex items-center text-12 font-medium">사용자이름</p>
           </div>
           <div className="flex">
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               연락처
             </p>
-            <p className="flex items-center text-12 font-medium">{userPhone}</p>
+            <p className="flex items-center text-12 font-medium">
+              사용자 휴대폰번호
+            </p>
           </div>
           <div className="flex">
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               주소지
             </p>
-            <p className="flex items-center text-12 font-medium">
-              {userAddress}
-            </p>
+            <p className="flex items-center text-12 font-medium">사용자 주소</p>
           </div>
         </div>
-        <div className="mt-[100px] flex h-[43px] justify-between border-b-[5px] border-primary px-[32px]">
-          <p className="text-24 font-bold">최종 결제 금액</p>
+        <div className="mt-[100px] flex h-[48px] justify-between border-b-[5px] border-primary px-[32px]">
+          <p className="text-24 font-bold text-accent">최종 결제 금액</p>
           <p className="text-28 font-bold">
-            {Number(price).toLocaleString()}원
+            {Number(targetProductData.price).toLocaleString()} 원
           </p>
         </div>
       </div>
       {/* 구매하기 버튼 */}
-      <Button
-        label="구매 결정하기"
-        type="button"
-        className="mt-[100px] w-[600px] font-bold"
-        onClick={() => requestOrder()}
-      />
+      <OrderButton />
     </section>
   );
 }
