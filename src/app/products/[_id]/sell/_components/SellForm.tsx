@@ -6,10 +6,58 @@ import { uploadFiles } from "../_lib/fileUploader";
 import { getToken } from "@/api/axios";
 
 export default function SellForm() {
-  const errorMessage = "";
   const token = getToken();
 
   const [state, dispatch] = useReducer(useSellFormReducer, INITIAL_STATE);
+
+  const handlePriceChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const isNumberInput = e.target.type === "number";
+    dispatch({
+      type: "VALIDATE_PRICE",
+      payload: { value: isNumberInput ? parseInt(value, 10) : value },
+    });
+    dispatch({
+      type: "CHANGE_INPUT",
+      payload: {
+        name,
+        value: isNumberInput ? parseInt(value, 10) : value,
+      },
+    });
+  };
+
+  const handleDateChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    dispatch({ type: "VALIDATE_DATE", payload: value });
+    dispatch({
+      type: "CHANGE_INPUT",
+      payload: {
+        name,
+        value,
+      },
+    });
+  };
+
+  const handleContentChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    dispatch({
+      type: "VALIDATE_CONTENT",
+      payload: { value },
+    });
+    dispatch({
+      type: "CHANGE_INPUT",
+      payload: {
+        name,
+        value,
+      },
+    });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -139,12 +187,12 @@ export default function SellForm() {
           onChange={handleChange}
           className="ml-[35px] mt-[20px] w-[250px] border-b-[2px] border-primary"
         />
-        {errorMessage !== null && (
+        {state.errorMessages.restamount !== null && (
           <div
             aria-live="polite"
             className="ml-[100px] flex h-[30px] w-full items-center text-warning"
           >
-            {errorMessage}
+            {state.errorMessages.restamount}
           </div>
         )}
       </div>
@@ -158,15 +206,18 @@ export default function SellForm() {
           name="price"
           placeholder="원"
           value={state.price}
-          onChange={handleChange}
+          onChange={handlePriceChange}
+          aria-errormessage="price-error-message"
+          aria-invalid={!state.valids.price ? "true" : "false"}
           className="ml-[70px] mt-[20px] w-[250px] border-b-[2px] border-primary"
         />
-        {errorMessage !== null && (
+        {state.errorMessages.price && (
           <div
+            id="price-error-message"
             aria-live="polite"
             className="ml-[100px] flex h-[30px] w-full items-center text-warning"
           >
-            {errorMessage}
+            {state.errorMessages.price}
           </div>
         )}
       </div>
@@ -180,15 +231,18 @@ export default function SellForm() {
           name="date"
           placeholder="예) 20220707"
           value={state.extra.date}
-          onChange={handleChange}
+          onChange={handleDateChange}
+          aria-errormessage="date-error-message"
+          aria-invalid={!state.valids.date ? "true" : "false"}
           className="ml-[35px] mt-[20px] w-[250px] border-b-[2px] border-primary"
         />
-        {errorMessage !== null && (
+        {state.errorMessages.date !== null && (
           <div
+            id="date-error-message"
             aria-live="polite"
             className="ml-[100px] flex h-[30px] w-full items-center text-warning"
           >
-            {errorMessage}
+            {state.errorMessages.date}
           </div>
         )}
       </div>
@@ -202,14 +256,25 @@ export default function SellForm() {
         </label>
         <textarea
           name="content"
-          id="text"
+          id="content"
           cols={100}
           rows={8}
           placeholder="제품의 상태 (사용감, 하자 유무) 등을 입력해 주세요."
           value={state.content}
-          onChange={handleChange}
+          onChange={handleContentChange}
+          aria-errormessage="content-error-message"
+          aria-invalid={!state.valids.content ? "true" : "false"}
           className="absolute left-[100px] border-[1px] border-tertiary pl-[16px] pt-[16px]"
         ></textarea>
+        {state.errorMessages.content && (
+          <div
+            id="content-error-message"
+            aria-live="polite"
+            className="ml-[100px] mt-[215px] flex h-[30px] w-full items-center text-warning"
+          >
+            {state.errorMessages.content}
+          </div>
+        )}
       </div>
       {/* 등록 버튼 */}
       <div className="mt-[90px] flex h-[195px] flex-row justify-center gap-[16px]">
