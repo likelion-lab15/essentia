@@ -119,32 +119,7 @@ export default function SellForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-[1200px]">
-      {/* 상품 정보 가져오기 - 브랜드, 상품명, 용량 */}
-      <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary">
-        <label htmlFor="name" className="text-18 font-bold">
-          브랜드
-        </label>
-        <span className="ml-[85px] inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
-          Aesop
-        </span>
-      </div>
-      <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary pb-[50px]">
-        <label htmlFor="name" className="text-18 font-bold">
-          상품명
-        </label>
-        <span className="ml-[85px] inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
-          Tacit Eau De Perfume
-        </span>
-      </div>
-      <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary pb-[50px]">
-        <label htmlFor="name" className="text-18 font-bold">
-          용량
-        </label>
-        <span className="ml-[102px] inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
-          50 ml
-        </span>
-      </div>
+    <form onSubmit={handleSubmit}>
       {/* 상품 이미지 */}
       <div className="h-[280px] border-b-[1px] border-tertiary pt-[50px]">
         <label htmlFor="file" className="mr-[100px] text-18 font-bold">
