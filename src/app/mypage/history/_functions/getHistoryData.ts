@@ -1,30 +1,37 @@
-import axios, { axiosPrivate } from "@/api/axios";
+import { getUserSession, getAccessToken } from "@/utils/getServerSession";
 
-export default async function getHistoryData(url: string) {
+/* 구매내역 불러오기 */
+export const getBuyHistory = async () => {
+  const accessToken = await getAccessToken();
   try {
-    const response = await axiosPrivate.get(url);
-    return response.data.item;
-  } catch (err) {
-    if (err instanceof Error) {
-      console.log(err.message);
-    }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/orders`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const data = await res.json();
+    return data.item;
+  } catch (error) {
+    console.error("message:", error);
   }
-}
+};
 
-export async function getHistoryData2(url: string, userId: number) {
+/* 판매내역 불러오기 */
+export const getSellHistory = async () => {
+  const user = await getUserSession();
+  const customParam = JSON.stringify({ "extra.depth": 2 });
+  const fullUrl = `products?custom=${encodeURIComponent(customParam)}`;
+
   try {
-    const customParam = JSON.stringify({ "extra.depth": 2 });
-    const fullUrl = `${url}?custom=${encodeURIComponent(customParam)}`;
-    const response = await axios.get(fullUrl);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/${fullUrl}`);
+    const data = await res.json();
 
-    const mySellData = response.data.item.filter(
-      (item: any) => item.seller_id === userId
+    const filteredItem = data.item.filter(
+      (item: any) => item.seller_id === user._id
     );
-
-    return mySellData;
-  } catch (err) {
-    if (err instanceof Error) {
-      console.log(err.message);
-    }
+    return filteredItem;
+  } catch (error) {
+    console.error("message:", error);
   }
-}
+};
