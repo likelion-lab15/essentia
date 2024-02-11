@@ -5,6 +5,7 @@ export type TFormSellInput =
   | "name"
   | "quantity"
   | "buyQuantity"
+  | "amount"
   | string;
 
 export type TExtra = {
@@ -24,6 +25,8 @@ export type TFromSellState = {
   name: string;
   quantity: number;
   buyQuantity: number;
+  amount: number;
+  fixed: number;
   extra: TExtra;
   valids: Record<TFormSellInput, boolean | null>;
   errorMessages: Record<TFormSellInput, string | null>;
@@ -34,10 +37,11 @@ export type TFormSellAction =
       type: "CHANGE_INPUT";
       payload: { name: TFormSellInput; value: string | number | boolean };
     }
-  | { type: "VALIDATE_PRICE"; payload: { value: number } }
+  | { type: "VALIDATE_PRICE"; payload: { value: any } }
   | { type: "VALIDATE_DATE"; payload: string }
   | { type: "VALIDATE_CONTENT"; payload: { value: string } }
   | {
       type: "UPLOAD_IMAGE";
       payload: { uploadedPaths: string[]; previewUrls: string[] };
-    };
+    }
+  | { type: "VALIDATE_RESTAMOUNT"; payload: { value: string } };
