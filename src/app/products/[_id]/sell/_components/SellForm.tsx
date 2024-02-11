@@ -5,25 +5,67 @@ import React, { useReducer } from "react";
 import { uploadFiles } from "../_lib/fileUploader";
 import { getToken } from "@/api/axios";
 
-export default function SellForm() {
+export default function SellForm({ amount, fixed }: any) {
+  const initialState = {
+    ...INITIAL_STATE,
+    amount,
+    fixed,
+  };
+
   const token = getToken();
 
-  const [state, dispatch] = useReducer(useSellFormReducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(useSellFormReducer, initialState);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files).slice(0, 10);
+      const uploadedPaths = await uploadFiles(files);
+      // 각 파일에 대한 미리보기 URL 생성
+      const previewUrls = files.map((file) => URL.createObjectURL(file));
+      dispatch({
+        type: "UPLOAD_IMAGE",
+        payload: {
+          uploadedPaths: uploadedPaths.map((path: string, index: number) => ({
+            path,
+            name: files[index].name,
+            originalname: files[index].name,
+          })),
+          previewUrls,
+        },
+      });
+    }
+  };
+
+  const handleRestamountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    dispatch({
+      type: "VALIDATE_RESTAMOUNT",
+      payload: { value },
+    });
+    dispatch({
+      type: "CHANGE_INPUT",
+      payload: {
+        name,
+        value,
+      },
+    });
+  };
 
   const handlePriceChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     const isNumberInput = e.target.type === "number";
+    const priceValue = isNumberInput ? parseInt(value, 10) : value;
     dispatch({
       type: "VALIDATE_PRICE",
-      payload: { value: isNumberInput ? parseInt(value, 10) : value },
+      payload: { value: priceValue },
     });
     dispatch({
       type: "CHANGE_INPUT",
       payload: {
         name,
-        value: isNumberInput ? parseInt(value, 10) : value,
+        value: priceValue,
       },
     });
   };
@@ -57,41 +99,6 @@ export default function SellForm() {
         value,
       },
     });
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    const isNumberInput = e.target.type === "number";
-
-    dispatch({
-      type: "CHANGE_INPUT",
-      payload: {
-        name,
-        value: isNumberInput ? parseInt(value, 10) : value,
-      },
-    });
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files).slice(0, 10);
-      const uploadedPaths = await uploadFiles(files);
-      // 각 파일에 대한 미리보기 URL 생성
-      const previewUrls = files.map((file) => URL.createObjectURL(file));
-      dispatch({
-        type: "UPLOAD_IMAGE",
-        payload: {
-          uploadedPaths: uploadedPaths.map((path: string, index: number) => ({
-            path,
-            name: files[index].name,
-            originalname: files[index].name,
-          })),
-          previewUrls,
-        },
-      });
-    }
   };
 
   /* form 제출 함수 */
@@ -157,7 +164,7 @@ export default function SellForm() {
           name="restamount"
           placeholder="ml"
           value={state.extra.restamount}
-          onChange={handleChange}
+          onChange={handleRestamountChange}
           className="ml-[35px] mt-[20px] w-[250px] border-b-[2px] border-primary"
         />
         {state.errorMessages.restamount !== null && (

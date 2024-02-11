@@ -26,6 +26,7 @@ export default async function Sell({
     name: product.item.name,
     brand: product.item.extra.brand,
     amount: product.item.extra.amount,
+    price: product.item.price,
   };
 
   return (
@@ -61,7 +62,7 @@ export default async function Sell({
             {targetAmount}ml
           </span>
         </div>
-        <SellForm />
+        <SellForm amount={targetAmount} fixed={productData.price} />
       </section>
     </main>
   );

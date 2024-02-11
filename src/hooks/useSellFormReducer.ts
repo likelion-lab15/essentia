@@ -8,7 +8,7 @@ export const INITIAL_STATE = {
   shippingFees: 0,
   show: true,
   active: true,
-  name: "Tacit Eau De Perfume",
+  name: "",
   quantity: 200,
   buyQuantity: 198,
   extra: {
@@ -31,12 +31,12 @@ export const INITIAL_STATE = {
 };
 
 // 유효성 검사를 위한 함수
-const validatePrice = (price: number) => {
-  return price >= 100; // 가격이 100원 이상인지 검사
+const validateAmount = (restamount: number, amount: number) => {
+  return restamount >= 0 && restamount <= amount;
 };
 
-const validateContent = (content: string) => {
-  return content.length > 10;
+const validatePrice = (price: number, fixed: number) => {
+  return price >= 100 && price < fixed;
 };
 
 const validateDate = (date: string) => {
@@ -48,6 +48,10 @@ const validateDate = (date: string) => {
   const isValidYear = year >= 1900 && year <= 2024;
 
   return isValidLength && isValidFormat && isValidYear;
+};
+
+const validateContent = (content: string) => {
+  return content.length > 10;
 };
 
 export function useSellFormReducer(
@@ -72,9 +76,33 @@ export function useSellFormReducer(
           [action.payload.name]: action.payload.value,
         };
       }
+    /* 이미지 상태 업데이트 */
+    case "UPLOAD_IMAGE":
+      return {
+        ...state,
+        mainImages: action.payload.uploadedPaths,
+        previewImages: action.payload.previewUrls,
+      };
+    /* 남은용량 유효성 검사 */
+    case "VALIDATE_RESTAMOUNT": {
+      const restamountValue = parseInt(action.payload.value, 10);
+      const isValidRestAmount = validateAmount(restamountValue, state.amount);
+      return {
+        ...state,
+        valids: {
+          ...state.valids,
+          restamount: isValidRestAmount,
+        },
+        errorMessages: {
+          ...state.errorMessages,
+          restamount: isValidRestAmount ? null : "정가 용량 이하이어야 합니다.",
+        },
+      };
+    }
     /* 가격 유효성 검사 */
     case "VALIDATE_PRICE": {
-      const isValidPrice = validatePrice(action.payload.value);
+      const priceValue = action.payload.value;
+      const isValidPrice = validatePrice(priceValue, state.fixed);
       return {
         ...state,
         valids: {
@@ -83,10 +111,11 @@ export function useSellFormReducer(
         },
         errorMessages: {
           ...state.errorMessages,
-          price: isValidPrice ? null : "100원 이상 입력해주세요.",
+          price: isValidPrice ? null : "정가 가격보다 낮아야 합니다.",
         },
       };
     }
+
     /* 구매일시 유효성 검사 */
     case "VALIDATE_DATE": {
       const isValidDate = validateDate(action.payload);
@@ -119,13 +148,6 @@ export function useSellFormReducer(
         },
       };
     }
-    /* 이미지 상태 업데이트 */
-    case "UPLOAD_IMAGE":
-      return {
-        ...state,
-        mainImages: action.payload.uploadedPaths,
-        previewImages: action.payload.previewUrls,
-      };
     default:
       return state;
   }
