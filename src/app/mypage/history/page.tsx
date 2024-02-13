@@ -1,35 +1,19 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+/* 김진우 */
 
-import { useState, useEffect } from "react";
-import getHistoryData, { getHistoryData2 } from "./_functions/getHistoryData";
+import { getBuyHistory, getSellHistory } from "./_functions/getHistoryData";
 import {
   BuyHistoryTable,
   Membership,
   MoreButton,
   SellHistoryTable,
 } from "./_components/_index";
-import { useUserStore } from "@/stores/_index";
 
-export default function History() {
-  const [buySlicedHistoryData, setBuySlicedHistoryData] = useState([]);
-  const [sellSlicedHistoryData, setSellSlicedHistoryData] = useState([]);
-  const user = useUserStore((state) => state.user);
-
-  useEffect(() => {
-    (async () => {
-      const [buyData, sellData] = await Promise.all([
-        getHistoryData("orders"),
-        getHistoryData2("products", user!._id),
-      ]);
-
-      const buySlicedData = buyData.slice(0, 5);
-      setBuySlicedHistoryData(buySlicedData);
-
-      const sellSlicedData = sellData.slice(0, 5);
-      setSellSlicedHistoryData(sellSlicedData);
-    })();
-  }, []);
+export default async function History() {
+  /* 구매 내역, 판매 내역 불러오기 */
+  const [buyData, sellData] = await Promise.all([
+    getBuyHistory(),
+    getSellHistory(),
+  ]);
 
   return (
     <section className="w-[1000px]">
@@ -40,14 +24,14 @@ export default function History() {
       <Membership />
 
       {/* 3. 구매 내역 */}
-      <div className="relative">
-        <BuyHistoryTable buyHistoryData={buySlicedHistoryData} />
+      {/* <div className="relative">
+        <BuyHistoryTable buyHistoryData={buyData.slice(0, 5)} />
         <MoreButton href={"/mypage/history/buyhistory"} />
-      </div>
+      </div> */}
 
       {/* 4. 판매 내역 */}
       <div className="relative">
-        <SellHistoryTable sellHistoryData={sellSlicedHistoryData} />
+        <SellHistoryTable sellHistoryData={sellData.slice(0, 5)} />
         <MoreButton href={"/mypage/history/sellhistory"} />
       </div>
     </section>
