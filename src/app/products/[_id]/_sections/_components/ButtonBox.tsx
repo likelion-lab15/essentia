@@ -19,6 +19,8 @@ export default function ButtonBox({
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
   // 사이즈 드롭다운박스 리스트 상태 관리
   const [amountView, setAmountView] = useState(false);
+  // 위시리스트 상태 관리
+  const [wishList, setWishList] = useState(wishListStatus);
   // useRef를 이용하여 외부 클릭 감지
   const wrapperRef = useRef<HTMLDivElement>(null);
   // 외부 클릭 시 드롭다운박스 닫기
@@ -55,13 +57,13 @@ export default function ButtonBox({
     }
   };
 
-  /* 위시리스트 추가+제거 함수 */
+  /* 위시리스트 제어 */
   const { getAccessToken, getUserSession } = useClientSession();
   const accessToken = getAccessToken();
   const userSession = getUserSession();
   const userId = userSession._id;
-  const [wishList, setWishList] = useState(wishListStatus);
 
+  /* 위시리스트에 추가하기 */
   const addWishList = async (id: string) => {
     try {
       const res = await fetch(
@@ -90,6 +92,7 @@ export default function ButtonBox({
     }
   };
 
+  /* 현재 상품의 북마크 id를 찾는 함수 */
   const findWishListId = async () => {
     try {
       const res = await fetch(
@@ -113,6 +116,10 @@ export default function ButtonBox({
     }
   };
 
+  /* 위시리스트에서 삭제하기 */
+  // 1. 사용자의 위시리스트 목록 전체를 조회하고
+  // 2. 위시리스트 목록 중 현재 상품의 id(상품 id)가 포함된 배열을 찾는다.
+  // 3. 찾은 배열의 _id(위시리스트 id)를 이용하여 위시리스트에서 상품을 삭제한다.
   const deleteWishList = async (id: string) => {
     try {
       const data = await findWishListId();
