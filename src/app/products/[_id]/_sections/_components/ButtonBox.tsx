@@ -60,6 +60,7 @@ export default function ButtonBox({
   const accessToken = getAccessToken();
   const userSession = getUserSession();
   const userId = userSession._id;
+  const [wishList, setWishList] = useState(wishListStatus);
 
   const addWishList = async (id: string) => {
     try {
@@ -74,45 +75,22 @@ export default function ButtonBox({
           body: JSON.stringify({
             product_id: parseInt(id),
             user_id: userId,
-            memo: "test",
+            memo: "위시리스트",
           }),
           cache: "no-cache",
         }
       );
       if (!res.ok) {
-        throw new Error("위시리스트 통신 실패");
+        throw new Error("위시리스트 추가 통신 실패");
       }
+      setWishList(true);
     } catch (error) {
       console.error("위시리스트 추가 중 오류:", error);
       throw error;
     }
   };
 
-  const deleteWishList = async (id: string) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          cache: "no-cache",
-        }
-      );
-      const data = await res.json();
-      console.log(data);
-      if (!res.ok) {
-        throw new Error("위시리스트 삭제 실패다 임마");
-      }
-    } catch (error) {
-      console.error("위시리스트 삭제 중 오류:", error);
-      throw error;
-    }
-  };
-
-  const checkWishList = async (id: string) => {
+  const findWishListId = async () => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/`,
@@ -126,21 +104,42 @@ export default function ButtonBox({
         }
       );
       if (!res.ok) {
-        throw new Error("위시리스트 조회 실패다 임마");
+        throw new Error("위시리스트 조회 실패");
       }
-      const data = await res.json();
-      const mydata = data.item;
-      console.log(mydata);
+      return res.json();
+    } catch (error) {
+      console.error("위시리스트 조회 중 오류:", error);
+      throw error;
+    }
+  };
+
+  const deleteWishList = async (id: string) => {
+    try {
+      const data = await findWishListId();
       const itemToDelete = data.item.find(
         (item: { product_id: number }) => item.product_id === parseInt(id)
       );
       if (itemToDelete) {
-        await deleteWishList(itemToDelete._id);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/${itemToDelete._id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            cache: "no-cache",
+          }
+        );
+        if (!res.ok) {
+          throw new Error("위시리스트 삭제 실패");
+        }
       } else {
-        console.log("Item not found in wishlist");
+        throw new Error("위시리스트에 있는 상품 id를 찾을 수 없습니다.");
       }
+      setWishList(false);
     } catch (error) {
-      console.error("위시리스트 조회 중 오류:", error);
+      console.error("위시리스트 삭제 중 오류:", error);
       throw error;
     }
   };
@@ -191,17 +190,9 @@ export default function ButtonBox({
       {/* 위시 리스트 버튼 */}
       <Button
         className="h-[46px] w-[560px] border border-primary bg-white text-primary"
-        label={
-          wishListStatus ? "위시 리스트에서 제거하기" : "위시 리스트에 추가하기"
-        }
+        label={wishList ? "위시 리스트에서 제거하기" : "위시 리스트에 추가하기"}
         type="button"
-        onClick={() => (wishListStatus ? deleteWishList(id) : addWishList(id))}
-      ></Button>
-      <Button
-        className="h-[46px] w-[560px] border border-primary bg-white text-primary"
-        label="위시리스트 목록 체크"
-        type="button"
-        onClick={() => checkWishList(id)}
+        onClick={() => (wishList ? deleteWishList(id) : addWishList(id))}
       ></Button>
     </>
   );
