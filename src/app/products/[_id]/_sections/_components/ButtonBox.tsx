@@ -1,41 +1,19 @@
 "use client";
 
 import Button from "@/components/Button";
-import userTokens from "@/app/tokens/userToken";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-
-const addWishList = async (id: string) => {
-  const { accessToken, userToken } = userTokens();
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}bookmarks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        product_id: parseInt(id),
-        user_id: userToken,
-        memo: "test",
-      }),
-    });
-    if (!res.ok) {
-      throw new Error("위시리스트 통신 실패");
-    }
-  } catch (error) {
-    console.error("위시리스트 추가 중 오류:", error);
-    throw error;
-  }
-};
+import { useClientSession } from "@/hooks/_index";
 
 export default function ButtonBox({
   id,
   amount,
+  wishListStatus,
 }: {
   id: string;
   amount: number[];
+  wishListStatus: boolean;
 }) {
   // 사이즈 드롭다운박스 제목 상태 관리
   const [selectedSize, setSelectedSize] = useState("사이즈를 선택해주세요");
@@ -74,6 +52,87 @@ export default function ButtonBox({
       // ml 문자열 제거
       const sizeWithoutUnit = selectedSize.replace("ml", "").trim();
       router.push(`/products/${id}/sell/?&amount=${sizeWithoutUnit}`);
+    }
+  };
+
+  /* 위시리스트 추가+제거 함수 */
+  const { getAccessToken, getUserSession } = useClientSession();
+  const accessToken = getAccessToken();
+  const userSession = getUserSession();
+  const userId = userSession._id;
+
+  const addWishList = async (id: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            product_id: parseInt(id),
+            user_id: userId,
+            memo: "test",
+          }),
+          cache: "no-cache",
+        }
+      );
+      if (!res.ok) {
+        throw new Error("위시리스트 통신 실패");
+      }
+    } catch (error) {
+      console.error("위시리스트 추가 중 오류:", error);
+      throw error;
+    }
+  };
+
+  const deleteWishList = async (id: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          cache: "no-cache",
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if (!res.ok) {
+        throw new Error("위시리스트 삭제 실패다 임마");
+      }
+    } catch (error) {
+      console.error("위시리스트 삭제 중 오류:", error);
+      throw error;
+    }
+  };
+
+  const checkWishList = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          cache: "no-cache",
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if (!res.ok) {
+        throw new Error("위시리스트 조회 실패다 임마");
+      }
+    } catch (error) {
+      console.error("위시리스트 조회 중 오류:", error);
+      throw error;
     }
   };
 
@@ -121,12 +180,19 @@ export default function ButtonBox({
         ></Button>
       </div>
       {/* 위시 리스트 버튼 */}
-
       <Button
         className="h-[46px] w-[560px] border border-primary bg-white text-primary"
-        label="위시 리스트에 추가하기"
+        label={
+          wishListStatus ? "위시 리스트에서 제거하기" : "위시 리스트에 추가하기"
+        }
         type="button"
-        onClick={() => addWishList(id)}
+        onClick={() => (wishListStatus ? deleteWishList(id) : addWishList(id))}
+      ></Button>
+      <Button
+        className="h-[46px] w-[560px] border border-primary bg-white text-primary"
+        label="위시리스트 목록 체크"
+        type="button"
+        onClick={() => checkWishList()}
       ></Button>
     </>
   );
