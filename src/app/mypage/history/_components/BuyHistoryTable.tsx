@@ -1,32 +1,5 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useReviewStore } from "@/stores/_index";
-import { axiosPrivate } from "@/api/axios";
-
-type TReview = {
-  _id: number;
-  rating: number;
-  content: string;
-  extra: {
-    title: string;
-  };
-  createdAt: string;
-  product: {
-    _id: number;
-    image: {
-      path: string;
-      name: string;
-      originalname: string;
-    };
-    name: string;
-  };
-  user: {
-    _id: number;
-    name: string;
-  };
-};
+import { ReviewButton } from "./_index";
+import { getRepliesData } from "../_functions/_index";
 
 type TProduct = {
   _id: number;
@@ -74,51 +47,12 @@ type TBuyHistory = {
 
 type TBuyHistoryData = TBuyHistory[];
 
-const BuyHistoryTable = ({
+const BuyHistoryTable = async ({
   buyHistoryData,
 }: {
   buyHistoryData: TBuyHistoryData;
 }) => {
-  const setReview = useReviewStore((state) => state.setReview);
-
-  const [reviewdProducts, setReviewedProducts] = useState<number[]>([]);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    // 리뷰된 상품의 목록들
-    (async () => {
-      try {
-        const res = await axiosPrivate.get("replies");
-        const repliesData = res.data.item;
-
-        const reviewdProductsData = repliesData.map((reply: TReview) => {
-          return reply.product._id;
-        });
-
-        setReviewedProducts(reviewdProductsData);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        }
-      }
-    })();
-  }, []);
-
-  const handleClick = (buyHistory: TBuyHistory, product: TProduct) => () => {
-    const { _id: orderId } = buyHistory;
-    const { _id: productId, name, image, extra } = product;
-
-    setReview({
-      order_id: orderId,
-      product_id: productId,
-      brand: extra.brand,
-      name: name,
-      image: image,
-    });
-
-    router.push("/review");
-  };
+  const repliesData = await getRepliesData();
 
   return (
     <table className="mb-[66px] w-[100%]">
@@ -149,23 +83,7 @@ const BuyHistoryTable = ({
                   {price.toLocaleString("ko-KR")} 원
                 </td>
                 <td className="w-[10%]">
-                  {reviewdProducts.includes(_id) ? (
-                    <button
-                      type="button"
-                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                      disabled
-                    >
-                      완료
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="h-[50px] w-[70px] hover:bg-[#A0D1EF]"
-                      onClick={handleClick(buyHistory, product)}
-                    >
-                      작성
-                    </button>
-                  )}
+                  <ReviewButton repliesData={repliesData} id={_id} />
                 </td>
               </tr>
             );
