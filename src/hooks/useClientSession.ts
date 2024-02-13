@@ -6,7 +6,7 @@ export default function useClientSession() {
   const { data: session } = useSession();
 
   /* 유저 세션을 반환하는 함수 */
-  const userSession = () => {
+  const getUserSession = () => {
     if (session) {
       return session.user.item;
     } else {
@@ -15,7 +15,7 @@ export default function useClientSession() {
   };
 
   /* JWT AccessToken을 반환하는 함수 */
-  const accessToken = () => {
+  const getAccessToken = () => {
     if (session) {
       return session.user.item.token.accessToken;
     } else {
@@ -24,7 +24,7 @@ export default function useClientSession() {
   };
 
   /* JWT RefreshToken을 반환하는 함수 */
-  const refreshToken = () => {
+  const getRefreshToken = () => {
     if (session) {
       return session.user.item.token.refreshToken;
     } else {
@@ -32,5 +32,5 @@ export default function useClientSession() {
     }
   };
 
-  return { userSession, accessToken, refreshToken };
+  return { getUserSession, getAccessToken, getRefreshToken };
 }
