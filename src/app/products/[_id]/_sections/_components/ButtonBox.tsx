@@ -112,7 +112,7 @@ export default function ButtonBox({
     }
   };
 
-  const checkWishList = async () => {
+  const checkWishList = async (id: string) => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/`,
@@ -125,10 +125,19 @@ export default function ButtonBox({
           cache: "no-cache",
         }
       );
-      const data = await res.json();
-      console.log(data);
       if (!res.ok) {
         throw new Error("위시리스트 조회 실패다 임마");
+      }
+      const data = await res.json();
+      const mydata = data.item;
+      console.log(mydata);
+      const itemToDelete = data.item.find(
+        (item: { product_id: number }) => item.product_id === parseInt(id)
+      );
+      if (itemToDelete) {
+        await deleteWishList(itemToDelete._id);
+      } else {
+        console.log("Item not found in wishlist");
       }
     } catch (error) {
       console.error("위시리스트 조회 중 오류:", error);
@@ -192,7 +201,7 @@ export default function ButtonBox({
         className="h-[46px] w-[560px] border border-primary bg-white text-primary"
         label="위시리스트 목록 체크"
         type="button"
-        onClick={() => checkWishList()}
+        onClick={() => checkWishList(id)}
       ></Button>
     </>
   );

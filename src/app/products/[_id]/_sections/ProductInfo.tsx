@@ -18,7 +18,6 @@ async function getData(id: string) {
 /* 데이터 fetching */
 async function getWishList(id: string) {
   const accessToken = await getAccessToken();
-  console.log(accessToken);
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/products/${id}`,
     {
@@ -32,7 +31,6 @@ async function getWishList(id: string) {
   if (!res.ok) {
     return false;
   }
-
   return true;
 }
 
