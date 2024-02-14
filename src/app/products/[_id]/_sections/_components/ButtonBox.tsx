@@ -61,10 +61,14 @@ export default function ButtonBox({
   const { getAccessToken, getUserSession } = useClientSession();
   const accessToken = getAccessToken();
   const userSession = getUserSession();
-  const userId = userSession._id;
+  const userId = userSession?._id;
 
   /* 위시리스트에 추가하기 */
   const addWishList = async (id: string) => {
+    if (!userSession) {
+      alert("로그인이 필요한 서비스입니다.");
+      return; // Stop the function execution here
+    }
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks`,
@@ -121,6 +125,10 @@ export default function ButtonBox({
   // 2. 위시리스트 목록 중 현재 상품의 id(상품 id)가 포함된 배열을 찾는다.
   // 3. 찾은 배열의 _id(위시리스트 id)를 이용하여 위시리스트에서 상품을 삭제한다.
   const deleteWishList = async (id: string) => {
+    if (!userSession) {
+      alert("로그인이 필요한 서비스입니다.");
+      return; // Stop the function execution here
+    }
     try {
       const data = await findWishListId();
       const itemToDelete = data.item.find(
