@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import ButtonBox from "./_components/ButtonBox";
+import { getAccessToken } from "@/utils/_index";
 
 /* 데이터 fetching */
 async function getData(id: string) {
@@ -14,8 +15,28 @@ async function getData(id: string) {
   return res.json();
 }
 
+/* 데이터 fetching */
+async function getWishList(id: string) {
+  const accessToken = await getAccessToken();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/products/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-cache",
+    }
+  );
+  if (!res.ok) {
+    return false;
+  }
+  return true;
+}
+
 export default async function ProductInfo({ id }: { id: string }) {
   const result = await getData(id);
+  const wishlistStatus = await getWishList(id);
   const productData = {
     name: result.item.name,
     price: result.item.price,
@@ -62,7 +83,11 @@ export default async function ProductInfo({ id }: { id: string }) {
               {productData.price.toLocaleString()}원
             </p>
           </div>
-          <ButtonBox id={id} amount={productData.amount} />
+          <ButtonBox
+            id={id}
+            amount={productData.amount}
+            wishListStatus={wishlistStatus}
+          />
         </div>
       </div>
     </section>
