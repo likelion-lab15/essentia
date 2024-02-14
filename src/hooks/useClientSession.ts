@@ -10,7 +10,7 @@ export default function useClientSession() {
     if (session) {
       return session.user.item;
     } else {
-      return { message: "유저 세션이 없습니다" };
+      return;
     }
   };
 
@@ -19,7 +19,7 @@ export default function useClientSession() {
     if (session) {
       return session.user.item.token.accessToken;
     } else {
-      return { message: "유저 세션이 없습니다" };
+      return;
     }
   };
 
@@ -28,7 +28,7 @@ export default function useClientSession() {
     if (session) {
       return session.user.item.token.refreshToken;
     } else {
-      return { message: "유저 세션이 없습니다" };
+      return;
     }
   };
 
