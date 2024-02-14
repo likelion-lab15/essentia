@@ -1,6 +1,6 @@
 /* 김진우 */
 
-import { getBuyHistory, getSellHistory } from "./_functions/getHistoryData";
+import { getBuyHistory, getSellHistory } from "./_functions/_index";
 import {
   BuyHistoryTable,
   Membership,
@@ -24,10 +24,10 @@ export default async function History() {
       <Membership />
 
       {/* 3. 구매 내역 */}
-      {/* <div className="relative">
+      <div className="relative">
         <BuyHistoryTable buyHistoryData={buyData.slice(0, 5)} />
         <MoreButton href={"/mypage/history/buyhistory"} />
-      </div> */}
+      </div>
 
       {/* 4. 판매 내역 */}
       <div className="relative">
