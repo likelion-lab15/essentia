@@ -10,7 +10,7 @@ export const getUserSession = async () => {
   if (session) {
     return session.user.item;
   } else {
-    return { message: "세션 정보가 없습니다" };
+    return;
   }
 };
 
@@ -21,7 +21,7 @@ export const getAccessToken = async () => {
   if (session) {
     return session.user.item.token.accessToken;
   } else {
-    return { message: "AccessToken이 없습니다" };
+    return;
   }
 };
 
@@ -32,6 +32,6 @@ export const getRefreshToken = async () => {
   if (session) {
     return session.user.item.token.refreshToken;
   } else {
-    return { message: "RefreshToken이 없습니다" };
+    return;
   }
 };
