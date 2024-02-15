@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { deleteWishList } from "../_functions/_index";
+import { deleteWish } from "../_functions/_index";
 import { useClientSession } from "@/hooks/_index";
 
 type TWishCard = {
@@ -35,7 +35,7 @@ export default function WishCard({ id, product, setUpdateFlag }: TWishCard) {
     e.stopPropagation();
 
     try {
-      await deleteWishList(id, getAccessToken());
+      await deleteWish(id, getAccessToken());
       setUpdateFlag((prev) => !prev);
     } catch (error) {
       if (error instanceof Error) {
