@@ -6,31 +6,31 @@ export default function useClientSession() {
   const { data: session } = useSession();
 
   /* 유저 세션을 반환하는 함수 */
-  const userSession = () => {
+  const getUserSession = () => {
     if (session) {
       return session.user.item;
     } else {
-      return { message: "유저 세션이 없습니다" };
+      return;
     }
   };
 
   /* JWT AccessToken을 반환하는 함수 */
-  const accessToken = () => {
+  const getAccessToken = () => {
     if (session) {
       return session.user.item.token.accessToken;
     } else {
-      return { message: "유저 세션이 없습니다" };
+      return;
     }
   };
 
   /* JWT RefreshToken을 반환하는 함수 */
-  const refreshToken = () => {
+  const getRefreshToken = () => {
     if (session) {
       return session.user.item.token.refreshToken;
     } else {
-      return { message: "유저 세션이 없습니다" };
+      return;
     }
   };
 
-  return { userSession, accessToken, refreshToken };
+  return { getUserSession, getAccessToken, getRefreshToken };
 }

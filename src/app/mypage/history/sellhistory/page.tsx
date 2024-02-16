@@ -1,21 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
-
-import { useEffect, useState } from "react";
+import { getSellHistory } from "../_functions/_index";
 import { SellHistoryTable } from "../_components/_index";
-import { getHistoryData2 } from "../_functions/getHistoryData";
-import { useUserStore } from "@/stores/_index";
 
-export default function SellHistory() {
-  const [sellHistoryData, setSellHistoryData] = useState([]);
-  const user = useUserStore((state) => state.user);
-
-  useEffect(() => {
-    (async () => {
-      const data = await getHistoryData2("/products", user!._id);
-      setSellHistoryData(data);
-    })();
-  }, []);
+export default async function SellHistory() {
+  const sellHistoryData = await getSellHistory();
 
   return (
     <section className="w-[1000px]">
