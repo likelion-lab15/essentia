@@ -62,7 +62,11 @@ export default async function Sell({
             {targetAmount}ml
           </span>
         </div>
-        <SellForm amount={targetAmount} fixed={productData.price} />
+        <SellForm
+          amount={targetAmount}
+          fixed={productData.price}
+          id={targetId}
+        />
       </section>
     </main>
   );

@@ -44,4 +44,4 @@ export type TFormSellAction =
       type: "UPLOAD_IMAGE";
       payload: { uploadedPaths: string[]; previewUrls: string[] };
     }
-  | { type: "VALIDATE_RESTAMOUNT"; payload: { value: string } };
+  | { type: "VALIDATE_RESTAMOUNT"; payload: { value: any } };

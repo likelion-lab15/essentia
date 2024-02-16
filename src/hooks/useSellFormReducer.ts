@@ -8,13 +8,14 @@ export const INITIAL_STATE = {
   shippingFees: 0,
   show: true,
   active: true,
-  name: "",
+  name: "Replica Lazy Sunday Morning Eau De Toilette",
   quantity: 200,
   buyQuantity: 198,
   extra: {
     depth: 2,
     restamount: "",
     date: "",
+    parent: "",
   },
   valids: {
     restamount: null,
