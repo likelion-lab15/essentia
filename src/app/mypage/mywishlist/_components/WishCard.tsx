@@ -29,18 +29,7 @@ export default function WishCard({ id, product }: TWishCard) {
 
   const { mutate } = useMutation({
     mutationFn: () => deleteWish(id, getAccessToken()),
-    onMutate: () => {
-      // mutationFn 보다 먼저 실행됨
-      console.log("mutate");
-    },
-    onError: () => {
-      console.log("에러가 발생해 제거 실패!");
-    },
-    onSuccess: () => {
-      console.log("제거 성공");
-    },
     onSettled: async (_, error) => {
-      console.log("settled");
       if (error) {
         console.log(error);
       } else {
