@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MouseEvent } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { deleteWish } from "../_functions/_index";
 import { useClientSession } from "@/hooks/_index";
@@ -17,13 +18,36 @@ type TWishCard = {
       originalname: string;
     };
   };
-  setUpdateFlag: any;
+  setUpdateFlag?: any;
 };
 
-export default function WishCard({ id, product, setUpdateFlag }: TWishCard) {
+export default function WishCard({ id, product }: TWishCard) {
   const { image, name, price } = product;
   const router = useRouter();
   const { getAccessToken } = useClientSession();
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: () => deleteWish(id, getAccessToken()),
+    onMutate: () => {
+      // mutationFn 보다 먼저 실행됨
+      console.log("mutate");
+    },
+    onError: () => {
+      console.log("에러가 발생해 제거 실패!");
+    },
+    onSuccess: () => {
+      console.log("제거 성공");
+    },
+    onSettled: async (_, error) => {
+      console.log("settled");
+      if (error) {
+        console.log(error);
+      } else {
+        await queryClient.invalidateQueries({ queryKey: ["wishList"] });
+      }
+    },
+  });
 
   /* 페이지 이동하기 */
   const handleClickToPush = () => {
@@ -31,17 +55,9 @@ export default function WishCard({ id, product, setUpdateFlag }: TWishCard) {
   };
 
   /* 찜목록에서 삭제하기 */
-  const handleDeleteWish = async (e: MouseEvent) => {
+  const handleDeleteWish = (e: MouseEvent) => {
     e.stopPropagation();
-
-    try {
-      await deleteWish(id, getAccessToken());
-      setUpdateFlag((prev) => !prev);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-    }
+    mutate();
   };
 
   return (
