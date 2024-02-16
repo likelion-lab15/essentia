@@ -12,8 +12,9 @@ export default function SellForm({ amount, fixed, id }: any) {
     fixed,
   };
 
-  const { accessToken } = useClientSession();
-  const token = accessToken();
+  const { getAccessToken } = useClientSession();
+  const token = getAccessToken();
+  console.log(token);
 
   const [state, dispatch] = useReducer(useSellFormReducer, initialState);
 
