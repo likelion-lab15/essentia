@@ -5,16 +5,20 @@ import React, { useReducer } from "react";
 import { uploadFiles } from "../_lib/fileUploader";
 import useClientSession from "@/hooks/useClientSession";
 
-export default function SellForm({ amount, fixed, id }: any) {
+export default function SellForm({ amount, fixedPrice, id }: any) {
   const initialState = {
     ...INITIAL_STATE,
     amount,
-    fixed,
+    extra: {
+      ...INITIAL_STATE.extra,
+      amount: parseInt(amount),
+      parent: parseInt(id),
+    },
+    fixedPrice,
   };
 
   const { getAccessToken } = useClientSession();
   const token = getAccessToken();
-  console.log(token);
 
   const [state, dispatch] = useReducer(useSellFormReducer, initialState);
 
