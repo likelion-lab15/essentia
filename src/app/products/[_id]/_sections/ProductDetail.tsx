@@ -1,175 +1,108 @@
-"use client";
-
-import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import axios from "@/api/axios";
-import { CardCarousel } from "@/containers/_index";
+import ReviewList from "./_components/ReviewList";
+import Link from "next/link";
+
+/* 데이터 fetching */
+async function getData(id: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
+  );
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
 
 type TReview = {
-  _id: string;
+  content: string;
+  title: string;
   extra: {
     title: string;
-    author: string;
+  };
+  user: {
+    name: string;
   };
   createdAt: string;
-  content: string;
 };
 
-export default function ProductDetail({ id }: { id: string }) {
-  /* 상태 변수 선언 */
-  // 현재 활성화된 섹션을 추적하기 위한 상태
-  const [activeSection, setActiveSection] = useState("");
+type TItem = {
+  replies: TReview[];
+};
 
-  // 리뷰 데이터 관리를 위한 상태
-  const [reviews, setReviews] = useState<TReview[]>([]);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [countReviews, setCountReviews] = useState(0);
-
-  // 페이지네이션을 위한 상태
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // 각 섹션에 대한 참조
-  const detailInfoRef = useRef<HTMLElement>(null);
-  const returnInfoRef = useRef<HTMLElement>(null);
-  const reviewRef = useRef<HTMLElement>(null);
-  const recommendedProductsRef = useRef<HTMLElement>(null);
-
-  /* 상수 선언 */
-  const REVIEWS_PER_PAGE = 5;
-  const pageCount = Math.ceil(reviews.length / REVIEWS_PER_PAGE);
-
-  // 현재 페이지의 리뷰 데이터
-  const currentReviews = reviews.slice(
-    (currentPage - 1) * REVIEWS_PER_PAGE,
-    currentPage * REVIEWS_PER_PAGE
-  );
-
-  /* 함수 선언 */
-  // 페이지 전환 핸들러
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-    setActiveIndex(null);
+export default async function ProductDetail({ id }: { id: string }) {
+  const result = await getData(id);
+  const productData = {
+    replyItem: result.item.options.item,
+    detailImage: result.item.mainImages[1].path,
   };
 
-  // 해당 섹션으로 스크롤 이동
-  const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
-    const headerHeight = 170;
-    if (ref && ref.current) {
-      window.scrollTo({
-        top: ref.current.offsetTop - headerHeight,
-        behavior: "smooth",
-      });
-    }
-  };
+  // 하위에 등록된 제품들의 리뷰를 가져오는 코드
+  const reviewsArray: TReview[] = productData.replyItem
+    .flatMap(
+      (item: TItem) =>
+        item.replies?.map((review) => ({
+          content: review.content,
+          title: review.extra.title,
+          author: review.user.name,
+          createdAt: review.createdAt,
+        })) ?? []
+    )
+    .filter((review: TReview) => review.content && review.title);
 
-  // 스크롤에 따라 현재 섹션을 감지
-  const checkActiveSection = () => {
-    const scrollPosition = window.scrollY + window.innerHeight / 2;
+  console.log("등록된 리뷰 목록", reviewsArray);
 
-    const refs: { [key: string]: React.RefObject<HTMLElement> } = {
-      detailInfo: detailInfoRef,
-      returnInfo: returnInfoRef,
-      review: reviewRef,
-      recommendedProducts: recommendedProductsRef,
-    };
+  // 총 리뷰개수
+  const numberOfReviews = reviewsArray.length;
 
-    for (const section in refs) {
-      const ref = refs[section];
-      if (ref.current) {
-        const offsetTop = ref.current.offsetTop;
-        const offsetBottom = offsetTop + ref.current.offsetHeight;
-        if (scrollPosition > offsetTop && scrollPosition < offsetBottom) {
-          setActiveSection(section);
-          break;
-        }
-      }
-    }
-  };
-
-  // API 호출 및 데이터 가져오기
-  const getProductInfo = useCallback(async () => {
-    try {
-      const response = await axios.get(`/products/${id}`);
-      const result = response.data;
-      console.log("products/[id] GET 통신 성공", result);
-      return result.item.replies;
-    } catch (error) {
-      console.error("products/[id] GET 통신 에러 발생 🥲", error);
-      return [];
-    }
-  }, [id]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const replies = await getProductInfo();
-      setReviews(replies);
-      setCountReviews(replies.length);
-    };
-    fetchData();
-  }, [getProductInfo]);
-
-  // 스크롤 이벤트 리스너 추가
-  useEffect(() => {
-    window.addEventListener("scroll", checkActiveSection);
-
-    return () => {
-      window.removeEventListener("scroll", checkActiveSection);
-    };
-  }, []);
-
-  // 리뷰 아코디언 토글 함수
-  const toggleAccordion = (index: number) => {
-    setActiveIndex(index === activeIndex ? null : index);
-  };
+  console.log("총 리뷰 개수", numberOfReviews);
 
   const navItems = [
-    { label: "상세정보", ref: detailInfoRef, section: "detailInfo" },
-    { label: "검수기준", ref: returnInfoRef, section: "returnInfo" },
-    { label: `REVIEW (${countReviews})`, ref: reviewRef, section: "review" },
+    { label: "상세정보", section: "detailInfo" },
+    { label: "검수기준", section: "returnInfo" },
+    { label: `REVIEW (${numberOfReviews})`, section: "review" },
     {
       label: "추천 상품",
-      ref: recommendedProductsRef,
       section: "recommendedProducts",
     },
   ];
 
   return (
     <>
-      {/* 상세페이지 네비게이션  */}
+      {/* 상세 네비게이션 */}
       <nav
         aria-label="상품 상세 네비게이션"
         className="sticky top-[79px] z-10 flex h-[64px] w-full flex-row justify-center border-b border-t border-primary bg-white"
       >
-        <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-tertiary">
+        <ul className="flex h-[62px] w-[800px] flex-row justify-between text-16 font-semibold text-primary">
           {navItems.map((item) => (
             <li key={item.section}>
-              <button
-                onClick={() => scrollToSection(item.ref)}
-                className={`flex h-[64px] w-[200px] items-center justify-center hover:text-primary ${
-                  activeSection === item.section ? "font-bold text-primary" : ""
-                }`}
+              <Link
+                href={`#${item.section}`}
+                className={`flex h-[64px] w-[200px] items-center justify-center hover:text-secondary`}
               >
                 {item.label}
-              </button>
+              </Link>
             </li>
           ))}
         </ul>
       </nav>
-      {/* 상세 이미지 SECTION */}
+      {/* 상세 이미지 */}
       <section
-        ref={detailInfoRef}
-        className="mb-[100px] flex h-[1800px] w-[1280px] items-center justify-center"
+        id="detailInfo"
+        className="mb-[100px] flex h-[1800px] w-[1280px] items-center justify-center border border-primary"
       >
         <Image
-          src="/detailImage.png"
+          src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.detailImage}`}
           alt="제품 상세 이미지"
           width={800}
           height={1789}
         ></Image>
       </section>
+      {/* 검수 기준 */}
       <section
-        ref={returnInfoRef}
-        className="mb-[100px] mt-[100px] flex h-[700px] w-[1280px] flex-col"
+        id="returnInfo"
+        className="mb-[100px] mt-[100px] flex h-[800px] w-[1280px] flex-col border border-primary"
       >
         <h3 className="border-b-2 border-primary pb-[30px] text-48 font-bold">
           검수 기준
@@ -248,69 +181,20 @@ export default function ProductDetail({ id }: { id: string }) {
           </p>
         </div>
       </section>
-      {/* 구분선 */}
       <div className="mb-[100px] h-0 w-full border-b-2 border-primary"></div>
-      <div className="flex h-[1150px] w-[1280px] flex-col items-center ">
-        {/* 리뷰 섹션 */}
-        <section ref={reviewRef} className="mb-[100px] w-full overflow-y-auto ">
-          <h3 className="border-b-2 border-primary pb-[40px] text-48 font-bold">
-            REVIEW ({countReviews})
-          </h3>
-          {/* 리뷰 아코디언 */}
-          <div className="text-20 font-medium">
-            {currentReviews.map((review, index: number) => (
-              <div
-                key={review._id}
-                className={`flex flex-col border-b-2 border-primary ${
-                  activeIndex === index ? "bg-blue-100" : ""
-                }`}
-              >
-                <button
-                  className="flex w-full items-center justify-between p-[20px] text-left"
-                  onClick={() => toggleAccordion(index)}
-                >
-                  <span className="flex-grow">{review.extra.title}</span>
-                  <span className="w-[100px] text-center">
-                    {review.extra.author}
-                  </span>
-                  <span className="w-[200px] text-right">
-                    {new Date(review.createdAt).toLocaleDateString("ko-KR")}
-                  </span>
-                </button>
-                <div
-                  className={
-                    activeIndex === index ? "max-h-[200px]" : "max-h-0"
-                  }
-                >
-                  <div
-                    className={`p-[20px] ${
-                      activeIndex === index ? "block" : "hidden"
-                    }`}
-                  >
-                    <p>{review.content}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          {/* 페이지네이션 컴포넌트 */}
-          <div className="mt-[40px] flex items-center justify-center text-24 font-bold">
-            {Array.from({ length: pageCount }, (_, i) => (
-              <button
-                className="m-[5px] p-[10px]"
-                key={i}
-                onClick={() => handlePageChange(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        </section>
-        {/* 추천 상품 */}
-        <section ref={recommendedProductsRef} className="h-[600px] w-full">
-          <h3 className="pb-[60px] text-48 font-bold">추천 상품</h3>
-        </section>
-      </div>
+      {/* 리뷰 */}
+      <ReviewList
+        numberOfReviews={numberOfReviews}
+        reviews={reviewsArray}
+        test={productData.replyItem}
+      />
+      {/* 추천 상품 */}
+      <section
+        id="recommendedProducts"
+        className="h-[600px] w-[1280px] border border-primary"
+      >
+        <h3 className="pb-[60px] text-48 font-bold">추천 상품</h3>
+      </section>
     </>
   );
 }
