@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { EmptyMessage, Loader, WishCard } from "../_components/_index";
+import { EmptyMessage, Error, Loader, WishCard } from "../_components/_index";
 import { useClientSession } from "@/hooks/_index";
 import { getWishList } from "../_functions/_index";
 
@@ -21,6 +21,7 @@ type TWish = {
 export default function WishCardList() {
   const { getAccessToken } = useClientSession();
 
+  // 데이터 호출
   const {
     data: wishList,
     isLoading,
@@ -31,12 +32,14 @@ export default function WishCardList() {
     enabled: !!getAccessToken(),
   });
 
+  // 로딩 핸들링
   if (isLoading) {
     return <Loader />;
   }
 
+  // 에러 핸들링
   if (isError) {
-    return <span>데이터를 불러오지 못했습니다!</span>;
+    return <Error />;
   }
 
   if (wishList && wishList.length > 0) {
