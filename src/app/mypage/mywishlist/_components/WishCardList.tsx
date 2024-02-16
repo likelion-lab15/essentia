@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { EmptyMessage, WishCard } from "../_components/_index";
+import { useQuery } from "@tanstack/react-query";
+import { EmptyMessage, Loader, WishCard } from "../_components/_index";
 import { useClientSession } from "@/hooks/_index";
+import { getWishList } from "../_functions/_index";
+
 type TWish = {
   _id: number;
   product: {
@@ -17,54 +19,33 @@ type TWish = {
 };
 
 export default function WishCardList() {
-  const [wishList, setWishList] = useState([]);
-  const [updateFlag, setUpdateFlag] = useState(false);
   const { getAccessToken } = useClientSession();
 
-  const accessToken = getAccessToken();
+  const {
+    data: wishList,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["wishList"],
+    queryFn: () => getWishList(getAccessToken()),
+    enabled: !!getAccessToken(),
+  });
 
-  /* 찜목록 데이터 불러오기 */
-  useEffect(() => {
-    const getWishList = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+  if (isLoading) {
+    return <Loader />;
+  }
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
+  if (isError) {
+    return <span>데이터를 불러오지 못했습니다!</span>;
+  }
 
-        const data = await res.json();
-
-        setWishList(data.item);
-      } catch (error) {
-        console.error("message:", error);
-      }
-    };
-
-    getWishList();
-  }, [updateFlag]);
-
-  if (wishList.length > 0) {
+  if (wishList && wishList.length > 0) {
     return (
       <div className="flex flex-wrap">
         {wishList.map((wish: TWish) => {
           const { _id, product } = wish;
 
-          return (
-            <WishCard
-              key={_id}
-              id={_id}
-              product={product}
-              setUpdateFlag={setUpdateFlag}
-            />
-          );
+          return <WishCard key={_id} id={_id} product={product} />;
         })}
       </div>
     );
