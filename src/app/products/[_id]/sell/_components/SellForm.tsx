@@ -3,16 +3,17 @@
 import { INITIAL_STATE, useSellFormReducer } from "@/hooks/useSellFormReducer";
 import React, { useReducer } from "react";
 import { uploadFiles } from "../_lib/fileUploader";
-import { getToken } from "@/api/axios";
+import useClientSession from "@/hooks/useClientSession";
 
-export default function SellForm({ amount, fixed }: any) {
+export default function SellForm({ amount, fixed, id }: any) {
   const initialState = {
     ...INITIAL_STATE,
     amount,
     fixed,
   };
 
-  const token = getToken();
+  const { accessToken } = useClientSession();
+  const token = accessToken();
 
   const [state, dispatch] = useReducer(useSellFormReducer, initialState);
 
@@ -38,15 +39,17 @@ export default function SellForm({ amount, fixed }: any) {
 
   const handleRestamountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const isNumberInput = e.target.type === "number";
+    const restamountValue = isNumberInput ? parseInt(value, 10) : value;
     dispatch({
       type: "VALIDATE_RESTAMOUNT",
-      payload: { value },
+      payload: { value: restamountValue },
     });
     dispatch({
       type: "CHANGE_INPUT",
       payload: {
         name,
-        value,
+        value: restamountValue,
       },
     });
   };
