@@ -16,6 +16,7 @@ export const INITIAL_STATE = {
     restamount: "",
     date: "",
     parent: "",
+    amount: "",
   },
   valids: {
     restamount: null,
@@ -36,8 +37,8 @@ const validateAmount = (restamount: number, amount: number) => {
   return restamount >= 0 && restamount <= amount;
 };
 
-const validatePrice = (price: number, fixed: number) => {
-  return price >= 100 && price < fixed;
+const validatePrice = (price: number, fixedPrice: number) => {
+  return price >= 100 && price < fixedPrice;
 };
 
 const validateDate = (date: string) => {
@@ -103,7 +104,7 @@ export function useSellFormReducer(
     /* 가격 유효성 검사 */
     case "VALIDATE_PRICE": {
       const priceValue = action.payload.value;
-      const isValidPrice = validatePrice(priceValue, state.fixed);
+      const isValidPrice = validatePrice(priceValue, state.fixedPrice);
       return {
         ...state,
         valids: {

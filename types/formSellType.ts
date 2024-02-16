@@ -26,7 +26,7 @@ export type TFromSellState = {
   quantity: number;
   buyQuantity: number;
   amount: number;
-  fixed: number;
+  fixedPrice: number;
   extra: TExtra;
   valids: Record<TFormSellInput, boolean | null>;
   errorMessages: Record<TFormSellInput, string | null>;
