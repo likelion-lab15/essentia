@@ -4,6 +4,7 @@ import { INITIAL_STATE, useSellFormReducer } from "@/hooks/useSellFormReducer";
 import React, { useReducer } from "react";
 import { uploadFiles } from "../_lib/fileUploader";
 import useClientSession from "@/hooks/useClientSession";
+import { useRouter } from "next/navigation";
 
 export default function SellForm({ amount, fixedPrice, id }: any) {
   const initialState = {
@@ -19,7 +20,7 @@ export default function SellForm({ amount, fixedPrice, id }: any) {
 
   const { getAccessToken } = useClientSession();
   const token = getAccessToken();
-
+  const router = useRouter();
   const [state, dispatch] = useReducer(useSellFormReducer, initialState);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,8 +127,14 @@ export default function SellForm({ amount, fixedPrice, id }: any) {
         }
       );
 
-      const responseData = await response.json();
-      console.log(responseData);
+      if (response.ok) {
+        const responseData = await response.json();
+        alert("상품이 등록되었습니다.");
+        console.log("상품이 등록되었습니다.", responseData);
+        router.push(`/products/${id}/buy?&amount=${amount}`);
+      } else {
+        alert("상품 등록에 실패하였습니다.");
+      }
     } catch (error) {
       console.error("Error 🥲", error);
     }
