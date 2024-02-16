@@ -3,6 +3,18 @@
 import { useState, useEffect } from "react";
 import { EmptyMessage, WishCard } from "../_components/_index";
 import { useClientSession } from "@/hooks/_index";
+type TWish = {
+  _id: number;
+  product: {
+    name: string;
+    price: number;
+    image: {
+      path: string;
+      name: string;
+      originalname: string;
+    };
+  };
+};
 
 export default function WishCardList() {
   const [wishList, setWishList] = useState([]);
@@ -42,7 +54,7 @@ export default function WishCardList() {
   if (wishList.length > 0) {
     return (
       <div className="flex flex-wrap">
-        {wishList.map((wish) => {
+        {wishList.map((wish: TWish) => {
           const { _id, product } = wish;
 
           return (
