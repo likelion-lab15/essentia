@@ -6,9 +6,10 @@ import { uploadFiles } from "../_lib/fileUploader";
 import useClientSession from "@/hooks/useClientSession";
 import { useRouter } from "next/navigation";
 
-export default function SellForm({ amount, fixedPrice, id }: any) {
+export default function SellForm({ amount, fixedPrice, id, name }: any) {
   const initialState = {
     ...INITIAL_STATE,
+    name,
     amount,
     extra: {
       ...INITIAL_STATE.extra,
@@ -129,9 +130,9 @@ export default function SellForm({ amount, fixedPrice, id }: any) {
 
       if (response.ok) {
         const responseData = await response.json();
-        alert("상품이 등록되었습니다.");
         console.log("상품이 등록되었습니다.", responseData);
-        router.push(`/products/${id}/buy?&amount=${amount}`);
+        alert("상품이 등록되었습니다.");
+        router.push("/mypage/history/sellhistory");
       } else {
         alert("상품 등록에 실패하였습니다.");
       }
