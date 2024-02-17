@@ -65,6 +65,7 @@ export default async function Sell({
         <SellForm
           amount={targetAmount}
           fixedPrice={productData.price}
+          name={productData.name}
           id={targetId}
         />
       </section>
