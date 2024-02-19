@@ -98,7 +98,7 @@ export default function Header() {
           </button>
           <button
             aria-label="찜 목록 보기"
-            onClick={() => router.push("/mypage/wishlist")}
+            onClick={() => router.push("/mypage/mywishlist")}
             className="bg-center bg-no-repeat"
           >
             <Image
