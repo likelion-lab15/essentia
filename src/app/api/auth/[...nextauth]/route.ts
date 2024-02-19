@@ -25,18 +25,18 @@ export const authOptions = {
           }),
         });
 
-        const user = await res.json();
-
-        if (user) {
-          return user;
-        } else {
-          return null;
+        /* 로그인이 실패하면 에러처리 */
+        if (!res.ok) {
+          return;
         }
+
+        return await res.json();
       },
     }),
   ],
   pages: {
     signIn: "/signin",
+    error: "/signin",
   },
   callbacks: {
     async jwt({ token, user }) {
