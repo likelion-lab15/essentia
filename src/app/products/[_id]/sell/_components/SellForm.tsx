@@ -3,27 +3,79 @@
 import { INITIAL_STATE, useSellFormReducer } from "@/hooks/useSellFormReducer";
 import React, { useReducer } from "react";
 import { uploadFiles } from "../_lib/fileUploader";
-import { getToken } from "@/api/axios";
+import useClientSession from "@/hooks/useClientSession";
+import { useRouter } from "next/navigation";
 
-export default function SellForm() {
-  const token = getToken();
+export default function SellForm({ amount, fixedPrice, id, name }: any) {
+  const initialState = {
+    ...INITIAL_STATE,
+    name,
+    amount,
+    extra: {
+      ...INITIAL_STATE.extra,
+      amount: parseInt(amount),
+      parent: parseInt(id),
+    },
+    fixedPrice,
+  };
 
-  const [state, dispatch] = useReducer(useSellFormReducer, INITIAL_STATE);
+  const { getAccessToken } = useClientSession();
+  const token = getAccessToken();
+  const router = useRouter();
+  const [state, dispatch] = useReducer(useSellFormReducer, initialState);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files).slice(0, 10);
+      const uploadedPaths = await uploadFiles(files);
+      // 각 파일에 대한 미리보기 URL 생성
+      const previewUrls = files.map((file) => URL.createObjectURL(file));
+      dispatch({
+        type: "UPLOAD_IMAGE",
+        payload: {
+          uploadedPaths: uploadedPaths.map((path: string, index: number) => ({
+            path,
+            name: files[index].name,
+            originalname: files[index].name,
+          })),
+          previewUrls,
+        },
+      });
+    }
+  };
+
+  const handleRestamountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const isNumberInput = e.target.type === "number";
+    const restamountValue = isNumberInput ? parseInt(value, 10) : value;
+    dispatch({
+      type: "VALIDATE_RESTAMOUNT",
+      payload: { value: restamountValue },
+    });
+    dispatch({
+      type: "CHANGE_INPUT",
+      payload: {
+        name,
+        value: restamountValue,
+      },
+    });
+  };
 
   const handlePriceChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     const isNumberInput = e.target.type === "number";
+    const priceValue = isNumberInput ? parseInt(value, 10) : value;
     dispatch({
       type: "VALIDATE_PRICE",
-      payload: { value: isNumberInput ? parseInt(value, 10) : value },
+      payload: { value: priceValue },
     });
     dispatch({
       type: "CHANGE_INPUT",
       payload: {
         name,
-        value: isNumberInput ? parseInt(value, 10) : value,
+        value: priceValue,
       },
     });
   };
@@ -59,41 +111,6 @@ export default function SellForm() {
     });
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    const isNumberInput = e.target.type === "number";
-
-    dispatch({
-      type: "CHANGE_INPUT",
-      payload: {
-        name,
-        value: isNumberInput ? parseInt(value, 10) : value,
-      },
-    });
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files).slice(0, 10);
-      const uploadedPaths = await uploadFiles(files);
-      // 각 파일에 대한 미리보기 URL 생성
-      const previewUrls = files.map((file) => URL.createObjectURL(file));
-      dispatch({
-        type: "UPLOAD_IMAGE",
-        payload: {
-          uploadedPaths: uploadedPaths.map((path: string, index: number) => ({
-            path,
-            name: files[index].name,
-            originalname: files[index].name,
-          })),
-          previewUrls,
-        },
-      });
-    }
-  };
-
   /* form 제출 함수 */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -111,40 +128,21 @@ export default function SellForm() {
         }
       );
 
-      const responseData = await response.json();
-      console.log(responseData);
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("상품이 등록되었습니다.", responseData);
+        alert("상품이 등록되었습니다.");
+        router.push("/mypage/history/sellhistory");
+      } else {
+        alert("상품 등록에 실패하였습니다.");
+      }
     } catch (error) {
       console.error("Error 🥲", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-[1200px]">
-      {/* 상품 정보 가져오기 - 브랜드, 상품명, 용량 */}
-      <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary">
-        <label htmlFor="name" className="text-18 font-bold">
-          브랜드
-        </label>
-        <span className="ml-[85px] inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
-          Aesop
-        </span>
-      </div>
-      <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary pb-[50px]">
-        <label htmlFor="name" className="text-18 font-bold">
-          상품명
-        </label>
-        <span className="ml-[85px] inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
-          Tacit Eau De Perfume
-        </span>
-      </div>
-      <div className="mt-[50px] h-[138px] border-b-[1px] border-tertiary pb-[50px]">
-        <label htmlFor="name" className="text-18 font-bold">
-          용량
-        </label>
-        <span className="ml-[102px] inline-block w-[745px] border-b-[5px] border-primary text-32 font-semibold">
-          50 ml
-        </span>
-      </div>
+    <form onSubmit={handleSubmit}>
       {/* 상품 이미지 */}
       <div className="h-[280px] border-b-[1px] border-tertiary pt-[50px]">
         <label htmlFor="file" className="mr-[100px] text-18 font-bold">
@@ -182,7 +180,7 @@ export default function SellForm() {
           name="restamount"
           placeholder="ml"
           value={state.extra.restamount}
-          onChange={handleChange}
+          onChange={handleRestamountChange}
           className="ml-[35px] mt-[20px] w-[250px] border-b-[2px] border-primary"
         />
         {state.errorMessages.restamount !== null && (
