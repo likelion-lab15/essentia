@@ -16,7 +16,7 @@ const shoppingInfoList = {
     },
     {
       title: "관심상품",
-      href: "/mypage/wishlist",
+      href: "/mypage/mywishlist",
     },
     {
       title: "리뷰",
