@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getRepliesData } from "./_lib/_index";
+import { fetchPrivateData } from "@/fetch/fetch";
 
 type TReply = {
   _id: number;
@@ -20,7 +20,7 @@ type TReply = {
 };
 
 export default async function MyReview() {
-  const repliesData = await getRepliesData();
+  const repliesData: TReply[] = await fetchPrivateData("replies");
 
   return (
     <section className="w-[1000px]">
@@ -28,7 +28,7 @@ export default async function MyReview() {
       <div className="mb-[40px] flex h-[70px] items-center border-b-[3px] border-[#222]">
         <p className="text-[28px] font-bold">내가 쓴 리뷰</p>
       </div>
-      {repliesData?.map((reply: TReply) => {
+      {repliesData?.map((reply) => {
         const { _id, createdAt, product, extra, content } = reply;
 
         return (
