@@ -4,115 +4,115 @@ const brandList = {
   data: [
     {
       title: "Diptyque",
-      href: "/products",
+      href: "/products?=Diptyque",
     },
     {
       title: "Aesop",
-      href: "/products",
+      href: "/products?=Aesop",
     },
     {
       title: "Maison Margiela",
-      href: "/products",
+      href: "/products?=Maison Margiela",
     },
     {
       title: "Byredo",
-      href: "/products",
+      href: "/products?=Byredo",
     },
     {
       title: "Creed",
-      href: "/products",
+      href: "/products?=Creed",
     },
     {
       title: "Le Labo",
-      href: "/products",
+      href: "/products?=Le Labo",
     },
     {
       title: "Santa Maria Novella",
-      href: "/products",
+      href: "/products?=Santa Maria Novella",
     },
     {
       title: "Tom Ford",
-      href: "/products",
+      href: "/products?=Tom Ford",
     },
     {
       title: "Jo Malone",
-      href: "/products",
+      href: "/products?=Jo Malone",
     },
     {
       title: "Dior",
-      href: "/products",
+      href: "/products?=Dior",
     },
     {
       title: "Chanel",
-      href: "/products",
+      href: "/products?=Chanel",
     },
     {
       title: "Frederic Malle",
-      href: "/products",
+      href: "/products?=Frederic Malle",
     },
     {
       title: "Giorgio Armani",
-      href: "/products",
+      href: "/products?=Giorgio Armani",
     },
     {
       title: "Kilian",
-      href: "/products",
+      href: "/products?=Kilian",
     },
     {
       title: "Maison Francis Kurkdjian",
-      href: "/products",
+      href: "/products?=Maison Francis Kurkdjian",
     },
     {
       title: "Saint Laurent",
-      href: "/products",
+      href: "/products?=Saint Laurent",
     },
     {
       title: "Gucci",
-      href: "/products",
+      href: "/products?=Gucci",
     },
     {
       title: "Buly 1803",
-      href: "/products",
+      href: "/products?=Buly 1803",
     },
     {
       title: "Kiehl's",
-      href: "/products",
+      href: "/products?=Kiehl's",
     },
     {
       title: "Acqua Di Parma",
-      href: "/products",
+      href: "/products?=Acqua Di Parma",
     },
     {
       title: "Palace",
-      href: "/products",
+      href: "/products?=Palace",
     },
     {
       title: "Nonfiction",
-      href: "/products",
+      href: "/products?=Nonfiction",
     },
     {
       title: "Valentino",
-      href: "/products",
+      href: "/products?=Valentino",
     },
     {
       title: "Prada",
-      href: "/products",
+      href: "/products?=Prada",
     },
     {
       title: "Memo",
-      href: "/products",
+      href: "/products?=Memo",
     },
     {
       title: "Malin+Goetz",
-      href: "/products",
+      href: "/products?=Malin+Goetz",
     },
     {
       title: "Celine",
-      href: "/products",
+      href: "/products?=Celine",
     },
     {
       title: "Tamburins",
-      href: "/products",
+      href: "/products?=Tamburins",
     },
   ],
 };
