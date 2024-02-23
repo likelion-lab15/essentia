@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
 import { useRouter } from "next/navigation";
 
 // 상품 타입 정의
