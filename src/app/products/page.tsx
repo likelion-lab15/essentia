@@ -1,18 +1,15 @@
-"use client";
 import FilterList from "@/components/FilterList";
 import Products from "./_components/Products";
 import Filter from "@/containers/Filter";
 import brandList from "@/constants/brandList";
-import { useState } from "react";
 import ScrollTopButton from "@/components/ScrollTopButton";
 
-type Tbrand = string;
-
-export default function AllProducts() {
-  const [selectedBrand, setSelectedBrand] = useState<Tbrand>("");
-  const handleBrandSelect = (brand: Tbrand) => {
-    setSelectedBrand(brand);
-  };
+export default async function AllProducts({
+  searchParams,
+}: {
+  searchParams: any;
+}) {
+  const selectedBrand = searchParams[""];
 
   return (
     <>
@@ -25,7 +22,7 @@ export default function AllProducts() {
         </div>
         <section className="flex gap-[30px]">
           <Filter title="Brand">
-            <FilterList list={brandList} onClick={handleBrandSelect} />
+            <FilterList list={brandList} />
           </Filter>
           <Products selectedBrand={selectedBrand} />
         </section>
