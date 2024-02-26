@@ -26,8 +26,6 @@ const INITIAL_STATE = {
     phone: false,
     newPassword: false,
     confirmNewPassword: false,
-    address: false,
-    detailAddress: false,
   },
 };
 
@@ -182,6 +180,7 @@ export default function UserForm() {
 
     if (!allTrue) {
       alert("잘못 입력된 정보가 있습니다!");
+      console.log(state);
       return;
     }
 
