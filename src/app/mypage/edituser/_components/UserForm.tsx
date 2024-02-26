@@ -36,9 +36,7 @@ const VALIDATION_RULES = {
   phone: (value) =>
     /^010\d{8}$/.test(value) ? "" : "올바른 휴대폰 번호를 입력해주세요",
   newPassword: (value) =>
-    value.length >= 8 &&
-    value.length <= 16 &&
-    /^(?=.*[a-zA-Z])(?=.*[\d\W])/.test(value)
+    /^.{8,16}$/.test(value)
       ? ""
       : "8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.",
 };
