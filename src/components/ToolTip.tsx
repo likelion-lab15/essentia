@@ -20,7 +20,7 @@ export default function ToolTip({ text, children }: TooltipProps) {
       </div>
       {showTooltip && (
         <div
-          className="absolute left-1/2 z-10 mt-2 inline-block -translate-x-1/2 transform rounded-md bg-primary p-2 text-14 text-white shadow-lg"
+          className="absolute left-1/2 z-40 mt-2 inline-block -translate-x-1/2 transform rounded-md bg-primary p-2 text-14 text-white shadow-lg"
           style={{ top: "80%" }}
         >
           <div className="inline-flex whitespace-nowrap">{text}</div>

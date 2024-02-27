@@ -36,11 +36,11 @@ export default async function Header() {
           ))}
         </ul>
         {/* 검색 & 사용자 버튼 */}
-        <div className="ml-[100px] flex h-[80px] w-[180px] justify-end ">
+        <div className="ml-[100px] mr-[-15px] flex h-[80px] w-[220px] justify-end">
           <ToolTip text="SEARCH">
             <button
               aria-label="검색창 열기"
-              className="flex h-full w-full items-center justify-center bg-center bg-no-repeat p-[10px]"
+              className="m-[5px] flex h-full w-full items-center justify-center bg-center bg-no-repeat p-[10px]"
             >
               <Image
                 src="/search-icon.svg"
@@ -53,7 +53,7 @@ export default async function Header() {
           <ToolTip text={user ? "MYPAGE" : "SIGNUP"}>
             <Link
               href={user ? "/mypage/history" : "/signup"}
-              className="flex h-full w-full items-center bg-center bg-no-repeat p-[10px]"
+              className="m-[5px] flex h-full w-full items-center bg-center bg-no-repeat p-[10px]"
               aria-label="마이페이지로 이동하기"
             >
               <Image
@@ -70,7 +70,7 @@ export default async function Header() {
               <Link
                 href={"/mypage/mywishlist"}
                 aria-label="찜 목록 보기"
-                className="flex h-full w-full items-center bg-center bg-no-repeat p-[10px]"
+                className="m-[5px] flex h-full w-full items-center bg-center bg-no-repeat p-[10px]"
               >
                 <Image
                   src="/blackheart-icon.svg"
