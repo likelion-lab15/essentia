@@ -5,13 +5,13 @@ import { AddressModal, Button, InputField } from "@/components/_index";
 import { useClientSession } from "@/hooks/_index";
 import { useModal } from "@/hooks/_index";
 import { initialState, reducer } from "../_reducers/_index";
-import { action } from "../_actions/_index";
 
 export default function UserForm() {
-  const { getUserSession } = useClientSession();
+  const { getUserSession, getAccessToken } = useClientSession();
   const { openModal, closeModal, ModalPortal } = useModal();
 
   const user = getUserSession();
+  const accessToken = getAccessToken();
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -41,9 +41,52 @@ export default function UserForm() {
     dispatch({ type: type, payload: value });
   };
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const newUserData = {
+      ...user,
+      phone: state?.phone,
+      password: state?.newPassword,
+      extra: {
+        ...user.extra,
+        addressBook: {
+          value: state?.address,
+          detail: state?.detailAddress,
+        },
+      },
+    };
+
+    try {
+      /* "https://jsonplaceholder.typicode.com/posts" */
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/users/${user._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(newUserData),
+        }
+      );
+
+      if (!res.ok) {
+        return;
+      }
+
+      alert("회원정보를 수정했습니다!");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      alert("회원정보를 수정하는데 실패했습니다!");
+    }
+  };
+
   return (
     <>
-      <form className="flex w-[900px] flex-col" action={action}>
+      <form className="flex w-[900px] flex-col" onSubmit={handleFormSubmit}>
         <div className="mb-[60px] flex gap-[100px]">
           <div className="w-[400px]">
             <InputField
