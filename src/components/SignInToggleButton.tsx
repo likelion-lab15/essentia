@@ -17,7 +17,7 @@ export default function SignInToggleButton({
     <ToolTip text={serverUserSession ? "LOGOUT" : "LOGIN"}>
       <button
         aria-label="로그인 또는 로그아웃하기"
-        className="border bg-center bg-no-repeat p-[10px] flex h-full w-full items-center"
+        className="flex h-full w-full items-center bg-center bg-no-repeat p-[10px]"
         onClick={clientUserSession ? () => signOut() : () => signIn()}
       >
         <Image
