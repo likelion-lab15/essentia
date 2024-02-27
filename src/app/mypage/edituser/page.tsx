@@ -1,6 +1,6 @@
 import { UserForm } from "./_components/_index";
 
-export default function EditUserInfo() {
+export default function EditUser() {
   return (
     <section className="w-[1000px]">
       {/* 1. 제목 */}
