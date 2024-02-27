@@ -5,6 +5,7 @@ type TInputField = {
   label: string;
   id: string;
   type: string;
+  name?: string;
   placeholder?: string;
   errorMessage?: string | null;
   invalid?: boolean;
@@ -19,6 +20,7 @@ export default function InputField({
   label,
   id,
   type,
+  name,
   placeholder,
   errorMessage,
   invalid,
@@ -48,6 +50,7 @@ export default function InputField({
         onBlur={onBlur}
         value={value}
         readOnly={readOnly}
+        name={name}
       />
       {errorMessage !== null && (
         <div
