@@ -1,10 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import naviList from "@/constants/naviList";
-import { Logo, ToolTip } from "@/components/_index";
+import { Logo, ToolTip, SignInToggleButton } from "@/components/_index";
 import { getUserSession } from "@/utils/getServerSession";
-// import { getServerSession } from "next-auth";
-import SignInToggleButton from "./SignInToggleButton";
 
 export default async function Header() {
   // 유저 세션 저장
