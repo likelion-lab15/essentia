@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { fetchPrivateData } from "@/fetch/fetch";
+import { getAccessToken } from "@/utils/_index";
 
 type TReply = {
   _id: number;
@@ -20,7 +21,8 @@ type TReply = {
 };
 
 export default async function MyReview() {
-  const repliesData: TReply[] = await fetchPrivateData("replies");
+  const accessToken = await getAccessToken();
+  const repliesData: TReply[] = await fetchPrivateData("replies", accessToken);
 
   return (
     <section className="w-[1000px]">

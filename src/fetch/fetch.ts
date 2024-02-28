@@ -1,5 +1,3 @@
-import { getAccessToken } from "@/utils/getServerSession";
-
 /* accessToken이 필요없는 fetch 통신 */
 export const fetchData = async (url: string, options?: any) => {
   try {
@@ -22,9 +20,11 @@ export const fetchData = async (url: string, options?: any) => {
 };
 
 /* accessToken이 필요한 fetch 통신 */
-export const fetchPrivateData = async (url: string, options?: any) => {
-  const accessToken = await getAccessToken();
-
+export const fetchPrivateData = async (
+  url: string,
+  accessToken: string,
+  options?: any
+) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/${url}`, {
       ...options,
