@@ -29,6 +29,7 @@ export const fetchPrivateData = async (url: string, options?: any) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/${url}`, {
       ...options,
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
     });
