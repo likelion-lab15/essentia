@@ -6,7 +6,7 @@ export async function getSelectedBrand(selectedBrand: string) {
     })
   );
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}products?custom=${customFilter}`
+    `${process.env.NEXT_PUBLIC_API_SERVER}/products?custom=${customFilter}`
   );
   if (!res.ok) {
     throw new Error("Failed to 상품 데이터 fetch");
