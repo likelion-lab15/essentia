@@ -11,7 +11,7 @@ export default async function Products({ selectedBrand }: TProductsProps) {
 
   return (
     <div className="w-[984px]">
-      <div className="h-[1300px]">
+      <div className="max-h-full">
         <div className="flex justify-between">
           {/* 브랜드명 */}
           {selectedBrand && (
