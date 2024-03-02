@@ -71,7 +71,7 @@ export default function ButtonBox({
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks`,
+        `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks`,
         {
           method: "POST",
           headers: {
@@ -100,7 +100,7 @@ export default function ButtonBox({
   const findWishListId = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/`,
+        `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks/`,
         {
           method: "GET",
           headers: {
@@ -136,7 +136,7 @@ export default function ButtonBox({
       );
       if (itemToDelete) {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/${itemToDelete._id}`,
+          `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks/${itemToDelete._id}`,
           {
             method: "DELETE",
             headers: {

@@ -5,7 +5,7 @@ import { getUserSession } from "@/utils/_index";
 /* 상품 데이터 fetching */
 async function getData(id: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
+    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
   );
   if (!res.ok) {
     throw new Error("구매할 상품의 부모 데이터를 가져오는데 실패하였습니다.");
@@ -17,7 +17,7 @@ async function getData(id: string) {
 /* 타겟 상품 데이터 fetching */
 async function getTargetProduct(targetId: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}products/${targetId}`
+    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${targetId}`
   );
   if (!res.ok) {
     throw new Error("구매할 상품의 데이터를 가져오는데 실패하였습니다.");
@@ -60,7 +60,7 @@ export default async function Order({
       {/* 구매할 향수 정보 */}
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
-          src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.image}`}
+          src={`${process.env.NEXT_PUBLIC_API_SERVER}/${productData.image}`}
           alt="구매할 상품 이미지"
           className=" h-[150px] w-[150px] border-2 border-primary bg-product"
         />

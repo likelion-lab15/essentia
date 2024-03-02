@@ -5,7 +5,7 @@ import { getAccessToken } from "@/utils/_index";
 /* 데이터 fetching */
 async function getData(id: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
+    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
   );
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -18,7 +18,7 @@ async function getData(id: string) {
 async function getWishList(id: string) {
   const accessToken = await getAccessToken();
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}bookmarks/products/${id}`,
+    `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks/products/${id}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export default async function ProductInfo({ id }: { id: string }) {
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
           <Image
             alt="향수 이미지"
-            src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.image}`}
+            src={`${process.env.NEXT_PUBLIC_API_SERVER}/${productData.image}`}
             width={450}
             height={450}
             className="bg-product"

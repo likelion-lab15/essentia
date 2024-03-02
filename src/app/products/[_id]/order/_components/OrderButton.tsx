@@ -22,7 +22,7 @@ export default function OrderButton({ targetId }: { targetId: string }) {
       return;
     }
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}orders`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
