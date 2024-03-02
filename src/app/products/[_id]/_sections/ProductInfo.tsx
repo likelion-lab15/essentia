@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-
+import Image from "next/image";
 import ButtonBox from "./_components/ButtonBox";
 import { getAccessToken } from "@/utils/_index";
 
@@ -52,13 +51,13 @@ export default async function ProductInfo({ id }: { id: string }) {
       <div className="flex h-[560px] w-full flex-row items-center justify-between pl-[60px] pr-[60px]">
         {/* 향수 이미지 */}
         <div className="flex h-[560px] w-[560px] flex-col items-center justify-center">
-          <img
+          <Image
             alt="향수 이미지"
             src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.image}`}
             width={450}
             height={450}
             className="bg-product"
-          ></img>
+          ></Image>
         </div>
         {/* 사용자 상호작용 */}
         <div className="h-[444] w-[560px]">
