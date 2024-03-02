@@ -4,32 +4,49 @@ import ProductCard from "@/components/ProductCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { getPageData } from "../_lib/getSelectedBrand";
+import { Fragment, useRef } from "react";
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import Loader from "@/app/mypage/mywishlist/_components/Loader";
 
 type TProductsProps = {
   selectedBrand: string;
 };
 
 export default function Products({ selectedBrand }: TProductsProps) {
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ["products", selectedBrand],
-    queryFn: async ({ pageParam = 1 }) => {
-      const products = await getPageData(pageParam);
-      return { products, nextPage: pageParam + 1, totalPages: 100 };
-    },
-    getNextPageParam: (lastPage) => {
-      // 실제 로직에 맞게 다음 페이지 존재 여부를 결정
-      return lastPage.nextPage <= lastPage.totalPages
-        ? lastPage.nextPage
-        : undefined;
-    },
+  const observerElem = useRef(null);
+
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["products", selectedBrand],
+      queryFn: async ({ pageParam }) => {
+        const products = await getPageData(pageParam);
+        return { products, nextPage: pageParam + 1, totalPages: 100 };
+      },
+      getNextPageParam: (lastPage) => {
+        return lastPage.nextPage <= lastPage.totalPages
+          ? lastPage.nextPage
+          : undefined;
+      },
+      initialPageParam: 1,
+    });
+
+  useIntersectionObserver({
+    target: observerElem,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
   });
 
   // 로딩 상태 처리
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="h-[300px] w-[984px]">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="w-[984px]">
-      <div className="h-[1300px]">
+      <div className="max-h-full">
         <div className="flex justify-between">
           {/* 브랜드명 */}
           {selectedBrand && (
@@ -46,18 +63,17 @@ export default function Products({ selectedBrand }: TProductsProps) {
           )}
         </div>
         <ul className="flex w-[1000px] flex-row flex-wrap">
-          {data?.pages.map((page) =>
-            // 직접 상품 배열을 순회
-            page.products.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))
-          )}
+          {data?.pages.map((page: any, i) => (
+            <Fragment key={i}>
+              {page.products.map((product: any) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </Fragment>
+          ))}
         </ul>
-        {hasNextPage && (
-          <button onClick={() => fetchNextPage()} disabled={!hasNextPage}>
-            Load More
-          </button>
-        )}
+        <div className="loader" ref={observerElem}>
+          {isFetchingNextPage && hasNextPage ? "Loading..." : "No search left"}
+        </div>
       </div>
     </div>
   );
