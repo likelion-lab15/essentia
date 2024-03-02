@@ -1,26 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 import OrderButton from "./_components/OrderButton";
+import { getUserSession } from "@/utils/_index";
 
-/* 데이터 fetching */
+/* 상품 데이터 fetching */
 async function getData(id: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
   );
   if (!res.ok) {
-    throw new Error("Failed to 상품 데이터 fetch");
+    throw new Error("구매할 상품의 부모 데이터를 가져오는데 실패하였습니다.");
   }
 
   return res.json();
 }
 
+/* 타겟 상품 데이터 fetching */
 async function getTargetProduct(targetId: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER}products/${targetId}`
   );
   if (!res.ok) {
-    throw new Error("Failed to 상품 데이터 fetch");
+    throw new Error("구매할 상품의 데이터를 가져오는데 실패하였습니다.");
   }
-
   return res.json();
 }
 
@@ -32,6 +33,7 @@ export default async function Order({
   params: { _id: string };
 }) {
   // 1. 사용자 로그인 상태 확인
+  const user = await getUserSession();
 
   // 2. 부모 데이터 가져오기
   const targetId = params._id;
@@ -46,9 +48,9 @@ export default async function Order({
 
   // 3. 자식 데이터 가져오기
   const targetProduct = await getTargetProduct(orderProductId);
-  console.log(targetProduct);
   const targetProductData = {
-    price: product.item.price,
+    orderId: targetProduct.item._id,
+    price: targetProduct.item.price,
   };
 
   return (
@@ -141,21 +143,24 @@ export default async function Order({
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               받는 분
             </p>
-            <p className="flex items-center text-12 font-medium">사용자이름</p>
+            <p className="flex items-center text-12 font-medium">{user.name}</p>
           </div>
           <div className="flex">
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               연락처
             </p>
             <p className="flex items-center text-12 font-medium">
-              사용자 휴대폰번호
+              {user.phone}
             </p>
           </div>
           <div className="flex">
             <p className="flex h-[24px] w-[92px] items-center justify-center text-12 font-bold">
               주소지
             </p>
-            <p className="flex items-center text-12 font-medium">사용자 주소</p>
+            <p className="flex items-center text-12 font-medium">
+              {`${user.extra.addressBook.value} 
+              ${user.extra.addressBook.detail}`}
+            </p>
           </div>
         </div>
         <div className="mt-[100px] flex h-[48px] justify-between border-b-[5px] border-primary px-[32px]">
@@ -166,7 +171,7 @@ export default async function Order({
         </div>
       </div>
       {/* 구매하기 버튼 */}
-      <OrderButton />
+      <OrderButton targetId={targetProductData.orderId} />
     </section>
   );
 }
