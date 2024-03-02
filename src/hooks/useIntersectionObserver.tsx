@@ -1,4 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, RefObject } from "react";
+
+type TIntersectionObserverProps = {
+  target: RefObject<Element>;
+  onIntersect: () => void;
+  enabled?: boolean;
+  root?: Element | null;
+  rootMargin?: string;
+  threshold?: number;
+};
 
 const useIntersectionObserver = ({
   target,
@@ -7,8 +16,8 @@ const useIntersectionObserver = ({
   root = null,
   rootMargin = "0px",
   threshold = 1.0,
-}) => {
-  const observerRef = useRef();
+}: TIntersectionObserverProps) => {
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     if (!enabled) {
