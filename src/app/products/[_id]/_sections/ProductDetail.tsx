@@ -194,7 +194,10 @@ export default async function ProductDetail({ id }: { id: string }) {
           </p>
         </div>
       </section>
-      <div className="mb-[100px] h-0 w-full border-b-2 border-primary"></div>
+      <div
+        id="review"
+        className="mb-[100px] h-0 w-full border-b-2 border-primary"
+      ></div>
       {/* 리뷰 */}
       <ReviewList numberOfReviews={numberOfReviews} reviews={reviewsArray} />
       {/* 추천 상품 */}
