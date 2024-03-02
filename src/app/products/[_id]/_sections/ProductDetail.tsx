@@ -39,14 +39,15 @@ export default async function ProductDetail({ id }: { id: string }) {
 
   // 하위에 등록된 제품들의 리뷰를 가져오는 코드
   const reviewsArray: TReview[] = productData.replyItem
-    .flatMap(
-      (item: TItem) =>
-        item.replies?.map((review) => ({
-          content: review.content,
-          title: review.extra.title,
-          author: review.user.name,
-          createdAt: review.createdAt,
-        })) ?? []
+    .flatMap((item: TItem) =>
+      Array.isArray(item?.replies)
+        ? item.replies.map((review) => ({
+            content: review.content,
+            title: review.extra.title,
+            author: review.user.name,
+            createdAt: review.createdAt,
+          }))
+        : []
     )
     .filter((review: TReview) => review.content && review.title);
 
@@ -90,7 +91,7 @@ export default async function ProductDetail({ id }: { id: string }) {
       {/* 상세 이미지 */}
       <section
         id="detailInfo"
-        className="mb-[100px] flex h-[1800px] w-[1280px] items-center justify-center border border-primary"
+        className="mb-[100px] flex h-[1800px] w-[1280px] items-center justify-center"
       >
         <Image
           src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.detailImage}`}
@@ -102,7 +103,7 @@ export default async function ProductDetail({ id }: { id: string }) {
       {/* 검수 기준 */}
       <section
         id="returnInfo"
-        className="mb-[100px] mt-[100px] flex h-[800px] w-[1280px] flex-col border border-primary"
+        className="mb-[100px] mt-[100px] flex h-[800px] w-[1280px] flex-col"
       >
         <h3 className="border-b-2 border-primary pb-[30px] text-48 font-bold">
           검수 기준
