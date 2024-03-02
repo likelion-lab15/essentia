@@ -3,7 +3,7 @@ import Products from "./_components/Products";
 import Filter from "@/containers/Filter";
 import brandList from "@/constants/brandList";
 import ScrollTopButton from "@/components/ScrollTopButton";
-import Pagination from "./_components/Pagination";
+// import Pagination from "./_components/Pagination";
 
 export default async function AllProducts({
   searchParams,
@@ -12,7 +12,7 @@ export default async function AllProducts({
 }) {
   const selectedBrand = searchParams[""];
   // console.log(searchParams.page);
-  const page = searchParams.page;
+  // const page = searchParams.page;
 
   return (
     <>
@@ -27,7 +27,7 @@ export default async function AllProducts({
           <Filter title="Brand">
             <FilterList list={brandList} />
           </Filter>
-          <Products selectedBrand={selectedBrand} page={page} />
+          <Products selectedBrand={selectedBrand} />
         </section>
         {/* <Pagination page={page} /> */}
       </main>
