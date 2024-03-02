@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-export default function ReviewList({ numberOfReviews, reviews, test }) {
+export default function ReviewList({
+  numberOfReviews,
+  reviews,
+}: {
+  numberOfReviews: number;
+  reviews: Array<any>;
+}) {
   // 리뷰 목록의 현재 페이지 상태
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   // 페이지네이션을 위한 상태
