@@ -5,13 +5,14 @@ import { AddressModal, Button, InputField } from "@/components/_index";
 import { useClientSession } from "@/hooks/_index";
 import { useModal } from "@/hooks/_index";
 import { initialState, reducer } from "../_reducers/_index";
-import { action } from "../_actions/_index";
+import { fetchPrivateData } from "@/fetch/fetch";
 
 export default function UserForm() {
-  const { getUserSession } = useClientSession();
+  const { getUserSession, getAccessToken } = useClientSession();
   const { openModal, closeModal, ModalPortal } = useModal();
 
   const user = getUserSession();
+  const accessToken = getAccessToken();
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -26,7 +27,7 @@ export default function UserForm() {
           phone: user?.phone || "",
           birthday: user?.extra.birthday || "",
           address: user?.extra.addressBook.value || "",
-          detailAddress: user?.extra.addressBook.detail || "",
+          addressDetail: user?.extra.addressBook.detail || "",
         },
       });
     }
@@ -41,9 +42,51 @@ export default function UserForm() {
     dispatch({ type: type, payload: value });
   };
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    /* 유효성 검사 */
+    const isAllValid = Object.values(initialState.isValid).every(
+      (value) => value === true
+    );
+
+    if (!isAllValid) {
+      alert("잘못 입력된 회원정보가 있습니다!");
+      return;
+    }
+
+    /* 회원정보 수정 통신 */
+    const newUserData = {
+      phone: state?.formData.phone || user?.phone,
+      password: state?.formData.newPassword,
+      extra: {
+        ...user.extra,
+        addressBook: {
+          value: state?.formData.address || user?.extra.addressBook.value,
+          detail:
+            state?.formData.addressDetail || user?.extra.addressBook.detail,
+        },
+      },
+    };
+
+    try {
+      await fetchPrivateData(`users/${user._id}`, accessToken, {
+        method: "PATCH",
+        body: JSON.stringify(newUserData),
+      });
+
+      alert("회원정보를 수정했습니다!");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      alert("회원정보를 수정하는데 실패했습니다!");
+    }
+  };
+
   return (
     <>
-      <form className="flex w-[900px] flex-col" action={action}>
+      <form className="flex w-[900px] flex-col" onSubmit={handleFormSubmit}>
         <div className="mb-[60px] flex gap-[100px]">
           <div className="w-[400px]">
             <InputField
@@ -116,10 +159,10 @@ export default function UserForm() {
             />
             <InputField
               label="상세주소"
-              id="detailAddress"
-              name="detailAddress"
+              id="addressDetail"
+              name="addressDetail"
               type="text"
-              placeholder={state?.formData.detailAddress}
+              placeholder={state?.formData.addressDetail}
               onBlur={(e) =>
                 handleInputBlur("UPDATE_ADDRESSDETAIL", e.target.value)
               }
@@ -144,3 +187,21 @@ export default function UserForm() {
     </>
   );
 }
+
+/* const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/users/${user._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(newUserData),
+        }
+      );
+
+      if (!res.ok) {
+        return;
+      }
+
+      alert("회원정보를 수정했습니다!"); */

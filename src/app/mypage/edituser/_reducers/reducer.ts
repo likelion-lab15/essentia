@@ -7,7 +7,7 @@ export const initialState = {
     newPassword: "",
     confirmNewPassword: "",
     address: "",
-    detailAddress: "",
+    addressDetail: "",
   },
   errorMessage: {
     phone: "",
@@ -25,7 +25,7 @@ export const reducer = (state, action) => {
   switch (action.type) {
     /* 상태 초기화를 위한 업데이트 */
     case "SET_INITIAL_STATE": {
-      const { email, name, phone, birthday, address, detailAddress } =
+      const { email, name, phone, birthday, address, addressDetail } =
         action.payload;
       return {
         ...state,
@@ -36,7 +36,7 @@ export const reducer = (state, action) => {
           phone,
           birthday,
           address,
-          detailAddress,
+          addressDetail,
         },
       };
     }
