@@ -1,13 +1,12 @@
-/* eslint-disable @next/next/no-img-element */
-
 import BuyButton from "./_components/BuyButton";
 import BackButton from "./_components/BackButton";
+import Image from "next/image";
 import { Key } from "react";
 
 /* 데이터 fetching */
 async function getData(id: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
+    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
   );
   if (!res.ok) {
     throw new Error("Failed to 상품 데이터 fetch");
@@ -56,8 +55,8 @@ export default async function Buy({
         {/* 구매할 상품 정보 */}
         <div className="mb-[25px] flex h-[300px] w-[800px] items-center justify-center border-b-2 border-primary">
           {/* 이미지 */}
-          <img
-            src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.image}`}
+          <Image
+            src={`${process.env.NEXT_PUBLIC_API_SERVER}/${productData.image}`}
             width={200}
             height={200}
             alt="상품 이미지"
@@ -125,7 +124,14 @@ export default async function Buy({
                       판매금액 : {Number(item.price).toLocaleString()}원
                     </p>
                     <p className="flex h-[60px] flex-1 items-center justify-center">
-                      구매일자 : {item.extra.date}
+                      구매일자 :{" "}
+                      {`${item.extra.date.substring(
+                        0,
+                        4
+                      )}.${item.extra.date.substring(
+                        4,
+                        6
+                      )}.${item.extra.date.substring(6, 8)}`}
                     </p>
                   </div>
                   <BuyButton

@@ -1,7 +1,7 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
+import { signIn, signOut } from "next-auth/react";
 import { ToolTip } from "@/components/_index";
 
 export default function SignInToggleButton({

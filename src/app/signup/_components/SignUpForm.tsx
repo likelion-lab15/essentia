@@ -185,7 +185,7 @@ export default function SignUpForm() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}users`,
+        `${process.env.NEXT_PUBLIC_API_SERVER}/users`,
         {
           method: "POST",
           headers: {

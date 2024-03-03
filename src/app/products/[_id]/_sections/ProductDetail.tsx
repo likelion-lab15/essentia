@@ -1,12 +1,23 @@
 import Image from "next/image";
 import ReviewList from "./_components/ReviewList";
 import Link from "next/link";
+import { CardCarousel } from "@/containers/_index";
 
 /* 데이터 fetching */
 async function getData(id: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}products/${id}`
+    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
   );
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+
+async function getProductsData() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/products`);
+
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
@@ -32,6 +43,7 @@ type TItem = {
 
 export default async function ProductDetail({ id }: { id: string }) {
   const result = await getData(id);
+  const ExhibitionData = await getProductsData();
   const productData = {
     replyItem: result.item.options.item,
     detailImage: result.item.mainImages[1].path,
@@ -39,14 +51,15 @@ export default async function ProductDetail({ id }: { id: string }) {
 
   // 하위에 등록된 제품들의 리뷰를 가져오는 코드
   const reviewsArray: TReview[] = productData.replyItem
-    .flatMap(
-      (item: TItem) =>
-        item.replies?.map((review) => ({
-          content: review.content,
-          title: review.extra.title,
-          author: review.user.name,
-          createdAt: review.createdAt,
-        })) ?? []
+    .flatMap((item: TItem) =>
+      Array.isArray(item?.replies)
+        ? item.replies.map((review) => ({
+            content: review.content,
+            title: review.extra.title,
+            author: review.user.name,
+            createdAt: review.createdAt,
+          }))
+        : []
     )
     .filter((review: TReview) => review.content && review.title);
 
@@ -90,7 +103,7 @@ export default async function ProductDetail({ id }: { id: string }) {
       {/* 상세 이미지 */}
       <section
         id="detailInfo"
-        className="mb-[100px] flex h-[1800px] w-[1280px] items-center justify-center border border-primary"
+        className="mb-[100px] flex h-[1800px] w-[1280px] items-center justify-center"
       >
         <Image
           src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.detailImage}`}
@@ -102,7 +115,7 @@ export default async function ProductDetail({ id }: { id: string }) {
       {/* 검수 기준 */}
       <section
         id="returnInfo"
-        className="mb-[100px] mt-[100px] flex h-[800px] w-[1280px] flex-col border border-primary"
+        className="mb-[100px] mt-[100px] flex h-[800px] w-[1280px] flex-col"
       >
         <h3 className="border-b-2 border-primary pb-[30px] text-48 font-bold">
           검수 기준
@@ -181,19 +194,16 @@ export default async function ProductDetail({ id }: { id: string }) {
           </p>
         </div>
       </section>
-      <div className="mb-[100px] h-0 w-full border-b-2 border-primary"></div>
+      <div
+        id="review"
+        className="mb-[100px] h-0 w-full border-b-2 border-primary"
+      ></div>
       {/* 리뷰 */}
-      <ReviewList
-        numberOfReviews={numberOfReviews}
-        reviews={reviewsArray}
-        test={productData.replyItem}
-      />
+      <ReviewList numberOfReviews={numberOfReviews} reviews={reviewsArray} />
       {/* 추천 상품 */}
-      <section
-        id="recommendedProducts"
-        className="h-[600px] w-[1280px] border border-primary"
-      >
+      <section id="recommendedProducts" className="h-[800px] w-[1280px]">
         <h3 className="pb-[60px] text-48 font-bold">추천 상품</h3>
+        <CardCarousel cardListData={ExhibitionData.item.slice(0, 9)} />
       </section>
     </>
   );
