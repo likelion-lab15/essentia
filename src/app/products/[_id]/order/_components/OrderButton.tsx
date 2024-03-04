@@ -11,8 +11,8 @@ export default function OrderButton({ targetId }: { targetId: string }) {
   const accessToken = getAccessToken();
   const userSession = getUserSession();
   const userName = userSession?.name;
-  const userAddressValue = userSession?.extra.addressBook.value;
-  const userAddressDetail = userSession?.extra.addressBook.detail;
+  const userAddressValue = userSession?.extra?.addressBook?.value;
+  const userAddressDetail = userSession?.extra?.addressBook?.detail;
   const userAddress = `${userAddressValue} ${userAddressDetail}`;
 
   /* 구매하기 요청 POST 통신 */

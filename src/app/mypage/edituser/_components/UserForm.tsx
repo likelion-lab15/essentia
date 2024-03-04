@@ -1,18 +1,32 @@
 "use client";
 
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, FormEvent } from "react";
 import { AddressModal, Button, InputField } from "@/components/_index";
 import { useClientSession } from "@/hooks/_index";
 import { useModal } from "@/hooks/_index";
 import { initialState, reducer } from "../_reducers/_index";
 import { fetchPrivateData } from "@/fetch/fetch";
 
+type UserSession = {
+  _id?: number;
+  email?: string;
+  name?: string;
+  phone?: string;
+  extra?: {
+    birthday?: string;
+    addressBook?: {
+      value?: string;
+      detail?: string;
+    };
+  };
+};
+
 export default function UserForm() {
   const { getUserSession, getAccessToken } = useClientSession();
   const { openModal, closeModal, ModalPortal } = useModal();
 
-  const user = getUserSession();
-  const accessToken = getAccessToken();
+  const user = getUserSession() as UserSession;
+  const accessToken = getAccessToken() as string;
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -25,24 +39,24 @@ export default function UserForm() {
           email: user?.email || "",
           name: user?.name || "",
           phone: user?.phone || "",
-          birthday: user?.extra.birthday || "",
-          address: user?.extra.addressBook.value || "",
-          addressDetail: user?.extra.addressBook.detail || "",
+          birthday: user?.extra?.birthday || "",
+          address: user?.extra?.addressBook?.value || "",
+          addressDetail: user?.extra?.addressBook?.detail || "",
         },
       });
     }
   }, [user]);
 
   /* 이벤트 핸들러 */
-  const handleInputBlur = (type, value) => {
+  const handleInputBlur = (type: string, value: string) => {
     dispatch({ type: type, payload: value });
   };
 
-  const handleInputValidation = (type, value) => {
+  const handleInputValidation = (type: string, value: string) => {
     dispatch({ type: type, payload: value });
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     /* 유효성 검사 */
@@ -62,9 +76,9 @@ export default function UserForm() {
       extra: {
         ...user.extra,
         addressBook: {
-          value: state?.formData.address || user?.extra.addressBook.value,
+          value: state?.formData.address || user?.extra?.addressBook?.value,
           detail:
-            state?.formData.addressDetail || user?.extra.addressBook.detail,
+            state?.formData.addressDetail || user?.extra?.addressBook?.detail,
         },
       },
     };
@@ -187,21 +201,3 @@ export default function UserForm() {
     </>
   );
 }
-
-/* const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/users/${user._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify(newUserData),
-        }
-      );
-
-      if (!res.ok) {
-        return;
-      }
-
-      alert("회원정보를 수정했습니다!"); */

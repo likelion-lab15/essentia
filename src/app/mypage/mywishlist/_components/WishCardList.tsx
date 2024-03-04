@@ -28,7 +28,7 @@ export default function WishCardList() {
     isError,
   } = useQuery({
     queryKey: ["wishList"],
-    queryFn: () => getWishList(getAccessToken()),
+    queryFn: () => getWishList(getAccessToken() as string),
     enabled: !!getAccessToken(),
   });
 

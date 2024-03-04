@@ -21,7 +21,7 @@ export const initialState = {
   },
 };
 
-export const reducer = (state, action) => {
+export const reducer = (state: any, action: any) => {
   switch (action.type) {
     /* 상태 초기화를 위한 업데이트 */
     case "SET_INITIAL_STATE": {

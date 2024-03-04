@@ -6,13 +6,13 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 // 프로젝트 내부 임포트
-import { cn } from "@/utils/_index";
+// import { cn } from "@/utils/_index";
 
 export default function SignIn() {
   /* 상태 */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(false);
+  // const [message, setMessage] = useState(false);
 
   /* 이벤트 핸들러 */
   const handleInputValue =
@@ -24,19 +24,11 @@ export default function SignIn() {
     e.preventDefault();
 
     await signIn("credentials", {
-      email: email,
+      username: email,
       password: password,
       redirect: true,
       callbackUrl: "http://localhost:3000",
     });
-
-    // if (data) {
-    //   setMessage(false);
-    //   alert("로그인에 성공했습니다!");
-    // } else {
-    //   setMessage(true);
-    //   alert("로그인에 실패했습니다!");
-    // }
   };
 
   return (
@@ -63,13 +55,13 @@ export default function SignIn() {
             className="h-[32px] border-b border-black text-[14px] font-medium"
           />
           <div className="mb-[6px] flex h-[20px] items-center">
-            <span
+            {/* <span
               className={cn("hidden text-[12px] text-red-500", {
                 block: message,
               })}
             >
               아이디를 확인해주세요
-            </span>
+            </span> */}
           </div>
         </div>
 
@@ -90,13 +82,13 @@ export default function SignIn() {
             className="h-[32px] border-b border-black text-[14px] font-medium"
           />
           <div className="h-[20px]">
-            <span
+            {/* <span
               className={cn("hidden text-[12px] text-red-500", {
                 block: message,
               })}
             >
               비밀번호를 확인해주세요
-            </span>
+            </span> */}
           </div>
         </div>
 

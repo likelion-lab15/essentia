@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function Pagination({ page }) {
+export default function Pagination(/* { page } */) {
   const router = useRouter();
   // const currentPage = 1;
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = 10;
 
-  const changePage = (page) => {
+  const changePage = (page: any) => {
     router.push(`/products?page=${page}&limit=12`);
     setCurrentPage(page);
   };

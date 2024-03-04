@@ -28,7 +28,7 @@ export default function WishCard({ id, product }: TWishCard) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: () => deleteWish(id, getAccessToken()),
+    mutationFn: () => deleteWish(id, getAccessToken() as string),
     onSettled: async (_, error) => {
       if (error) {
         console.log(error);

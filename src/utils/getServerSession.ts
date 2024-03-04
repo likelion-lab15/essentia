@@ -1,6 +1,6 @@
 /* 개발자 - 김진우 */
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/auth";
 import { getServerSession } from "next-auth";
 
 /* 유저 세션을 반환하는 함수 */
