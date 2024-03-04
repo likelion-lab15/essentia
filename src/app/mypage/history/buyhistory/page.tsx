@@ -1,19 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { getBuyHistory } from "../_functions/_index";
 import { BuyHistoryTable } from "../_components/_index";
-import getHistoryData from "../_functions/getHistoryData";
 
-export default function BuyHistory() {
-  const [buyHistoryData, setBuyHistoryData] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      const data = await getHistoryData("orders");
-      setBuyHistoryData(data);
-    })();
-  }, []);
-
+export default async function BuyHistory() {
+  const buyHistoryData = await getBuyHistory();
   return (
     <section className="w-[1000px]">
       <div className="pt-[6px]">

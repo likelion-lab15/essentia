@@ -1,39 +1,39 @@
-/* eslint-disable no-unused-vars */
 "use client";
 
 import DaumPostcode from "react-daum-postcode";
 
-interface AddressModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelectAddress: (data: any) => void;
-}
+type TAddressModal = {
+  // eslint-disable-next-line no-unused-vars
+  selectedAddress: (address: string) => void;
+};
 
-export default function AddressModal({
-  isOpen,
-  onClose,
-  onSelectAddress,
-}: AddressModalProps) {
-  return (
-    <div
-      className={`fixed inset-0 z-50 ${
-        isOpen ? "flex" : "hidden"
-      } items-center justify-center bg-black bg-opacity-50`}
-    >
-      <div className="w-full max-w-lg rounded-lg bg-white p-4 shadow-lg">
-        <button
-          onClick={onClose}
-          className="absolute right-2 top-2 rounded bg-transparent p-2 text-black hover:bg-gray-200"
-        >
-          Close
-        </button>
-        <DaumPostcode
-          onComplete={(data) => {
-            onSelectAddress(data);
-            onClose();
-          }}
-        />
-      </div>
-    </div>
-  );
+type TAddressData = {
+  address: string;
+  addressType: string;
+  bname: string;
+  buildingName: string;
+};
+
+export default function AddressModal({ selectedAddress }: TAddressModal) {
+  const handleComplete = (data: TAddressData) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+    selectedAddress(fullAddress); // fullAddress => 서울시 양천구 오목로 10길 7-9
+  };
+  const customStyle = {
+    width: "500px",
+    height: "600px",
+  };
+  return <DaumPostcode onComplete={handleComplete} style={customStyle} />;
 }

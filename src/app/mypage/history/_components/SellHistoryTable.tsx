@@ -84,7 +84,9 @@ const SellHistoryTable = ({
             >
               <td className="w-[10%]">{createdAt.split(" ")[0]}</td>
               <td className="w-[30%] text-left">{truncateName}</td>
-              <td className="w-[10%]">{price.toLocaleString("ko-KR")} 원</td>
+              <td className="w-[10%] pr-[30px] text-right">
+                {price.toLocaleString("ko-KR")} 원
+              </td>
               <td className="w-[10%]">
                 <button
                   type="button"

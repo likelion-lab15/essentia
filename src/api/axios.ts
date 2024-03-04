@@ -5,7 +5,7 @@ import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_API_SERVER;
 
 // 세션스토리지에서 토큰 불러오기
-const getToken = () => {
+export const getToken = () => {
   if (typeof window !== "undefined") {
     const tokenString = sessionStorage.getItem("token");
     if (tokenString) {

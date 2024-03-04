@@ -1,12 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
+import Image from "next/image";
+import { fetchPrivateData } from "@/fetch/fetch";
+import { getAccessToken } from "@/utils/_index";
 
-import { useState, useEffect } from "react";
-import { axiosPrivate } from "@/api/axios";
-
-type TReview = {
+type TReply = {
   _id: number;
-  rating: number;
   content: string;
   createdAt: string;
   extra: {
@@ -14,34 +11,18 @@ type TReview = {
   };
   product: {
     _id: number;
+    name: string;
     image: {
       path: string;
       name: string;
       originalname: string;
     };
-    name: string;
-  };
-  user: {
-    _id: number;
-    name: string;
   };
 };
 
-export default function MyReview() {
-  const [reviewData, setReviewData] = useState<TReview[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await axiosPrivate.get("replies");
-        setReviewData(res.data.item);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        }
-      }
-    })();
-  }, []);
+export default async function MyReview() {
+  const accessToken = await getAccessToken();
+  const repliesData: TReply[] = await fetchPrivateData("replies", accessToken);
 
   return (
     <section className="w-[1000px]">
@@ -49,18 +30,17 @@ export default function MyReview() {
       <div className="mb-[40px] flex h-[70px] items-center border-b-[3px] border-[#222]">
         <p className="text-[28px] font-bold">내가 쓴 리뷰</p>
       </div>
-      {reviewData?.map((review) => {
-        const { _id, createdAt, product, extra, content } = review;
+      {repliesData?.map((reply) => {
+        const { _id, createdAt, product, extra, content } = reply;
 
         return (
           <div key={_id} className="mb-[25px] flex bg-gray-100 p-[30px]">
             <div className="mr-[42px] flex flex-col">
-              <div className="mb-[10px] h-[200px] w-[200px]">
-                <img
+              <div className="relative mb-[10px] h-[200px] w-[200px]">
+                <Image
                   src={`${process.env.NEXT_PUBLIC_API_SERVER}${product.image.path}`}
                   alt={product.image.originalname}
-                  width="100%"
-                  height="100%"
+                  fill
                 />
               </div>
               <span className="text-[16px] font-medium">{product.name}</span>

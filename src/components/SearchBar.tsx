@@ -39,7 +39,7 @@ export default function SearchBar({ onClose }: TSearchBarProps) {
   };
 
   return (
-    <div className="z-100 border-3 fixed top-[80px] h-screen w-screen bg-white bg-opacity-95">
+    <div className="border-3 relative h-[80vh] w-[80vw] bg-white bg-opacity-95">
       <div className="absolute right-[100px] top-[200px] flex-col">
         {/* 검색 폼 */}
         <form onSubmit={handleSearch}>
@@ -60,14 +60,14 @@ export default function SearchBar({ onClose }: TSearchBarProps) {
           </button>
         </form>
         {/* 닫기 버튼 */}
-        <button onClick={onClose} className="fixed right-[40px] top-[100px]">
+        {/* <button onClick={onClose} className="fixed right-[40px] top-[100px]">
           <Image
             src="/close-icon.svg"
             alt="닫기 아이콘"
             width={60}
             height={60}
           />
-        </button>
+        </button> */}
         {/* 검색 결과 표시 */}
         {searchResults.length > 0 && (
           <ul className="border-x-[2px] border-b-[2px] border-tertiary text-16 font-regular">
