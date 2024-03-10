@@ -1,16 +1,5 @@
+import { fetchData } from "@/fetch/fetch";
 import SellForm from "./_components/SellForm";
-
-/* 데이터 fetching */
-async function getData(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
-  );
-  if (!res.ok) {
-    throw new Error("Failed to 상품 데이터 fetch");
-  }
-
-  return res.json();
-}
 
 export default async function Sell({
   searchParams,
@@ -21,12 +10,12 @@ export default async function Sell({
 }) {
   const targetId = params._id;
   const targetAmount = Number(searchParams.amount);
-  const product = await getData(targetId);
+  const product = await fetchData(`products/${targetId}`);
   const productData = {
-    name: product.item.name,
-    brand: product.item.extra.brand,
-    amount: product.item.extra.amount,
-    price: product.item.price,
+    name: product.name,
+    brand: product.extra.brand,
+    amount: product.extra.amount,
+    price: product.price,
   };
 
   return (
