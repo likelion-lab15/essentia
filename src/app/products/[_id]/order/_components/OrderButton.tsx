@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/Button";
+import { fetchPrivateData } from "@/fetch/fetch";
 import useClientSession from "@/hooks/useClientSession";
 
 export default function OrderButton({ targetId }: { targetId: string }) {
@@ -8,7 +9,7 @@ export default function OrderButton({ targetId }: { targetId: string }) {
   const { getAccessToken, getUserSession } = useClientSession();
   const productId = parseInt(targetId);
   /* 유저 정보 */
-  const accessToken = getAccessToken();
+  const accessToken = getAccessToken() as string;
   const userSession = getUserSession();
   const userName = userSession?.name;
   const userAddressValue = userSession?.extra?.addressBook?.value;
@@ -21,37 +22,38 @@ export default function OrderButton({ targetId }: { targetId: string }) {
       alert("로그인이 필요한 서비스입니다.");
       return;
     }
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+
+    const orderData = {
+      products: [
+        {
+          _id: productId,
+          quantity: 1,
         },
-        body: JSON.stringify({
-          products: [
-            {
-              _id: productId,
-              quantity: 1,
-            },
-          ],
-          address: {
-            name: userName,
-            value: userAddress,
-          },
-        }),
+      ],
+      address: {
+        name: userName,
+        value: userAddress,
+      },
+    };
+
+    try {
+      // fetchPrivateData 함수를 사용해 주문 요청을 보냅니다.
+      const response = await fetchPrivateData("orders", accessToken, {
+        method: "POST",
+        body: JSON.stringify(orderData),
         cache: "no-cache",
       });
-      alert("상품 주문이 완료되었습니다. 주문 내역을 확인해주세요.");
-      if (!res.ok) {
-        throw new Error("상품 주문 실패");
+
+      // response를 기반으로 알림을 보냅니다.
+      if (response) {
+        alert("상품 주문이 완료되었습니다. 구매 내역을 확인해주세요.");
+      } else {
+        alert("상품 주문에 실패했습니다. 다시 시도해주세요.");
       }
     } catch (error) {
       console.error("상품 주문 요청 중 에러가 발생하였습니다. :", error);
-      throw error;
     }
   };
-
   return (
     <Button
       label="구매 결정하기"
