@@ -2,17 +2,12 @@ import BuyButton from "./_components/BuyButton";
 import BackButton from "./_components/BackButton";
 import Image from "next/image";
 import { Key } from "react";
+import { fetchData } from "@/fetch/fetch";
 
 /* 데이터 fetching */
 async function getData(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
-  );
-  if (!res.ok) {
-    throw new Error("Failed to 상품 데이터 fetch");
-  }
-
-  return res.json();
+  // fetchData를 사용하여 상품 데이터를 가져옵니다.
+  return fetchData(`products/${id}`);
 }
 
 export default async function Buy({
@@ -26,14 +21,14 @@ export default async function Buy({
   const targetAmount = Number(searchParams.amount);
   const product = await getData(targetId);
   const productData = {
-    name: product.item.name,
-    price: product.item.price,
-    brand: product.item.extra.brand,
-    amount: product.item.extra.amount,
-    content: product.item.content,
-    image: product.item.mainImages[0].path,
+    name: product.name,
+    price: product.price,
+    brand: product.extra.brand,
+    amount: product.extra.amount,
+    content: product.content,
+    image: product.mainImages[0].path,
   };
-  const targetProductsList = product.item.options.item;
+  const targetProductsList = product.options.item;
   const renderProduct = targetProductsList.filter(
     (item: { extra: { amount: number } }) => item.extra?.amount === targetAmount
   );
