@@ -18,7 +18,6 @@ export default async function checkEmailDuplication(
       }
     );
     if (response.ok) {
-      console.log("response ok");
       /* 사용가능한 이메일인 경우 */
       return true;
     } else if (response.status === 409) {
