@@ -32,6 +32,7 @@ export const authOptions = {
       },
     }),
   ],
+  secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
   pages: {
     signIn: "/signin",
     error: "/signin",

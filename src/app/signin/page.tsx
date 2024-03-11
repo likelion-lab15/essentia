@@ -27,7 +27,7 @@ export default function SignIn() {
       username: email,
       password: password,
       redirect: true,
-      callbackUrl: "http://localhost:3000",
+      callbackUrl: "https://ttp-onyx.netlify.app",
     });
   };
 
