@@ -1,18 +1,9 @@
 import { Button } from "./_components/_index";
 import { CardCarousel } from "@/containers/_index";
-
-async function getProductsData() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/products`);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
+import { fetchData } from "@/fetch/fetch";
 
 export default async function ExhibitionSection() {
-  const ExhibitionData = await getProductsData();
+  const ExhibitionData = await fetchData(`products`);
 
   return (
     <section className="mb-[80px] mt-[80px] flex h-[800px] w-full flex-col">
@@ -29,7 +20,7 @@ export default async function ExhibitionSection() {
       </div>
       {/* 3. 캐러셀 */}
       <div className="mx-auto w-[1382px]">
-        <CardCarousel cardListData={ExhibitionData.item.slice(0, 9)} />
+        <CardCarousel cardListData={ExhibitionData.slice(0, 9)} />
       </div>
     </section>
   );
