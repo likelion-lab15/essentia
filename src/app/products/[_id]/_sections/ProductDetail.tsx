@@ -2,27 +2,17 @@ import Image from "next/image";
 import ReviewList from "./_components/ReviewList";
 import Link from "next/link";
 import { CardCarousel } from "@/containers/_index";
+import { fetchData } from "@/fetch/fetch";
 
-/* 데이터 fetching */
+/* 상품 데이터 fetching */
 async function getData(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
-  );
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
+  // 부모 상품의 데이터를 가져옵니다.
+  return fetchData(`products/${id}`);
 }
 
+/* 캐러셀을 위한 데이터 통신 */
 async function getProductsData() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/products`);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
+  return fetchData(`products`);
 }
 
 type TReview = {
@@ -45,8 +35,8 @@ export default async function ProductDetail({ id }: { id: string }) {
   const result = await getData(id);
   const ExhibitionData = await getProductsData();
   const productData = {
-    replyItem: result.item.options.item,
-    detailImage: result.item.mainImages[1].path,
+    replyItem: result.options.item,
+    detailImage: result.mainImages[1].path,
   };
 
   // 하위에 등록된 제품들의 리뷰를 가져오는 코드
@@ -203,7 +193,7 @@ export default async function ProductDetail({ id }: { id: string }) {
       {/* 추천 상품 */}
       <section id="recommendedProducts" className="h-[800px] w-[1280px]">
         <h3 className="pb-[60px] text-48 font-bold">추천 상품</h3>
-        <CardCarousel cardListData={ExhibitionData.item.slice(0, 9)} />
+        <CardCarousel cardListData={ExhibitionData.slice(0, 9)} />
       </section>
     </>
   );

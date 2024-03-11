@@ -1,22 +1,17 @@
 import Image from "next/image";
 import ButtonBox from "./_components/ButtonBox";
 import { getAccessToken } from "@/utils/_index";
+import { fetchData } from "@/fetch/fetch";
 
-/* 데이터 fetching */
+/* 상품 데이터 fetching */
 async function getData(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
-  );
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
+  // 부모 상품의 데이터를 가져옵니다.
+  return fetchData(`products/${id}`);
 }
 
-/* 데이터 fetching */
+/* 위시리스트 데이터 fetching */
 async function getWishList(id: string) {
-  const accessToken = await getAccessToken();
+  const accessToken = (await getAccessToken()) as string;
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks/products/${id}`,
     {
@@ -37,12 +32,12 @@ export default async function ProductInfo({ id }: { id: string }) {
   const result = await getData(id);
   const wishlistStatus = await getWishList(id);
   const productData = {
-    name: result.item.name,
-    price: result.item.price,
-    brand: result.item.extra.brand,
-    amount: result.item.extra.amount,
-    content: result.item.content,
-    image: result.item.mainImages[0].path,
+    name: result.name,
+    price: result.price,
+    brand: result.extra.brand,
+    amount: result.extra.amount,
+    content: result.content,
+    image: result.mainImages[0].path,
   };
 
   return (
