@@ -47,6 +47,7 @@ export default function WishCard({ id, product }: TWishCard) {
   const handleDeleteWish = (e: MouseEvent) => {
     e.stopPropagation();
     mutate();
+    alert("상품이 제거됐습니다!");
   };
 
   return (
