@@ -1,7 +1,8 @@
 "use client";
 
-import { axiosPrivate } from "@/api/axios";
+import { fetchPrivateData } from "@/fetch/fetch";
 import { useRouter } from "next/navigation";
+import { useClientSession } from "@/hooks/_index";
 
 type TSellHistoryData = {
   _id: number;
@@ -40,6 +41,8 @@ const SellHistoryTable = ({
   sellHistoryData: TSellHistoryData[];
 }) => {
   const router = useRouter();
+  const { getAccessToken } = useClientSession();
+  const accessToken = getAccessToken() as string;
 
   // 상품 수정 페이지로 이동
   const editProduct = (id: number) => {
@@ -48,14 +51,10 @@ const SellHistoryTable = ({
 
   // 상품 삭제
   const deleteProduct = async (id: number) => {
-    try {
-      await axiosPrivate.delete(`/seller/products/${id}`);
-      alert("상품을 삭제했습니다!");
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-    }
+    await fetchPrivateData(`/seller/products/${id}`, accessToken, {
+      method: "DELETE",
+    });
+    alert(`${id}를 상품에서 삭제했습니다!`);
   };
 
   return (
