@@ -22,7 +22,7 @@ export const fetchData = async (url: string, options?: any) => {
 /* accessToken이 필요한 fetch 통신 */
 export const fetchPrivateData = async (
   url: string,
-  accessToken: string,
+  accessToken: string | undefined,
   options?: any
 ) => {
   try {

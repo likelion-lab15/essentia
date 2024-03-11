@@ -1,28 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
+import { fetchData } from "@/fetch/fetch";
 import OrderButton from "./_components/OrderButton";
 import { getUserSession } from "@/utils/_index";
 
 /* 상품 데이터 fetching */
 async function getData(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${id}`
-  );
-  if (!res.ok) {
-    throw new Error("구매할 상품의 부모 데이터를 가져오는데 실패하였습니다.");
-  }
-
-  return res.json();
+  // 부모 상품의 데이터를 가져옵니다.
+  return fetchData(`products/${id}`);
 }
 
 /* 타겟 상품 데이터 fetching */
 async function getTargetProduct(targetId: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER}/products/${targetId}`
-  );
-  if (!res.ok) {
-    throw new Error("구매할 상품의 데이터를 가져오는데 실패하였습니다.");
-  }
-  return res.json();
+  // 구매할 타겟 상품 데이터를 가져옵니다.
+  return fetchData(`products/${targetId}`);
 }
 
 export default async function Order({
@@ -41,16 +31,16 @@ export default async function Order({
   const amount = searchParams.amount;
   const product = await getData(targetId);
   const productData = {
-    name: product.item.name,
-    brand: product.item.extra.brand,
-    image: product.item.mainImages[0].path,
+    name: product.name,
+    brand: product.extra.brand,
+    image: product.mainImages[0].path,
   };
 
   // 3. 자식 데이터 가져오기
   const targetProduct = await getTargetProduct(orderProductId);
   const targetProductData = {
-    orderId: targetProduct.item._id,
-    price: targetProduct.item.price,
+    orderId: targetProduct._id,
+    price: targetProduct.price,
   };
 
   return (
@@ -60,7 +50,7 @@ export default async function Order({
       {/* 구매할 향수 정보 */}
       <div className="flex h-[200px] w-[600px] flex-row items-center justify-center border-b-[2px] border-primary">
         <img
-          src={`${process.env.NEXT_PUBLIC_API_SERVER}/${productData.image}`}
+          src={`${process.env.NEXT_PUBLIC_API_SERVER}${productData.image}`}
           alt="구매할 상품 이미지"
           className=" h-[150px] w-[150px] border-2 border-primary bg-product"
         />

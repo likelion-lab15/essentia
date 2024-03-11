@@ -5,6 +5,7 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useClientSession } from "@/hooks/_index";
+import { fetchPrivateData } from "@/fetch/fetch";
 
 export default function ButtonBox({
   id,
@@ -59,7 +60,7 @@ export default function ButtonBox({
 
   /* 위시리스트 제어 */
   const { getAccessToken, getUserSession } = useClientSession();
-  const accessToken = getAccessToken();
+  const accessToken = getAccessToken() as string;
   const userSession = getUserSession();
   const userId = userSession?._id;
 
@@ -67,53 +68,32 @@ export default function ButtonBox({
   const addWishList = async (id: string) => {
     if (!userSession) {
       alert("로그인이 필요한 서비스입니다.");
-      return; // Stop the function execution here
+      return;
     }
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            product_id: parseInt(id),
-            user_id: userId,
-            memo: "위시리스트",
-          }),
-          cache: "no-cache",
-        }
-      );
-      if (!res.ok) {
-        throw new Error("위시리스트 추가 통신 실패");
-      }
-      setWishList(true);
+      await fetchPrivateData("bookmarks", accessToken, {
+        method: "POST",
+        body: JSON.stringify({
+          product_id: parseInt(id),
+          user_id: userId,
+          memo: "위시리스트",
+        }),
+      });
+
+      setWishList(true); // 요청 성공 후 위시리스트 상태 업데이트
     } catch (error) {
       console.error("위시리스트 추가 중 오류:", error);
-      throw error;
     }
   };
 
   /* 현재 상품의 북마크 id를 찾는 함수 */
   const findWishListId = async () => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks/`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          cache: "no-cache",
-        }
-      );
-      if (!res.ok) {
-        throw new Error("위시리스트 조회 실패");
-      }
-      return res.json();
+      const wishListData = await fetchPrivateData("bookmarks/", accessToken, {
+        method: "GET",
+      });
+
+      return wishListData; // 요청 성공 시 반환된 위시리스트 데이터
     } catch (error) {
       console.error("위시리스트 조회 중 오류:", error);
       throw error;
@@ -127,28 +107,18 @@ export default function ButtonBox({
   const deleteWishList = async (id: string) => {
     if (!userSession) {
       alert("로그인이 필요한 서비스입니다.");
-      return; // Stop the function execution here
+      return;
     }
     try {
       const data = await findWishListId();
-      const itemToDelete = data.item.find(
+      const itemToDelete = data.find(
         (item: { product_id: number }) => item.product_id === parseInt(id)
       );
       if (itemToDelete) {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_SERVER}/bookmarks/${itemToDelete._id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            cache: "no-cache",
-          }
-        );
-        if (!res.ok) {
-          throw new Error("위시리스트 삭제 실패");
-        }
+        await fetchPrivateData(`bookmarks/${itemToDelete._id}`, accessToken, {
+          method: "DELETE",
+        });
+        setWishList(false); // 성공적으로 삭제되면 상태 업데이트
       } else {
         throw new Error("위시리스트에 있는 상품 id를 찾을 수 없습니다.");
       }

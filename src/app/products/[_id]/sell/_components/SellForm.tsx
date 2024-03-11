@@ -5,6 +5,7 @@ import React, { useReducer } from "react";
 import { uploadFiles } from "../_lib/fileUploader";
 import useClientSession from "@/hooks/useClientSession";
 import { useRouter } from "next/navigation";
+import { fetchPrivateData } from "@/fetch/fetch";
 
 export default function SellForm({ amount, fixedPrice, id, name }: any) {
   const initialState = {
@@ -20,7 +21,6 @@ export default function SellForm({ amount, fixedPrice, id, name }: any) {
   };
 
   const { getAccessToken } = useClientSession();
-  const token = getAccessToken();
   const router = useRouter();
   const [state, dispatch] = useReducer(useSellFormReducer, initialState);
 
@@ -115,21 +115,20 @@ export default function SellForm({ amount, fixedPrice, id, name }: any) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const token = getAccessToken();
+    const options = {
+      method: "POST",
+      body: JSON.stringify(state),
+    };
+
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/seller/products`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(state),
-        }
+      const responseData = await fetchPrivateData(
+        "seller/products",
+        token,
+        options
       );
 
-      if (response.ok) {
-        const responseData = await response.json();
+      if (responseData) {
         console.log("상품이 등록되었습니다.", responseData);
         alert("상품이 등록되었습니다.");
         router.push("/mypage/history/sellhistory");

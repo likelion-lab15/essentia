@@ -6,7 +6,7 @@ import RQProvider from "../components/RQProvider";
 import { NextAuthProvider } from "@/contexts/_index";
 
 export const metadata: Metadata = {
-  title: "Essentia",
+  title: "ONYX",
   description: "향수 중고거래 플랫폼",
 };
 

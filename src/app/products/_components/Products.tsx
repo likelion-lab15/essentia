@@ -3,10 +3,10 @@
 import ProductCard from "@/components/ProductCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { getPageData } from "../_lib/getSelectedBrand";
 import { Fragment, useRef } from "react";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import Loader from "@/app/mypage/mywishlist/_components/Loader";
+import { fetchData } from "@/fetch/fetch";
 
 type TProductsProps = {
   selectedBrand: string;
@@ -18,8 +18,8 @@ export default function Products({ selectedBrand }: TProductsProps) {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["products", selectedBrand],
-      queryFn: async ({ pageParam }) => {
-        const products = await getPageData(pageParam);
+      queryFn: async ({ pageParam = 1 }) => {
+        const products = await fetchData(`products?page=${pageParam}&limit=12`);
         return { products, nextPage: pageParam + 1, totalPages: 100 };
       },
       getNextPageParam: (lastPage) => {

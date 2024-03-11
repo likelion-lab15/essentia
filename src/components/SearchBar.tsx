@@ -1,8 +1,8 @@
 "use client";
 import { FormEvent, useState } from "react";
 import Image from "next/image";
-import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
+import { fetchData } from "@/fetch/fetch";
 
 type TSearchBar = {
   _id: string;
@@ -20,10 +20,10 @@ export default function SearchBar({ onClose }: TSearchBarProps) {
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.get(
-        `/products?keyword=${encodeURIComponent(searchTerm)}`
+      const products = await fetchData(
+        `products?keyword=${encodeURIComponent(searchTerm)}`
       );
-      setSearchResults(response.data.item);
+      setSearchResults(products);
     } catch (error) {
       console.error("검색 중 오류 발생 🥲", error);
     }
