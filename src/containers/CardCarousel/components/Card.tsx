@@ -40,6 +40,7 @@ export default function Card({
           <Image
             src={`${process.env.NEXT_PUBLIC_API_SERVER}${mainImages[0].path}`}
             alt={mainImages[0].originalname}
+            sizes="100%"
             fill
             className="object-cover"
           />
