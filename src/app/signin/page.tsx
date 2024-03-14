@@ -27,7 +27,7 @@ export default function SignIn() {
       username: email,
       password: password,
       redirect: true,
-      callbackUrl: "https://ttp-onyx.netlify.app",
+      callbackUrl: `${process.env.NEXT_PUBLIC_MAIN}`,
     });
   };
 
