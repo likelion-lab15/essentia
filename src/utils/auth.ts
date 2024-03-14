@@ -14,16 +14,19 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
-        const res = await fetch("https://onyx-onyx.koyeb.app/api/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: credentials?.username,
-            password: credentials?.password,
-          }),
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_SERVER}/users/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: credentials?.username,
+              password: credentials?.password,
+            }),
+          }
+        );
         /* 로그인이 실패하면 에러처리 */
         if (!res.ok) {
           return null;
@@ -32,7 +35,7 @@ export const authOptions = {
       },
     }),
   ],
-  secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/signin",
     error: "/signin",
