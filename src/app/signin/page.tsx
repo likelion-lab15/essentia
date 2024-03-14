@@ -1,18 +1,13 @@
 "use client";
 
-// 노드 모듈 / 외부 라이브러리 임포트
-import { ChangeEvent, FormEvent, useState } from "react";
 import Link from "next/link";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 
-// 프로젝트 내부 임포트
-// import { cn } from "@/utils/_index";
-
 export default function SignIn() {
-  /* 상태 */
+  /* state */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [message, setMessage] = useState(false);
 
   /* 이벤트 핸들러 */
   const handleInputValue =
@@ -54,15 +49,7 @@ export default function SignIn() {
             onChange={handleInputValue(setEmail)}
             className="h-[32px] border-b border-black text-[14px] font-medium"
           />
-          <div className="mb-[6px] flex h-[20px] items-center">
-            {/* <span
-              className={cn("hidden text-[12px] text-red-500", {
-                block: message,
-              })}
-            >
-              아이디를 확인해주세요
-            </span> */}
-          </div>
+          <div className="mb-[6px] flex h-[20px] items-center"></div>
         </div>
 
         {/* 비밀번호 */}
@@ -81,15 +68,7 @@ export default function SignIn() {
             onChange={handleInputValue(setPassword)}
             className="h-[32px] border-b border-black text-[14px] font-medium"
           />
-          <div className="h-[20px]">
-            {/* <span
-              className={cn("hidden text-[12px] text-red-500", {
-                block: message,
-              })}
-            >
-              비밀번호를 확인해주세요
-            </span> */}
-          </div>
+          <div className="h-[20px]"></div>
         </div>
 
         {/* 로그인 버튼 */}
