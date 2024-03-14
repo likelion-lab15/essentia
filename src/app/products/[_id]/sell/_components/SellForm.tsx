@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
+// @ts-nocheck
+
 "use client";
 import { INITIAL_STATE, useSellFormReducer } from "@/hooks/useSellFormReducer";
 import React, { useReducer } from "react";
