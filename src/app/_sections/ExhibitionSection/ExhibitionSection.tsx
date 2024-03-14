@@ -3,7 +3,7 @@ import { CardCarousel } from "@/containers/_index";
 import { fetchData } from "@/fetch/fetch";
 
 export default async function ExhibitionSection() {
-  const ExhibitionData = await fetchData(`products`);
+  const ExhibitionData = await fetchData("products");
 
   return (
     <section className="mb-[80px] mt-[80px] flex h-[800px] w-full flex-col">
