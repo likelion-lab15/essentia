@@ -1,6 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-
-"use client";
+/* "use client";
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -50,11 +48,11 @@ export default function Review() {
   // review에 name이 있으면 렌더링 시작
   return (
     <section className="mx-auto w-[680px]">
-      {/* 1. 제목 */}
+
       <div className="flex h-[64px] items-center border-b-[3px] border-black">
         <span className="text-[20px] font-bold">리뷰 작성</span>
       </div>
-      {/* 2. 상품 정보 */}
+
       <div className="flex border-b-[1px] border-[#808080] p-[25px]">
         <div className="mr-[42px] h-[100px] w-[100px]">
           <img
@@ -68,12 +66,11 @@ export default function Review() {
           <p className="text-[18px] font-regular">{reviewData?.brand}</p>
           <p className="text-[24px] font-bold">{reviewData?.name}</p>
           <p className="text-[16px] font-regular">
-            {/* Le Labo Santal 33 Eau De Parfum 50ml (Korean Ver.) */}
           </p>
         </div>
       </div>
       <form onSubmit={handleFormSubmit}>
-        {/* 3. 리뷰 작성 */}
+
         <div className="border-b-[1px] border-[#808080] py-[25px]">
           <div className="mb-[15px] border-[1px] border-[#808080]">
             <label htmlFor="title" className="sr-only">
@@ -105,7 +102,7 @@ export default function Review() {
             />
           </div>
         </div>
-        {/* 4. 주의사항 */}
+
         <div className="mb-[50px] py-[25px]">
           <p className="mb-[12px] text-[12px] font-medium text-[#808080]">
             &#x2022; 이미지 리뷰는 상품이 노출된 사진이 1장 이상 포함되어야
@@ -123,11 +120,15 @@ export default function Review() {
           </p>
         </div>
 
-        {/* 5. 버튼 */}
         <div className="mb-[50px] flex justify-center">
           <Button label="등록하기" type="submit" />
         </div>
       </form>
     </section>
   );
+}
+ */
+
+export default function Review() {
+  return <div>Review</div>;
 }

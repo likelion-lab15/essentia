@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
-"use client";
+/* "use client";
 
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { axiosPrivate } from "@/api/axios";
@@ -75,7 +73,6 @@ export default function EditSell({ params }: { params: TParams }) {
 
   return (
     <section className="mx-auto w-[680px]">
-      {/* 1. 제목 */}
       <div className="flex h-[64px] items-center border-b-[3px] border-black">
         <span className="text-[20px] font-bold">상품 수정</span>
       </div>
@@ -126,4 +123,9 @@ export default function EditSell({ params }: { params: TParams }) {
       </div>
     </section>
   );
+}
+ */
+
+export default function EditSell() {
+  return <div>EditSell</div>;
 }
