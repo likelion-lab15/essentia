@@ -1,7 +1,7 @@
 import {
   BrandListSection,
   MagazineSection,
-  ExhibitionSection,
+  // ExhibitionSection,
   HeroSection,
 } from "./_sections/_index";
 
@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center">
       <HeroSection />
-      <ExhibitionSection />
+      {/* <ExhibitionSection /> */}
       <MagazineSection />
       <BrandListSection />
     </main>
